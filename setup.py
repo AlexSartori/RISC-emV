@@ -22,7 +22,7 @@ setuptools.setup(
         #     'bar = other_module:some_func',
         # ],
         'gui_scripts': [
-            'riscemv=riscemv:main',
+            'riscemv=riscemv:main_gui',
         ]
     },
     classifiers=[

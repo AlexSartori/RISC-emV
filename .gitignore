@@ -21,3 +21,4 @@ MANIFEST
 
 # pytest-cov
 .coverage
+.pytest_cache
