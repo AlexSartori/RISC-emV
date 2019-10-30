@@ -13,8 +13,8 @@ class ProgramLoader:
         self.lines = []
 
         with open(filename, 'rb') as f:
-            binary_instruction = f.read(XLEN/8)
-            bits_instruction = ("{:0" + str(XLEN) + "b}").format(binary_instruction)
+            binary_instruction = f.read(self.XLEN/8)
+            bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
             self.lines.append(bits_instruction)
 
             # 6 types of instructions: R/I/S/SB/U/UJ
