@@ -1,0 +1,102 @@
+{
+    "IntRegisters": [
+        {
+            "symbolic_name": "Zero",
+            "value": "00000000000000000000000000000000",
+            "read_only": true
+        },
+        {
+            "symbolic_name": "ra"
+        },
+        {
+            "symbolic_name": "sp"
+        },
+        {
+            "symbolic_name": "gp"
+        },
+        {
+            "symbolic_name": "tp"
+        },
+        {
+            "symbolic_name": "t0"
+        },
+        {
+            "symbolic_name": "t1"
+        },
+        {
+            "symbolic_name": "t2"
+        },
+        {
+            "symbolic_name": "s0"
+        },
+        {
+            "symbolic_name": "s1"
+        },
+        {
+            "symbolic_name": "a0"
+        },
+        {
+            "symbolic_name": "a1"
+        },
+        {
+            "symbolic_name": "a2"
+        },
+        {
+            "symbolic_name": "a3"
+        },
+        {
+            "symbolic_name": "a4"
+        },
+        {
+            "symbolic_name": "a5"
+        },
+        {
+            "symbolic_name": "a6"
+        },
+        {
+            "symbolic_name": "a7"
+        },
+        {
+            "symbolic_name": "s2"
+        },
+        {
+            "symbolic_name": "s3"
+        },
+        {
+            "symbolic_name": "s4"
+        },
+        {
+            "symbolic_name": "s5"
+        },
+        {
+            "symbolic_name": "s6"
+        },
+        {
+            "symbolic_name": "s7"
+        },
+        {
+            "symbolic_name": "s8"
+        },
+        {
+            "symbolic_name": "s9"
+        },
+        {
+            "symbolic_name": "s10"
+        },
+        {
+            "symbolic_name": "s11"
+        },
+        {
+            "symbolic_name": "t3"
+        },
+        {
+            "symbolic_name": "t4"
+        },
+        {
+            "symbolic_name": "t5"
+        },
+        {
+            "symbolic_name": "t6"
+        }
+    ]
+}
