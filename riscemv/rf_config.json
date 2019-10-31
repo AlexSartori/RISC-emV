@@ -98,5 +98,106 @@
         {
             "symbolic_name": "t6"
         }
+    ],
+    "FPRegisters": [
+        {
+            "symbolic_name": "ft0"
+        },
+        {
+            "symbolic_name": "ft1"
+        },
+        {
+            "symbolic_name": "ft2"
+        },
+        {
+            "symbolic_name": "ft3"
+        },
+        {
+            "symbolic_name": "ft4"
+        },
+        {
+            "symbolic_name": "ft5"
+        },
+        {
+            "symbolic_name": "ft6"
+        },
+        {
+            "symbolic_name": "ft7"
+        },
+        {
+            "symbolic_name": "ft1"
+        },
+        {
+            "symbolic_name": "fs0"
+        },
+        {
+            "symbolic_name": "fs1"
+        },
+        {
+            "symbolic_name": "fa0"
+        },
+        {
+            "symbolic_name": "fa1"
+        },
+        {
+            "symbolic_name": "fa2"
+        },
+        {
+            "symbolic_name": "fa3"
+        },
+        {
+            "symbolic_name": "fa4"
+        },
+        {
+            "symbolic_name": "fa5"
+        },
+        {
+            "symbolic_name": "fa6"
+        },
+        {
+            "symbolic_name": "fa7"
+        },
+        {
+            "symbolic_name": "fs2"
+        },
+        {
+            "symbolic_name": "fs3"
+        },
+        {
+            "symbolic_name": "fs4"
+        },
+        {
+            "symbolic_name": "fs5"
+        },
+        {
+            "symbolic_name": "fs6"
+        },
+        {
+            "symbolic_name": "fs7"
+        },
+        {
+            "symbolic_name": "fs8"
+        },
+        {
+            "symbolic_name": "fs9"
+        },
+        {
+            "symbolic_name": "fs10"
+        },
+        {
+            "symbolic_name": "fs11"
+        },
+        {
+            "symbolic_name": "ft8"
+        },
+        {
+            "symbolic_name": "ft9"
+        },
+        {
+            "symbolic_name": "ft10"
+        },
+        {
+            "symbolic_name": "ft11"
+        }
     ]
 }

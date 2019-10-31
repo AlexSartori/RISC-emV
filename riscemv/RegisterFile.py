@@ -34,10 +34,14 @@ class RegisterFile:
         self.IR = Register('IR')
 
         self.IntRegisters = []
+        self.FPRegisters = []
 
         rf_config = json.load(open(os.path.join(os.path.dirname(__file__), "rf_config.json")))
         for int_reg in rf_config['IntRegisters']:
             self.IntRegisters.append(Register.parse(int_reg))
+
+        for fp_reg in rf_config['FPRegisters']:
+            self.FPRegisters.append(Register.parse(fp_reg))
 
 
     def readInt(self, reg_name):
@@ -47,4 +51,14 @@ class RegisterFile:
 
     def writeInt(self, reg_name, value):
         dec_name = int(reg_name, 2)
-        self.IntRegisters[dec_name].set_value(value)        
+        self.IntRegisters[dec_name].set_value(value)    
+        
+
+    def readFP(self, reg_name):
+        dec_name = int(reg_name, 2)
+        return self.FPRegisters[dec_name].get_value()
+
+
+    def writeFP(self, reg_name, value):
+        dec_name = int(reg_name, 2)
+        self.FPRegisters[dec_name].set_value(value)       
