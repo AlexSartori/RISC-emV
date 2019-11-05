@@ -3,7 +3,7 @@ from riscemv.instructions.Instruction import Instruction
 from riscemv.ProgramLoader import ProgramLoader
 
 
-class RInstruction(Instruction):
+class RType_Instruction(Instruction):
     def __init__(self, opcode, rd, funct3, rs1, rs2, funct7):
         self.opcode = opcode
         self.rd = rd
@@ -34,24 +34,24 @@ class RInstruction(Instruction):
 
 
     instruction_execution = {
-        "add": lambda rs1, rs2: 
+        "add": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) + int(rs2, 2)),
-        "sub": lambda rs1, rs2: 
+        "sub": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) - int(rs2, 2)),
-        "xor": lambda rs1, rs2: 
+        "xor": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) ^ int(rs2, 2)),
-        "or": lambda rs1, rs2: 
+        "or": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) | int(rs2, 2)),
-        "and": lambda rs1, rs2: 
+        "and": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) & int(rs2, 2)),
-        "sll": lambda rs1, rs2: 
+        "sll": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) << int(rs2, 2)),
-        "srl": lambda rs1, rs2: 
+        "srl": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) >> int(rs2, 2)),
-        "sra": lambda rs1, rs2: 
+        "sra": lambda rs1, rs2:
             "{:05b}".format(int(rs1, 2) >> int(rs2, 2)),
-        "slt": lambda rs1, rs2: 
+        "slt": lambda rs1, rs2:
             "{:05b}".format(1 if (int(rs1, 2) < int(rs2, 2)) else 0),
-        "sltu": lambda rs1, rs2: 
+        "sltu": lambda rs1, rs2:
             "{:05b}".format(1 if (int(rs1, 2) < int(rs2, 2)) else 0)
     }
