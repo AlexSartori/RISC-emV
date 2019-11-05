@@ -56,3 +56,11 @@ class ProgramLoader:
             raise SyntaxError("RISCemV: cannot process line \"" + l + "\"")
 
         return binary_instruction
+
+
+    def binary_to_instr_name(self, binary_instr, instr_type):
+        for instr_name, instr_code in self.rv32i[instr_type].items():
+            if binary_instr == instr_code:
+                return instr_name
+        
+        raise EnvironmentError("RISCemV: instruction not found! " + binary_instr)
