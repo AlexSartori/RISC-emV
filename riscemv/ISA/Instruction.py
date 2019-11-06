@@ -1,4 +1,4 @@
-import abc
+import abc # = abstract class
 
 
 class Instruction(abc.ABC):
@@ -7,6 +7,10 @@ class Instruction(abc.ABC):
     def parse(binary_code):
         pass
 
+
+    # @abc.abstractmethod
+    # def to_binary(self):
+    #     pass
 
     @abc.abstractmethod
     def execute(self):

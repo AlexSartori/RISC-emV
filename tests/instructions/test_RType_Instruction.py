@@ -1,4 +1,4 @@
-from riscemv.instructions.RInstruction import RInstruction
+from riscemv.ISA.ISA import ISA
 
 
 def test_add():
@@ -11,8 +11,8 @@ def test_add():
     instruction = instruction.replace("$rs2", rs2)
     exp = "11000" # 24
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_sub():
@@ -25,8 +25,8 @@ def test_sub():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00010" # 2
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_xor():
@@ -39,8 +39,8 @@ def test_xor():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00110"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_or():
@@ -53,8 +53,8 @@ def test_or():
     instruction = instruction.replace("$rs2", rs2)
     exp = "01111"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_and():
@@ -67,8 +67,8 @@ def test_and():
     instruction = instruction.replace("$rs2", rs2)
     exp = "01001"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_sll():
@@ -81,8 +81,8 @@ def test_sll():
     instruction = instruction.replace("$rs2", rs2)
     exp = "11010"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_srl():
@@ -95,8 +95,8 @@ def test_srl():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00110"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_sra():
@@ -109,8 +109,8 @@ def test_sra():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00110"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_slt():
@@ -123,8 +123,8 @@ def test_slt():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00000"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())
 
 
 def test_sltu():
@@ -137,5 +137,5 @@ def test_sltu():
     instruction = instruction.replace("$rs2", rs2)
     exp = "00000"
 
-    instr = RInstruction.parse(instruction)
-    assert exp == instr.execute()
+    instr = ISA().instruction_from_bin(instruction)
+    assert exp == '{:05b}'.format(instr.execute())

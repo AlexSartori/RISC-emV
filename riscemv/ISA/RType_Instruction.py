@@ -1,6 +1,5 @@
 import os, json
-from riscemv.instructions.Instruction import Instruction
-from riscemv.ProgramLoader import ProgramLoader
+from riscemv.ISA.Instruction import Instruction
 
 
 class RType_Instruction(Instruction):
@@ -12,10 +11,11 @@ class RType_Instruction(Instruction):
         self.rs2 = rs2
         self.funct7 = funct7
 
-        binary_instr = "{0}$rs2$rs1{1}$rd{2}".format(funct7, funct3, opcode)
-        #TODO: change to have dynamic XLEN
-        pl = ProgramLoader(32)
-        self.instruction_name = pl.binary_to_instr_name(binary_instr, "r-type")
+
+    # def to_binary(self):
+    #     return "{0}$rs2$rs1{1}$rd{2}".format(
+    #         self.funct7, self.funct3, self.opcode
+    #     )
 
 
     @staticmethod
@@ -26,32 +26,8 @@ class RType_Instruction(Instruction):
         funct3 = binary_code[17:20]
         rd = binary_code[20:25]
         opcode = binary_code[25:32]
-        return RInstruction(opcode, rd, funct3, rs1, rs2, funct7)
+        return RType_Instruction(opcode, rd, funct3, rs1, rs2, funct7)
 
 
     def execute(self):
-        return self.instruction_execution[self.instruction_name](self.rs1, self.rs2)
-
-
-    instruction_execution = {
-        "add": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) + int(rs2, 2)),
-        "sub": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) - int(rs2, 2)),
-        "xor": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) ^ int(rs2, 2)),
-        "or": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) | int(rs2, 2)),
-        "and": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) & int(rs2, 2)),
-        "sll": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) << int(rs2, 2)),
-        "srl": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) >> int(rs2, 2)),
-        "sra": lambda rs1, rs2:
-            "{:05b}".format(int(rs1, 2) >> int(rs2, 2)),
-        "slt": lambda rs1, rs2:
-            "{:05b}".format(1 if (int(rs1, 2) < int(rs2, 2)) else 0),
-        "sltu": lambda rs1, rs2:
-            "{:05b}".format(1 if (int(rs1, 2) < int(rs2, 2)) else 0)
-    }
+        raise NotImplementedError("The ISA configuration did not override this function")

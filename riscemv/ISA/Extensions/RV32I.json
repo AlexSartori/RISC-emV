@@ -1,0 +1,50 @@
+{
+    "r-type": {
+        "add": {
+            "funct3": "000",
+            "funct7": "0000000",
+            "exec": "rs + rt"
+        }, "sub": {
+            "funct3": "000",
+            "funct7": "0100000",
+            "exec": "rs - rt"
+        }, "sll": {
+            "funct3": "001",
+            "funct7": "0000000",
+            "exec": "rs << rt"
+        }, "slt": {
+            "funct3": "010",
+            "funct7": "0000000",
+            "exec": "1 if (rs < rt) else 0"
+        }, "sltu": {
+            "funct3": "011",
+            "funct7": "0000000",
+            "exec": "1 if (rs < rt) else 0"
+        }, "xor": {
+            "funct3": "100",
+            "funct7": "0000000",
+            "exec": "rs ^ rt"
+        }, "srl": {
+            "funct3": "101",
+            "funct7": "0000000",
+            "exec": "rs >> rt"
+        }, "sra": {
+            "funct3": "101",
+            "funct7": "0100000",
+            "exec": "rs >> rt"
+        }, "or": {
+            "funct3": "110",
+            "funct7": "0000000",
+            "exec": "rs | rt"
+        }, "and": {
+            "funct3": "111",
+            "funct7": "0000000",
+            "exec": "rs & rt"
+        }
+    },
+    "i-type": {},
+    "s-type": {},
+    "sb-type": {},
+    "u-type": {},
+    "uj-type": {}
+}
