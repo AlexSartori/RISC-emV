@@ -42,7 +42,81 @@
             "exec": "rs & rt"
         }
     },
-    "i-type": {},
+    "i-type": {
+        "addi": {
+            "opcode": "0010011",
+            "funct3": "000",
+            "exec": "rs + imm"
+        },
+        "xori": {
+            "opcode": "0010011",
+            "funct3": "100",
+            "exec": "rs ^ imm"
+        },
+        "ori": {
+            "opcode": "0010011",
+            "funct3": "110",
+            "exec": "rs | imm"
+        },
+        "andi": {
+            "opcode": "0010011",
+            "funct3": "111",
+            "exec": "rs & imm"
+        },
+        "slti": {
+            "opcode": "0010011",
+            "funct3": "010",
+            "exec": "1 if (rs < imm) else 0"
+        },
+        "sltiu": {
+            "opcode": "0010011",
+            "funct3": "011",
+            "exec": "1 if (rs < imm) else 0"
+        },
+        "slli": {
+            "opcode": "0010011",
+            "funct3": "001",
+            "imm": "0000000",
+            "exec": "rs << imm"
+        },
+        "srli": {
+            "opcode": "0010011",
+            "funct3": "101",
+            "imm": "0000000",
+            "exec": "rs >> imm"
+        },
+        "srai": {
+            "opcode": "0010011",
+            "funct3": "101",
+            "imm": "0100000",
+            "exec": "rs >> imm"
+        },
+        "lb": {
+            "opcode": "0000011",
+            "funct3": "000",
+            "exec": ""
+        },
+        "lh": {
+            "opcode": "0000011",
+            "funct3": "001",
+            "exec": ""
+        },
+        "lw": {
+            "opcode": "0000011",
+            "funct3": "010",
+            "exec": ""
+        },
+        "lbu": {
+            "opcode": "0000011",
+            "funct3": "100",
+            "exec": ""
+        },
+        "lhu": {
+            "opcode": "0000011",
+            "funct3": "101",
+            "exec": ""
+        }
+    },
     "s-type": {},
     "sb-type": {},
     "u-type": {},
