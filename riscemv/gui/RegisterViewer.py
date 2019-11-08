@@ -40,15 +40,23 @@ class RegisterViewer(QtWidgets.QFrame):
         format_chooser.layout().addWidget(fmt_hex)
         format_chooser.layout().addStretch(1)
 
-        self.rf_table = QtWidgets.QTableWidget()
-        self.rf_table.setColumnCount(32)
-        self.rf_table.setRowCount(1)
-        self.rf_table.verticalHeader().setVisible(False)
-        self.rf_table.setHorizontalHeaderLabels(["R" + str(r) for r in range(32)])
-        self.rf_table.setFont(QtGui.QFont('monospace', 10))
+        self.rf_int_table = QtWidgets.QTableWidget()
+        self.rf_int_table.setColumnCount(32 + 2)
+        self.rf_int_table.setRowCount(1)
+        self.rf_int_table.verticalHeader().setVisible(False)
+        self.rf_int_table.setHorizontalHeaderLabels(['PC', 'IR'] + ["X" + str(r) for r in range(32)])
+        self.rf_int_table.setFont(QtGui.QFont('monospace', 10))
+
+        self.rf_fp_table = QtWidgets.QTableWidget()
+        self.rf_fp_table.setColumnCount(32)
+        self.rf_fp_table.setRowCount(1)
+        self.rf_fp_table.verticalHeader().setVisible(False)
+        self.rf_fp_table.setHorizontalHeaderLabels(["FP" + str(r) for r in range(32)])
+        self.rf_fp_table.setFont(QtGui.QFont('monospace', 10))
 
         self.layout().addWidget(format_chooser)
-        self.layout().addWidget(self.rf_table)
+        self.layout().addWidget(self.rf_int_table)
+        self.layout().addWidget(self.rf_fp_table)
 
         self.load_contents()
 
@@ -66,25 +74,46 @@ class RegisterViewer(QtWidgets.QFrame):
 
 
     def load_contents(self):
-        for i, r in enumerate(self.RF.IntRegisters):
-            v = r.get_value()
+        def format_reg(r):
+            fmt_str = {
+                'BIN': '{:b}',
+                'DEC': '{:d}',
+                'HEX': '0x{:x}'
+            }
+            return '-' if r.get_value() is None else fmt_str[self.format].format(r.get_value())
 
-            if v is None:
-                v = '-'
-            elif self.format == "BIN":
-                v = '{:b}'.format(v)
-            elif self.format == "DEC":
-                v = '{:d}'.format(v)
-            else:
-                v = '0x{:x}'.format(v)
-
-            self.rf_table.setItem(0, i, QtWidgets.QTableWidgetItem(v))
-
-        # TODO: somehow imprecise height
-        self.rf_table.setMaximumHeight(
-            self.rf_table.horizontalHeader().height()
-            + self.rf_table.rowHeight(0)
-            + self.rf_table.horizontalScrollBar().height()
+        self.rf_int_table.setItem(0, 0,
+            QtWidgets.QTableWidgetItem(format_reg(self.RF.PC))
+        )
+        self.rf_int_table.setItem(0, 1,
+            QtWidgets.QTableWidgetItem(format_reg(self.RF.IR))
         )
 
-        self.rf_table.resizeColumnsToContents()
+        for i, r in enumerate(self.RF.IntRegisters):
+            self.rf_int_table.setItem(0, i + 2,
+                QtWidgets.QTableWidgetItem(format_reg(r))
+            )
+
+        for i, r in enumerate(self.RF.FPRegisters):
+            self.rf_fp_table.setItem(0, i,
+                QtWidgets.QTableWidgetItem(format_reg(r))
+            )
+
+        self.rf_int_table.resizeRowsToContents()
+        self.rf_int_table.setMaximumHeight(
+            self.rf_int_table.horizontalHeader().height()
+            + self.rf_int_table.rowHeight(0)
+            + self.rf_int_table.horizontalScrollBar().height()
+        )
+        self.rf_int_table.verticalHeader().setStretchLastSection(True)
+
+        self.rf_fp_table.resizeRowsToContents()
+        self.rf_fp_table.setMaximumHeight(
+            self.rf_fp_table.horizontalHeader().height()
+            + self.rf_fp_table.rowHeight(0)
+            + self.rf_fp_table.horizontalScrollBar().height()
+        )
+        self.rf_fp_table.verticalHeader().setStretchLastSection(True)
+
+        self.rf_int_table.resizeColumnsToContents()
+        self.rf_fp_table.resizeColumnsToContents()

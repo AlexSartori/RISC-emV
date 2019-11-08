@@ -77,7 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def openDocument(self):
         # options = QtWidgets.QFileDialog.Options()
         # options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*)") # TODO: only .s or ELF
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
         self.PL.load_assembly_code(open(filename).read())
         self.code_textbox.setText(
             '\n'.join([i[0] for i in self.PL.lines])
