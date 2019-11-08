@@ -21,8 +21,12 @@ class IType_Instruction(Instruction):
         return IType_Instruction(opcode, rd, funct3, rs, imm)
 
 
-    def execute(self):
-        raise NotImplementedError("The ISA configuration did not override this function")
+    def execute(self, rs_value):
+        code = self.execution_code
+        code = code.replace('rs', '0b'+str(rs_value))
+
+        fn = lambda: eval(code)
+        return fn()
 
 
     def is_load(self):
