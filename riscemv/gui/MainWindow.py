@@ -1,23 +1,36 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
+
+from riscemv.ProgramLoader import ProgramLoader
+from riscemv.RegisterFile import RegisterFile
+
 from riscemv.gui.CodeTextBox import CodeTextBox
 from riscemv.gui.InstBufferViewer import InstBufferViewer
 from riscemv.gui.RegisterViewer import RegisterViewer
 from riscemv.gui.RegStatusViewer import RegStatusViewer
 from riscemv.gui.ResStationsViewer import ResStationsViewer
 
-# TODO: divide components into classes
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, inst_buffer, reg_file, reg_status, res_stations):
         super(MainWindow, self).__init__()
         self.setWindowTitle("RISC-emV")
         self.setMinimumSize(self.sizeHint())
 
+        self.init_emulator_components(inst_buffer, reg_file, reg_status, res_stations)
+        self.initUI()
+        self.statusBar().showMessage("Ready")
+
+
+    def init_emulator_components(self, inst_buffer, reg_file, reg_status, res_stations):
+        self.PL = ProgramLoader(32)
+        self.RF = reg_file
+
+
+    def initUI(self):
         openAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open'), 'Open', self)
         startAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('media-playback-start'), 'Start', self)
         stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
         # startAction.setShortcut('Ctrl+R')
-        # startAction.triggered.connect(qApp.quit)
 
         openAction.triggered.connect(self.openDocument)
 
@@ -26,11 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar.addAction(startAction)
         self.toolbar.addAction(stepAction)
 
-        self.initUI()
-        self.statusBar().showMessage("Ready")
 
-
-    def initUI(self):
         self.central_split = QtWidgets.QSplitter()
         self.setCentralWidget(self.central_split)
 
@@ -47,7 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.code_pane.setStretchFactor(1, 1)
 
 
-        self.register_view = RegisterViewer()
+        self.register_view = RegisterViewer(self.RF)
         self.regstatus_view = RegStatusViewer()
         self.resstations_view = ResStationsViewer()
 
@@ -69,4 +78,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # options = QtWidgets.QFileDialog.Options()
         # options |= QtWidgets.QFileDialog.DontUseNativeDialog
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "All Files (*)") # TODO: only .s or ELF
-        self.code_textbox.setText(open(filename).read())
+        self.PL.load_assembly_code(open(filename).read())
+        self.code_textbox.setText(
+            '\n'.join([i[0] for i in self.PL.lines])
+        )
+        self.statusBar().showMessage("Document loaded.")

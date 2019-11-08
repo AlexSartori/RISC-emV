@@ -1,13 +1,13 @@
+import sys
 from PyQt5.QtWidgets import QApplication
 from riscemv.gui.MainWindow import MainWindow
-import sys
-
+from riscemv.RegisterFile import RegisterFile
 
 
 def launch():
     app = QApplication(sys.argv)
 
-    win = MainWindow()
+    win = MainWindow(None, RegisterFile(), None, None)
     win.showMaximized()
 
     sys.exit(app.exec_())

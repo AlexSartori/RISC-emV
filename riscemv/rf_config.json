@@ -2,7 +2,7 @@
     "IntRegisters": [
         {
             "symbolic_name": "Zero",
-            "value": "00000000000000000000000000000000",
+            "value": 0,
             "read_only": true
         },
         {

@@ -13,7 +13,7 @@ class Register:
         if 'value' in int_reg:
             value = int_reg['value']
             read_only = int_reg['read_only']
-        
+
         return Register(int_reg['symbolic_name'], value, read_only)
 
 
@@ -51,8 +51,8 @@ class RegisterFile:
 
     def writeInt(self, reg_name, value):
         dec_name = int(reg_name, 2)
-        self.IntRegisters[dec_name].set_value(value)    
-        
+        self.IntRegisters[dec_name].set_value(value)
+
 
     def readFP(self, reg_name):
         dec_name = int(reg_name, 2)
@@ -61,4 +61,9 @@ class RegisterFile:
 
     def writeFP(self, reg_name, value):
         dec_name = int(reg_name, 2)
-        self.FPRegisters[dec_name].set_value(value)       
+        self.FPRegisters[dec_name].set_value(value)
+
+
+    def __iter__(self):
+        yield iter(self.IntRegisters)
+        yield iter(self.FPRegisters)
