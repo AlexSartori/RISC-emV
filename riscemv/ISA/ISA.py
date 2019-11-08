@@ -39,7 +39,7 @@ class ISA:
             match = self.ISA['i-type'][line[0]]
             rd  = int(line[1][1:-1]) # Remove letter and comma
             rs = int(line[2][1:-1])
-            imm = int(line[3][1:])
+            imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
             inst.execute = lambda : eval(match['exec'].replace('rs', rs).replace('imm', imm))
@@ -50,13 +50,14 @@ class ISA:
 
     def instruction_from_bin(self, binary_code):
         opcode = binary_code[25:32]
+        print("OPCODE:", opcode)
 
         if opcode == "0110011": # r-type
             inst = RType_Instruction.parse(binary_code)
 
             for i in self.ISA['r-type'].values():
                 if i['funct7'] == inst.funct7 and i['funct3'] == inst.funct3:
-                    exec = i['exec'].replace('rs', '0b'+str(inst.rs1)).replace('rt', '0b'+str(inst.rs2))
+                    exec = i['exec'].replace('rs', str(inst.rs1)).replace('rt', str(inst.rs2))
                     inst.execute = lambda: eval(exec)
 
             return inst
@@ -67,7 +68,7 @@ class ISA:
                 if i['opcode'] == inst.opcode and i['funct3'] == inst.funct3:
                     if 'imm' in i and inst.imm[:5] != i['imm']:
                         continue
-                    exec = i['exec'].replace('rs', '0b'+str(inst.rs)).replace('imm', '0b'+str(inst.imm))
+                    exec = i['exec'].replace('rs', str(inst.rs)).replace('imm', str(inst.imm))
                     inst.execute = lambda: eval(exec)
 
             return inst

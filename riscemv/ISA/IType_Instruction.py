@@ -13,10 +13,10 @@ class IType_Instruction(Instruction):
 
     @staticmethod
     def parse(binary_code):
-        imm = binary_code[:12]
-        rs = binary_code[12:17]
+        imm = int(binary_code[:12], 2)
+        rs = int(binary_code[12:17], 2)
         funct3 = binary_code[17:20]
-        rd = binary_code[20:25]
+        rd = int(binary_code[20:25], 2)
         opcode = binary_code[25:32]
         return IType_Instruction(opcode, rd, funct3, rs, imm)
 

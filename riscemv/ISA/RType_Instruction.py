@@ -21,10 +21,10 @@ class RType_Instruction(Instruction):
     @staticmethod
     def parse(binary_code):
         funct7 = binary_code[:7]
-        rs2 = binary_code[7:12]
-        rs1 = binary_code[12:17]
+        rs2 = int(binary_code[7:12], 2)
+        rs1 = int(binary_code[12:17], 2)
         funct3 = binary_code[17:20]
-        rd = binary_code[20:25]
+        rd = int(binary_code[20:25], 2)
         opcode = binary_code[25:32]
         return RType_Instruction(opcode, rd, funct3, rs1, rs2, funct7)
 
