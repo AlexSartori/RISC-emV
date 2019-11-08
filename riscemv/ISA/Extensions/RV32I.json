@@ -117,7 +117,20 @@
             "exec": ""
         }
     },
-    "s-type": {},
+    "s-type": {
+        "sb": {
+            "funct3": "000",
+            "exec": ""
+        },
+        "sh": {
+            "funct3": "001",
+            "exec": ""
+        },
+        "sw": {
+            "funct3": "010",
+            "exec": ""
+        }
+    },
     "sb-type": {},
     "u-type": {},
     "uj-type": {}
