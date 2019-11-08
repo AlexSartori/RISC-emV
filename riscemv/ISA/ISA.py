@@ -75,9 +75,8 @@ class ISA:
 
             for i in self.ISA['i-type'].values():
                 if i['opcode'] == inst.opcode and i['funct3'] == inst.funct3:
-                    if 'imm' in i and inst.imm[:5] != i['imm']:
-                        continue
-                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+                    if ('imm' in i and inst.imm[:7] == i['imm']) or 'imm' not in i:
+                        inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
 
             return inst
         elif opcode == "0100011": # s-type
