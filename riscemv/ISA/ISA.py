@@ -1,6 +1,7 @@
 import os, json
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
+from riscemv.ISA.SType_Instruction import SType_Instruction
 
 
 # TODO: make static so it loads instructions only once
@@ -33,7 +34,7 @@ class ISA:
             rs2 = int(line[3][1:])
 
             inst = RType_Instruction("?", rd, match['funct3'], rs1, rs2, match['funct7'])
-            inst.execute = lambda : eval(match['exec'].replace('rs', rs1).replace('rt', rs2))
+            inst.execution_code = match['exec']
             return inst
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
@@ -42,7 +43,17 @@ class ISA:
             imm = int(line[3][1:])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
-            inst.execute = lambda : eval(match['exec'].replace('rs', rs).replace('imm', imm))
+            inst.execution_code = match['exec'].replace('imm', imm)
+            return inst
+        elif line[0] in self.ISA['s-type']:
+            match = self.ISA['s-type'][line[0]]
+            rs2  = int(line[1][1:-1]) # Remove letter and comma
+            rs1_parts = line[2][1:-1].split('(')
+            rs1 = int(rs1_parts[1])
+            imm = int(rs1_parts[0])
+
+            inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
+            inst.execution_code = match['exec'].replace('imm', imm)
             return inst
         else:
             raise NotImplementedError()
@@ -56,8 +67,7 @@ class ISA:
 
             for i in self.ISA['r-type'].values():
                 if i['funct7'] == inst.funct7 and i['funct3'] == inst.funct3:
-                    exec = i['exec'].replace('rs', '0b'+str(inst.rs1)).replace('rt', '0b'+str(inst.rs2))
-                    inst.execute = lambda: eval(exec)
+                    inst.execution_code = i['exec']
 
             return inst
         elif opcode in ["0010011", "0000011"]: # i-type
@@ -67,9 +77,16 @@ class ISA:
                 if i['opcode'] == inst.opcode and i['funct3'] == inst.funct3:
                     if 'imm' in i and inst.imm[:5] != i['imm']:
                         continue
-                    exec = i['exec'].replace('rs', '0b'+str(inst.rs)).replace('imm', '0b'+str(inst.imm))
-                    inst.execute = lambda: eval(exec)
+                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+
+            return inst
+        elif opcode == "0100011": # s-type
+            inst = SType_Instruction.parse(binary_code)
+
+            for i in self.ISA['s-type'].values():
+                if i['funct3'] == inst.funct3:
+                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
 
             return inst
         else:
-            raise NotImplementedError("Only r-type and i-type")
+            raise NotImplementedError("Only r-type, i-type and s-type")

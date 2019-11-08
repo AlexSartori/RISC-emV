@@ -8,6 +8,9 @@ class Instruction(abc.ABC):
         pass
 
 
+    execution_code = None # will be modified on loading
+
+
     # @abc.abstractmethod
     # def to_binary(self):
     #     pass

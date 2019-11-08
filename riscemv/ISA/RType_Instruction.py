@@ -29,5 +29,10 @@ class RType_Instruction(Instruction):
         return RType_Instruction(opcode, rd, funct3, rs1, rs2, funct7)
 
 
-    def execute(self):
-        raise NotImplementedError("The ISA configuration did not override this function")
+    def execute(self, rs1_value, rs2_value):
+        code = self.execution_code
+        code = code.replace('rs', '0b'+str(rs1_value))
+        code = code.replace('rt', '0b'+str(rs2_value))
+
+        fn = lambda: eval(code)
+        return fn()
