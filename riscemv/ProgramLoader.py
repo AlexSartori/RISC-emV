@@ -14,7 +14,7 @@ class ProgramLoader:
         with open(filename, 'rb') as f:
             binary_instruction = f.read(self.XLEN/8)
             bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
-            self.lines.append(self.ISA.instruction_from_bin(bits_instruction))
+            self.lines.append((bits_instruction, self.ISA.instruction_from_bin(bits_instruction)))
 
             # 6 types of instructions: R/I/S/SB/U/UJ
             #   - R-Format:  3 register inputs (add, xor, mul)
@@ -31,7 +31,7 @@ class ProgramLoader:
         for line in listing.split('\n'):
             if line.strip() != '':
                 inst = self.ISA.instruction_from_str(line)
-                self.lines.append(inst)
+                self.lines.append((line, inst))
 
 
     # def asm_to_binary(self, l):
