@@ -17,7 +17,7 @@ class InstBufferViewer(QtWidgets.QFrame):
             ['Instruction', 'Issue', 'Execute', 'Write Result']
         )
         ib_table.setRowCount(8)
-        self.ib_table = ib_table
+        ib_table.setFont(QtGui.QFont('monospace', 10))
 
         print("WARN: Instruction buffer has hardcoded size at <InstBUfferViewer.__init__>")
         for r in range(8):

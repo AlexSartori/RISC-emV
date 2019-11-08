@@ -18,6 +18,7 @@ class ResStationsViewer(QtWidgets.QFrame):
             ['Tag', 'Busy', 'Op', 'Vj', 'Vk', 'Qj', 'Qk', 'A']
         )
         rs_table.horizontalHeader().setStretchLastSection(True) # setResizeMode(QtWidgets.QTableWidget.QHeaderView.Stretch)
+        rs_table.setFont(QtGui.QFont('monospace', 10))
 
         print("WARN: Reservation Stations number has been hardcoded at <MainWindow.create_resstations_view>")
         for r in range(5):

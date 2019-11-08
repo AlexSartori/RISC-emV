@@ -17,10 +17,14 @@ class RegisterViewer(QtWidgets.QFrame):
         fmt_label.setText("Display:")
         fmt_binary = QtWidgets.QPushButton()
         fmt_binary.setText("BIN")
+        fmt_binary.setStyleSheet("QPushButton { padding: 1px 5px; }")
+        fmt_binary.setDown(True)
         fmt_decimal = QtWidgets.QPushButton()
         fmt_decimal.setText("DEC")
+        fmt_decimal.setStyleSheet("QPushButton { padding: 1px 5px; }")
         fmt_hex = QtWidgets.QPushButton()
         fmt_hex.setText("HEX")
+        fmt_hex.setStyleSheet("QPushButton { padding: 1px 5px; }")
 
         format_chooser.layout().addWidget(fmt_label)
         format_chooser.layout().addWidget(fmt_binary)
@@ -33,6 +37,7 @@ class RegisterViewer(QtWidgets.QFrame):
         rf_table.setRowCount(1)
         rf_table.verticalHeader().setVisible(False)
         rf_table.setHorizontalHeaderLabels(["R" + str(r) for r in range(32)])
+        rf_table.setFont(QtGui.QFont('monospace', 10))
 
         for r in range(32):
             rf_table.setItem(0, r, QtWidgets.QTableWidgetItem("0101001010"))
