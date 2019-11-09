@@ -45,25 +45,16 @@ class RegisterFile:
 
 
     def readInt(self, reg_name):
-        dec_name = int(reg_name, 2)
-        return self.IntRegisters[dec_name].get_value()
+        return self.IntRegisters[reg_name].get_value()
 
 
     def writeInt(self, reg_name, value):
-        dec_name = int(reg_name, 2)
-        self.IntRegisters[dec_name].set_value(value)
-
+        self.IntRegisters[reg_name].set_value(value)    
+        
 
     def readFP(self, reg_name):
-        dec_name = int(reg_name, 2)
-        return self.FPRegisters[dec_name].get_value()
+        return self.FPRegisters[reg_name].get_value()
 
 
     def writeFP(self, reg_name, value):
-        dec_name = int(reg_name, 2)
-        self.FPRegisters[dec_name].set_value(value)
-
-
-    def __iter__(self):
-        yield iter(self.IntRegisters)
-        yield iter(self.FPRegisters)
+        self.FPRegisters[reg_name].set_value(value)       
