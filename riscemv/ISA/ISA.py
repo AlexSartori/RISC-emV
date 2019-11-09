@@ -35,6 +35,8 @@ class ISA:
 
             inst = RType_Instruction("?", rd, match['funct3'], rs1, rs2, match['funct7'])
             inst.execution_code = match['exec']
+            inst.functional_unit = match['funcUnit']
+            inst.clock_needed = match['clockNeeded']
             return inst
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
@@ -43,7 +45,9 @@ class ISA:
             imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
-            inst.execution_code = match['exec'].replace('imm', imm)
+            inst.execution_code = match['exec'].replace('imm', str(imm))
+            inst.functional_unit = match['funcUnit']
+            inst.clock_needed = match['clockNeeded']
             return inst
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
@@ -53,7 +57,9 @@ class ISA:
             imm = int(rs1_parts[0])
 
             inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
-            inst.execution_code = match['exec'].replace('imm', imm)
+            inst.execution_code = match['exec'].replace('imm', str(imm))
+            inst.functional_unit = match['funcUnit']
+            inst.clock_needed = match['clockNeeded']
             return inst
         else:
             raise NotImplementedError()
@@ -69,6 +75,8 @@ class ISA:
             for i in self.ISA['r-type'].values():
                 if i['funct7'] == inst.funct7 and i['funct3'] == inst.funct3:
                     inst.execution_code = i['exec']
+                    inst.functional_unit = i['funcUnit']
+                    inst.clock_needed = i['clockNeeded']
 
             return inst
         elif opcode in ["0010011", "0000011"]: # i-type
@@ -76,8 +84,11 @@ class ISA:
 
             for i in self.ISA['i-type'].values():
                 if i['opcode'] == inst.opcode and i['funct3'] == inst.funct3:
-                    if ('imm' in i and inst.imm[:7] == i['imm']) or 'imm' not in i:
-                        inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+                    imm_bin = '{:032b}'.format(inst.imm)
+                    if ('imm' in i and imm_bin[:7] == i['imm']) or 'imm' not in i:
+                        inst.execution_code = i['exec'].replace('imm', '0b'+str(imm_bin))
+                        inst.functional_unit = i['funcUnit']
+                        inst.clock_needed = i['clockNeeded']
 
             return inst
         elif opcode == "0100011": # s-type
@@ -86,6 +97,8 @@ class ISA:
             for i in self.ISA['s-type'].values():
                 if i['funct3'] == inst.funct3:
                     inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+                    inst.functional_unit = i['funcUnit']
+                    inst.clock_needed = i['clockNeeded']
 
             return inst
         else:
