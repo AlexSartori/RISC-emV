@@ -9,6 +9,8 @@ class Instruction(abc.ABC):
 
 
     execution_code = None # will be modified on loading
+    functional_unit = None
+    clock_needed = None
 
 
     # @abc.abstractmethod

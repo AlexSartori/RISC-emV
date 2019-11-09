@@ -10,3 +10,10 @@ class RegisterStatus:
     
     def remove_status(self, register):
         del self.__reg_status[register]
+
+
+    def get_status(self, register):
+        if register not in self.__reg_status:
+            return 0 
+        else:
+            return self.__reg_status[register]
