@@ -1,7 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 from riscemv.ProgramLoader import ProgramLoader
-from riscemv.RegisterFile import RegisterFile
 
 from riscemv.gui.CodeTextBox import CodeTextBox
 from riscemv.gui.InstBufferViewer import InstBufferViewer
@@ -16,6 +15,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("RISC-emV")
         self.setMinimumSize(self.sizeHint())
 
+        self.emulator_instance = emulator_instance
         self.init_emulator_components(emulator_instance)
         self.initUI()
         self.statusBar().showMessage("Ready")
@@ -36,6 +36,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         openAction.setShortcut('Ctrl+O')
         openAction.triggered.connect(self.openDocument)
+
+        stepAction.triggered.connect(self.emulator_instance.step)
 
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.addAction(openAction)
@@ -88,7 +90,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         for l in self.PL.lines:
-            self.IFQ.put(l[0])
+            self.IFQ.put(l[1])
         self.instbuffer_view.load_contents()
 
         self.statusBar().showMessage("Document loaded.")

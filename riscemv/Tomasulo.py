@@ -3,19 +3,21 @@ from riscemv.RegisterFile import RegisterFile
 from riscemv.RegisterStatus import RegisterStatus
 from riscemv.ProgramLoader import ProgramLoader
 from riscemv.InstructionBuffer import InstructionBuffer
+from riscemv.DataMemory import DataMemory
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 import queue
 
 class Tomasulo:
-    def __init__(self, code_text, XLEN, adders_number, multipliers_number, dividers_number):
+    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number):
         self.__steps = 0
 
-        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number)
+        self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
-        self.IFQ = InstructionBuffer()
+        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number)
+        self.DM = DataMemory()
 
         # self.__load__(code_text, XLEN)
 
@@ -42,7 +44,7 @@ class Tomasulo:
     def issue(self):
         if self.IFQ.empty():
             return
-        instruction = self.IFQ.get()
+        instruction = self.IFQ.get().instruction
         is_load = isinstance(instruction, IType_Instruction) and instruction.is_load()
         is_store = isinstance(instruction, SType_Instruction)
 

@@ -1,4 +1,5 @@
 from riscemv.Tomasulo import Tomasulo
+from riscemv.ISA.ISA import ISA
 
 
 def test_tomasulo():
@@ -6,7 +7,9 @@ def test_tomasulo():
     n_adders = n_mult = n_div = 1
     code_text = "addi x10, x9, 12"
 
-    tomasulo = Tomasulo(code_text, xlen, n_adders, n_mult, n_div)
+    tomasulo = Tomasulo(xlen, n_adders, n_mult, n_div)
+    tomasulo.IFQ.put(ISA().instruction_from_str(code_text))
+
     reg_addr = 9
     tomasulo.Regs.writeInt(reg_addr, 0)
 
@@ -14,7 +17,7 @@ def test_tomasulo():
     assert tomasulo.issue_fu != None
     assert tomasulo.exec_fu == tomasulo.exec_res == None
 
-    tomasulo.step()    
+    tomasulo.step()
     assert tomasulo.issue_fu == None
     assert tomasulo.exec_fu != None
     assert tomasulo.exec_res != None
