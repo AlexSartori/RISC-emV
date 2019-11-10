@@ -1,4 +1,4 @@
-import os, json
+import os, json, re
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
@@ -26,6 +26,7 @@ class ISA:
 
     def instruction_from_str(self, line):
         line = [l.lower().strip() for l in line.split(' ')]
+        inst = None
 
         if line[0] in self.ISA['r-type']:
             match = self.ISA['r-type'][line[0]]
@@ -34,21 +35,27 @@ class ISA:
             rs2 = int(line[3][1:])
 
             inst = RType_Instruction("?", rd, match['funct3'], rs1, rs2, match['funct7'])
+            inst.string = ' '.join(line)
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            return inst
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
             rd  = int(line[1][1:-1]) # Remove letter and comma
-            rs = int(line[2][1:-1])
-            imm = int(line[3])
+
+            if match['opcode'] == "0000011": # Load instruction
+                _rexp = re.search('([0-9]{1,2})\([r|fp]([0-9]{1,2})\)', line[2])
+                imm = int(_rexp.group(1))
+                rs = int(_rexp.group(2))
+            else:
+                rs = int(line[2][1:-1])
+                imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
+            inst.string = ' '.join(line)
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            return inst
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
             rs2  = int(line[1][1:-1]) # Remove letter and comma
@@ -57,12 +64,14 @@ class ISA:
             imm = int(rs1_parts[0])
 
             inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
+            inst.string = ' '.join(line)
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            return inst
         else:
             raise NotImplementedError()
+
+        return inst
 
 
     def instruction_from_bin(self, binary_code):

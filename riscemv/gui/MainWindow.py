@@ -31,13 +31,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def initUI(self):
         openAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open'), 'Open', self)
-        startAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('media-playback-start'), 'Start', self)
-        stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
-
+        openAction.triggered.connect(self.open_document)
         openAction.setShortcut('Ctrl+O')
-        openAction.triggered.connect(self.openDocument)
 
-        stepAction.triggered.connect(self.emulator_instance.step)
+        startAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('media-playback-start'), 'Start', self)
+        startAction.triggered.connect(self.emulator_run)
+        startAction.setShortcut('Ctrl+R')
+
+        stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
+        stepAction.triggered.connect(self.emulator_step)
+        stepAction.setShortcut('Ctrl+Shift+R')
 
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.addAction(openAction)
@@ -62,8 +65,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.register_view = RegisterViewer(self.RF)
-        self.regstatus_view = RegStatusViewer()
-        self.resstations_view = ResStationsViewer()
+        self.regstatus_view = RegStatusViewer(self.RegStatus)
+        self.resstations_view = ResStationsViewer(self.ResStations)
 
         self.status_pane = QtWidgets.QFrame()
         self.status_pane.setLayout(QtWidgets.QVBoxLayout())
@@ -79,10 +82,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_split.setStretchFactor(1, 3)
 
 
-    def openDocument(self):
+    def open_document(self):
         # options = QtWidgets.QFileDialog.Options()
         # options |= QtWidgets.QFileDialog.DontUseNativeDialog
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
+        if not filename: return
         self.PL.load_assembly_code(open(filename).read())
 
         self.code_textbox.setText(
@@ -94,3 +98,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.instbuffer_view.load_contents()
 
         self.statusBar().showMessage("Document loaded.")
+
+
+    def emulator_step(self):
+        self.emulator_instance.step()
+        self.register_view.load_contents()
+        self.regstatus_view.load_contents()
+        self.instbuffer_view.load_contents()
+        self.resstations_view.load_contents()
+
+
+    def emulator_run(self):
+        while not self.emulator_instance.IFQ.empty():
+            self.emulator_instance.step()
+            self.register_view.load_contents()
+            self.regstatus_view.load_contents()
+            self.instbuffer_view.load_contents()
+            self.resstations_view.load_contents()

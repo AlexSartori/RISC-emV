@@ -12,8 +12,7 @@ class CodeTextBox(QtWidgets.QFrame):
 
         self.text_edit = QtWidgets.QTextEdit()
         self.text_edit.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
-        self.text_edit.setFont(QtGui.QFont('Monospace', 14))
-        self.text_edit.setText("ADD r4, r3, r5 ; RV32I addition\nSUB r5, r4 r12\nbla bla")
+        self.text_edit.setFont(QtGui.QFont('Monospace'))
 
         self.layout().addWidget(self.text_edit)
 

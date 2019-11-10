@@ -19,7 +19,7 @@ class InstBufferViewer(QtWidgets.QFrame):
             ['Instruction', 'Issue', 'Execute', 'Write Result']
         )
         self.ib_table.setRowCount(8)
-        self.ib_table.setFont(QtGui.QFont('monospace', 10))
+        self.ib_table.setFont(QtGui.QFont('monospace'))
         self.layout().addWidget(self.ib_table)
 
         self.load_contents()

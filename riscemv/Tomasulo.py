@@ -10,98 +10,95 @@ from riscemv.ISA.SType_Instruction import SType_Instruction
 import queue
 
 class Tomasulo:
-    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number):
+    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, storers_number):
         self.__steps = 0
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
-        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number)
+        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number, storers_number)
         self.DM = DataMemory()
-
-        # self.__load__(code_text, XLEN)
-
-        self.issue_fu = self.exec_fu = self.exec_res = None
-
-
-    # def __load__(self, code_text, XLEN):
-    #     self.IFQ = queue.Queue()
-    #
-    #     pl = ProgramLoader(XLEN)
-    #     pl.load_assembly_code(code_text)
-    #     for instr_code, instr in pl.lines:
-    #         self.IFQ.put(instr)
 
 
     def step(self):
         self.__steps += 1
+        print("[TOM] Performing step number", self.__steps)
 
-        self.write(self.exec_fu, self.exec_res)
-        self.exec_fu, self.exec_res = self.execute(self.issue_fu)
-        self.issue_fu = self.issue()
+        self.write()
+        self.execute()
+        self.issue()
 
 
     def issue(self):
         if self.IFQ.empty():
-            return
-        instruction = self.IFQ.get().instruction
-        is_load = isinstance(instruction, IType_Instruction) and instruction.is_load()
-        is_store = isinstance(instruction, SType_Instruction)
-
-        r = instruction.functional_unit
-
-        if is_load or is_store:
-
-            if is_load: # load
-                raise NotImplementedError()
-            else: # store
-                raise NotImplementedError()
+            print("[TOM] IFQ is empty")
         else:
-            if not self.RS.check_if_busy(r):
-                fu = self.RS.get_first_free(r)
+            ifq_entry = self.IFQ.get()
+            instruction = ifq_entry.instruction
+            print("[TOM] Issuing", instruction)
+            fu = self.RS.get_first_free(instruction.functional_unit)
+
+            if fu is None:
+                # TODO: instruction gets lost
+                print("All RS busy, stalling")
+            else:
                 fu.instruction = instruction
+                fu.time_remaining = instruction.clock_needed
+
                 if isinstance(instruction, RType_Instruction):
-                    if self.RegisterStat.get_status(instruction.rs1) != 0:
-                        fu.Qj = self.RegisterStat.get_status(instruction.rs1)
+                    if self.RegisterStat.get_int_status(instruction.rs1) is not None:
+                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs1)
                     else:
                         fu.Vj = self.Regs.readInt(instruction.rs1)
                         fu.Qj = 0
-                    if self.RegisterStat.get_status(instruction.rs2) != 0:
-                        fu.Qk = self.RegisterStat.get_status(instruction.rs2)
+                    if self.RegisterStat.get_int_status(instruction.rs2) is not None:
+                        fu.Qk = self.RegisterStat.get_int_status(instruction.rs2)
                     else:
                         fu.Vk = self.Regs.readInt(instruction.rs2)
                         fu.Qk = 0
                 elif isinstance(instruction, IType_Instruction):
-                    if self.RegisterStat.get_status(instruction.rs) != 0:
-                        fu.Qj = self.RegisterStat.get_status(instruction.rs)
+                    if self.RegisterStat.get_int_status(instruction.rs) is not None:
+                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs)
                     else:
                         fu.Vj = self.Regs.readInt(instruction.rs)
                         fu.Qj = 0
-                    fu.Vk = instruction.imm # store the immediate value
+                    fu.A = instruction.imm # store the immediate value
                     fu.Qk = 0
 
-                self.RegisterStat.add_status(instruction.rd, fu.name)
-                return fu
-
-        return None
+                print(fu.Vj, fu.Vk, fu.Qj, fu.Qk)
+                self.RegisterStat.add_int_status(instruction.rd, fu.name)
 
 
-    def execute(self, fu):
-        if fu is not None:
-            if fu.Qj == 0 and fu.Qk == 0:
-                if isinstance(fu.instruction, RType_Instruction):
-                    exec = fu.instruction.execute(fu.Vj, fu.Vk)
-                elif isinstance(fu.instruction, IType_Instruction):
-                    exec = fu.instruction.execute(fu.Vj)
-                return fu, exec
-        return None, None
+    def execute(self):
+        for fu in self.RS:
+            if fu.busy and fu.time_remaining > 0:
+                fu.time_remaining -= 1
+                print("[TOM.EX]", fu.name, fu.time_remaining)
+
+                if fu.time_remaining == 0:
+                    if isinstance(fu.instruction, RType_Instruction):
+                        fu.result = fu.instruction.execute(fu.Vj, fu.Vk)
+                    elif isinstance(fu.instruction, IType_Instruction):
+                        if fu.instruction.is_load():
+                            fu.A = fu.instruction.execute(fu.Vj)
+                            fu.result = self.DM.load(fu.A)
+                        else:
+                            fu.result = fu.instruction.execute(fu.Vj)
 
 
-    def write(self, fu, result):
-        if fu is not None and result is not None:
-            self.RegisterStat.remove_status(fu.instruction.rd)
-            self.Regs.writeInt(fu.instruction.rd, result)
+    def write(self):
+        for fu in self.RS:
+            if fu.busy and fu.time_remaining == 0:
+                self.RegisterStat.remove_int_status(fu.instruction.rd)
+                self.Regs.writeInt(fu.instruction.rd, fu.result)
 
-            self.RS.write_result(fu.name, result)
+                # Write result
+                for other_fu in self.RS:
+                    if other_fu.Qj == fu.name:
+                        other_fu.Vj = fu.result
+                        other_fu.Qj = 0
+                    elif other_fu.Qk == fu.name:
+                        other_fu.Vk = fu.result
+                        other_fu.Qk = 0
 
-            fu.clear()
+                fu.clear()

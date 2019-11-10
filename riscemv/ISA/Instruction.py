@@ -13,6 +13,12 @@ class Instruction(abc.ABC):
     clock_needed = None
 
 
+    def __str__(self):
+        if self.string is not None:
+            return self.string
+        else:
+            return self.execution_code
+
     # @abc.abstractmethod
     # def to_binary(self):
     #     pass

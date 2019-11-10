@@ -1,4 +1,4 @@
-add r3, r2, r1
-or r4, r5, r6
+lw r1, 8(r0)
+add r3, r0, r1
 
-sub r2, r3, r4
+addi r2, r3, 12

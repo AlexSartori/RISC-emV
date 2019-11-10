@@ -132,36 +132,36 @@
         "lb": {
             "opcode": "0000011",
             "funct3": "000",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "lh": {
             "opcode": "0000011",
             "funct3": "001",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "lw": {
             "opcode": "0000011",
             "funct3": "010",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "lbu": {
             "opcode": "0000011",
             "funct3": "100",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "lhu": {
             "opcode": "0000011",
             "funct3": "101",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "ld",
             "clockNeeded": 1
         }
     },

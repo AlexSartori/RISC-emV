@@ -45,7 +45,7 @@ class RegisterViewer(QtWidgets.QFrame):
         self.rf_int_table.setRowCount(1)
         self.rf_int_table.verticalHeader().setVisible(False)
         self.rf_int_table.setHorizontalHeaderLabels(['PC', 'IR'] + ["X" + str(r) for r in range(32)])
-        self.rf_int_table.setFont(QtGui.QFont('monospace', 10))
+        self.rf_int_table.setFont(QtGui.QFont('monospace'))
 
         self.rf_fp_table = QtWidgets.QTableWidget()
         self.rf_fp_table.setColumnCount(32)
