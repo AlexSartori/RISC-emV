@@ -11,27 +11,30 @@ from riscemv.gui.ResStationsViewer import ResStationsViewer
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, inst_buffer, reg_file, reg_status, res_stations):
+    def __init__(self, emulator_instance):
         super(MainWindow, self).__init__()
         self.setWindowTitle("RISC-emV")
         self.setMinimumSize(self.sizeHint())
 
-        self.init_emulator_components(inst_buffer, reg_file, reg_status, res_stations)
+        self.init_emulator_components(emulator_instance)
         self.initUI()
         self.statusBar().showMessage("Ready")
 
 
-    def init_emulator_components(self, inst_buffer, reg_file, reg_status, res_stations):
+    def init_emulator_components(self, emu):
         self.PL = ProgramLoader(32)
-        self.RF = reg_file
+        self.RF = emu.Regs
+        self.ResStations = emu.RS
+        self.RegStatus = emu.RegisterStat
+        self.IFQ = emu.IFQ
 
 
     def initUI(self):
         openAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open'), 'Open', self)
         startAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('media-playback-start'), 'Start', self)
         stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
-        # startAction.setShortcut('Ctrl+R')
 
+        openAction.setShortcut('Ctrl+O')
         openAction.triggered.connect(self.openDocument)
 
         self.toolbar = self.addToolBar('HomeToolbar')
@@ -45,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.code_textbox = CodeTextBox()
-        self.instbuffer_view = InstBufferViewer()
+        self.instbuffer_view = InstBufferViewer(self.IFQ)
 
         self.code_pane = QtWidgets.QSplitter()
         self.code_pane.setOrientation(QtCore.Qt.Vertical)
@@ -79,7 +82,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # options |= QtWidgets.QFileDialog.DontUseNativeDialog
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
         self.PL.load_assembly_code(open(filename).read())
+
         self.code_textbox.setText(
             '\n'.join([i[0] for i in self.PL.lines])
         )
+
+        for l in self.PL.lines:
+            self.IFQ.put(l[0])
+        self.instbuffer_view.load_contents()
+
         self.statusBar().showMessage("Document loaded.")

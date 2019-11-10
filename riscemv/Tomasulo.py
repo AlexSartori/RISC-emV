@@ -2,6 +2,7 @@ from riscemv.ReservationStations import ReservationStations
 from riscemv.RegisterFile import RegisterFile
 from riscemv.RegisterStatus import RegisterStatus
 from riscemv.ProgramLoader import ProgramLoader
+from riscemv.InstructionBuffer import InstructionBuffer
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
@@ -14,20 +15,21 @@ class Tomasulo:
         self.RS = ReservationStations(adders_number, multipliers_number, dividers_number)
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
+        self.IFQ = InstructionBuffer()
 
-        self.__load__(code_text, XLEN)
+        # self.__load__(code_text, XLEN)
 
         self.issue_fu = self.exec_fu = self.exec_res = None
 
-    
-    def __load__(self, code_text, XLEN):
-        self.IFQ = queue.Queue()
 
-        pl = ProgramLoader(XLEN)
-        pl.load_assembly_code(code_text)
-        for instr_code, instr in pl.lines:
-            self.IFQ.put(instr)
-        
+    # def __load__(self, code_text, XLEN):
+    #     self.IFQ = queue.Queue()
+    #
+    #     pl = ProgramLoader(XLEN)
+    #     pl.load_assembly_code(code_text)
+    #     for instr_code, instr in pl.lines:
+    #         self.IFQ.put(instr)
+
 
     def step(self):
         self.__steps += 1
@@ -45,13 +47,13 @@ class Tomasulo:
         is_store = isinstance(instruction, SType_Instruction)
 
         r = instruction.functional_unit
-        
+
         if is_load or is_store:
 
             if is_load: # load
                 raise NotImplementedError()
             else: # store
-                raise NotImplementedError()                
+                raise NotImplementedError()
         else:
             if not self.RS.check_if_busy(r):
                 fu = self.RS.get_first_free(r)
@@ -78,7 +80,7 @@ class Tomasulo:
 
                 self.RegisterStat.add_status(instruction.rd, fu.name)
                 return fu
-        
+
         return None
 
 
@@ -92,7 +94,7 @@ class Tomasulo:
                 return fu, exec
         return None, None
 
-    
+
     def write(self, fu, result):
         if fu is not None and result is not None:
             self.RegisterStat.remove_status(fu.instruction.rd)
