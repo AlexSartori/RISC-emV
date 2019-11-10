@@ -23,10 +23,9 @@ class IType_Instruction(Instruction):
 
     def execute(self, rs_value):
         code = self.execution_code
-        code = code.replace('rs', '0b'+str(rs_value))
+        code = code.replace('rs', str(rs_value))
 
-        fn = lambda: eval(code)
-        return fn()
+        return eval(code)
 
 
     def is_load(self):

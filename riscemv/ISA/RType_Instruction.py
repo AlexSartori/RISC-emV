@@ -31,8 +31,7 @@ class RType_Instruction(Instruction):
 
     def execute(self, rs1_value, rs2_value):
         code = self.execution_code
-        code = code.replace('rs', '0b'+str(rs1_value))
-        code = code.replace('rt', '0b'+str(rs2_value))
+        code = code.replace('rs', str(rs1_value))
+        code = code.replace('rt', str(rs2_value))
 
-        fn = lambda: eval(code)
-        return fn()
+        return eval(code)

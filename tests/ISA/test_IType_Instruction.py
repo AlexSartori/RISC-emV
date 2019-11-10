@@ -8,11 +8,11 @@ def test_addi():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001101" # 13
-    exp = "00000000000000000000000000011000" # 24
+    rs1 = 0b00000000000000000000000000001101 # 13
+    exp = 0b00000000000000000000000000011000 # 24
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_xori():
@@ -22,11 +22,11 @@ def test_xori():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001101" # 13
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_ori():
@@ -36,11 +36,11 @@ def test_ori():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001101" # 13
-    exp = "00000000000000000000000000001111"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    exp = 0b00000000000000000000000000001111
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_andi():
@@ -50,11 +50,11 @@ def test_andi():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001101" # 13
-    exp = "00000000000000000000000000001001"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    exp = 0b00000000000000000000000000001001
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_slli():
@@ -64,11 +64,11 @@ def test_slli():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001101" # 13
-    exp = "00000000000000000000000000011010"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    exp = 0b00000000000000000000000000011010
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_srli():
@@ -78,11 +78,11 @@ def test_srli():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001100" # 12
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_srai():
@@ -92,11 +92,11 @@ def test_srai():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001100" # 12
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_slti():
@@ -106,11 +106,11 @@ def test_slti():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001100" # 12
-    exp = "00000000000000000000000000000000"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    exp = 0b00000000000000000000000000000000
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)
 
 
 def test_sltui():
@@ -120,8 +120,8 @@ def test_sltui():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$imm", imm)
-    rs1 = "00000000000000000000000000001100" # 12
-    exp = "00000000000000000000000000000000"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    exp = 0b00000000000000000000000000000000
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1))
+    assert exp == instr.execute(rs1)

@@ -7,12 +7,12 @@ def test_add():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000001011" # 11
-    exp = "00000000000000000000000000011000" # 24
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000001011 # 11
+    exp = 0b00000000000000000000000000011000 # 24
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_sub():
@@ -21,12 +21,12 @@ def test_sub():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000001011" # 11
-    exp = "00000000000000000000000000000010" # 2
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000001011 # 11
+    exp = 0b00000000000000000000000000000010 # 2
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_xor():
@@ -35,12 +35,12 @@ def test_xor():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000001011" # 11
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000001011 # 11
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_or():
@@ -49,12 +49,12 @@ def test_or():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000001011" # 11
-    exp = "00000000000000000000000000001111"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000001011 # 11
+    exp = 0b00000000000000000000000000001111
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_and():
@@ -63,12 +63,12 @@ def test_and():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000001011" # 11
-    exp = "00000000000000000000000000001001"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000001011 # 11
+    exp = 0b00000000000000000000000000001001
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_sll():
@@ -77,12 +77,12 @@ def test_sll():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001101" # 13
-    rs2 = "00000000000000000000000000000001" # 1
-    exp = "00000000000000000000000000011010"
+    rs1 = 0b00000000000000000000000000001101 # 13
+    rs2 = 0b00000000000000000000000000000001 # 1
+    exp = 0b00000000000000000000000000011010
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_srl():
@@ -91,12 +91,12 @@ def test_srl():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001100" # 12
-    rs2 = "00000000000000000000000000000001" # 1
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    rs2 = 0b00000000000000000000000000000001 # 1
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_sra():
@@ -105,12 +105,12 @@ def test_sra():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001100" # 12
-    rs2 = "00000000000000000000000000000001" # 1
-    exp = "00000000000000000000000000000110"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    rs2 = 0b00000000000000000000000000000001 # 1
+    exp = 0b00000000000000000000000000000110
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_slt():
@@ -119,12 +119,12 @@ def test_slt():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001100" # 12
-    rs2 = "00000000000000000000000000000001" # 1
-    exp = "00000000000000000000000000000000"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    rs2 = 0b00000000000000000000000000000001 # 1
+    exp = 0b00000000000000000000000000000000
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
 
 
 def test_sltu():
@@ -133,9 +133,9 @@ def test_sltu():
     instruction = instruction.replace("$rd", rd)
     instruction = instruction.replace("$rs1", rd)
     instruction = instruction.replace("$rs2", rd)
-    rs1 = "00000000000000000000000000001100" # 12
-    rs2 = "00000000000000000000000000000001" # 1
-    exp = "00000000000000000000000000000000"
+    rs1 = 0b00000000000000000000000000001100 # 12
+    rs2 = 0b00000000000000000000000000000001 # 1
+    exp = 0b00000000000000000000000000000000
 
     instr = ISA().instruction_from_bin(instruction)
-    assert exp == '{:032b}'.format(instr.execute(rs1, rs2))
+    assert exp == instr.execute(rs1, rs2)
