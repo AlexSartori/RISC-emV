@@ -85,7 +85,7 @@ class Tomasulo:
 
     def execute(self):
         for fu in self.RS:
-            if fu.busy and fu.time_remaining > 0:
+            if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
                 fu.time_remaining -= 1
                 print("[TOM.EX]", fu.name, fu.time_remaining)
 

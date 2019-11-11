@@ -110,8 +110,4 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def emulator_run(self):
         while not self.emulator_instance.IFQ.empty():
-            self.emulator_instance.step()
-            self.register_view.load_contents()
-            self.regstatus_view.load_contents()
-            self.instbuffer_view.load_contents()
-            self.resstations_view.load_contents()
+            self.emulator_step()
