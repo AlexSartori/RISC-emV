@@ -35,6 +35,7 @@ class Tomasulo:
         else:
             ifq_entry = self.IFQ.get()
             instruction = ifq_entry.instruction
+            self.IFQ.set_instruction_issue(instruction.line_number, self.__steps)
             print("[TOM] Issuing", instruction)
             fu = self.RS.get_first_free(instruction.functional_unit)
 
@@ -86,6 +87,7 @@ class Tomasulo:
     def execute(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
+                self.IFQ.set_instruction_execute(fu.instruction.line_number, self.__steps)
                 fu.time_remaining -= 1
                 print("[TOM.EX]", fu.name, fu.time_remaining)
 
@@ -105,6 +107,7 @@ class Tomasulo:
     def write(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining == 0:
+                self.IFQ.set_instruction_write_result(fu.instruction.line_number, self.__steps)
                 if isinstance(fu.instruction, SType_Instruction):
                     self.DM.store(fu.A, fu.Vk)
                 else:

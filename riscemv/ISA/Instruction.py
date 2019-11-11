@@ -8,6 +8,8 @@ class Instruction(abc.ABC):
         pass
 
 
+    line_number = None
+
     execution_code = None # will be modified on loading
     functional_unit = None
     clock_needed = None

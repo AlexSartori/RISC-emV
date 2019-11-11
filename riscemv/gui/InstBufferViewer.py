@@ -25,11 +25,13 @@ class InstBufferViewer(QtWidgets.QFrame):
         self.load_contents()
 
 
-    def load_contents(self):
+    def load_contents(self):        
+        self.ib_table.setRowCount(len(self.IFQ.code_lines))
+
         for i, ifq_entry in enumerate(self.IFQ):
             self.ib_table.setItem(i, 0, QtWidgets.QTableWidgetItem(str(ifq_entry.instruction)))
-            self.ib_table.setItem(i, 1, QtWidgets.QTableWidgetItem(ifq_entry.issue))
-            self.ib_table.setItem(i, 2, QtWidgets.QTableWidgetItem(ifq_entry.execute))
-            self.ib_table.setItem(i, 3, QtWidgets.QTableWidgetItem(ifq_entry.write_result))
+            self.ib_table.setItem(i, 1, QtWidgets.QTableWidgetItem(str(ifq_entry.issue) if ifq_entry.issue is not None else ''))
+            self.ib_table.setItem(i, 2, QtWidgets.QTableWidgetItem(str(ifq_entry.execute) if ifq_entry.execute is not None else ''))
+            self.ib_table.setItem(i, 3, QtWidgets.QTableWidgetItem(str(ifq_entry.write_result) if ifq_entry.write_result is not None else ''))
 
         self.ib_table.resizeColumnsToContents()

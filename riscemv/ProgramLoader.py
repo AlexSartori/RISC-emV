@@ -11,10 +11,14 @@ class ProgramLoader:
     def load_machine_code(self, filename):
         self.lines = []
 
+        i = 0
         with open(filename, 'rb') as f:
             binary_instruction = f.read(self.XLEN/8)
             bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
-            self.lines.append((bits_instruction, self.ISA.instruction_from_bin(bits_instruction)))
+            instr = self.ISA.instruction_from_bin(bits_instruction)
+            instr.line_number = i
+            self.lines.append((bits_instruction, instr))
+            i += 1
 
             # 6 types of instructions: R/I/S/SB/U/UJ
             #   - R-Format:  3 register inputs (add, xor, mul)
@@ -28,10 +32,13 @@ class ProgramLoader:
     def load_assembly_code(self, listing):
         self.lines = []
 
+        i = 0
         for line in listing.split('\n'):
             if line.strip() != '':
                 inst = self.ISA.instruction_from_str(line)
+                inst.line_number = i
                 self.lines.append((line, inst))
+                i += 1
 
 
     # def asm_to_binary(self, l):
