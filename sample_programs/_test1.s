@@ -1,4 +1,4 @@
-lw r1, 8(r0)
-add r3, r0, r1
+lw x1, 8(x0)
+add x3, x0, x1
 
-addi r2, r3, 12
+addi x2, x3, 12

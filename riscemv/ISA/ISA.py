@@ -44,7 +44,7 @@ class ISA:
             rd  = int(line[1][1:-1]) # Remove letter and comma
 
             if match['opcode'] == "0000011": # Load instruction
-                _rexp = re.search('([0-9]{1,2})\([r|fp]([0-9]{1,2})\)', line[2])
+                _rexp = re.search(r'([0-9]{1,2})\([x|fp]([0-9]{1,2})\)', line[2])
                 imm = int(_rexp.group(1))
                 rs = int(_rexp.group(2))
             else:
@@ -59,8 +59,8 @@ class ISA:
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
             rs2  = int(line[1][1:-1]) # Remove letter and comma
-            rs1_parts = line[2][1:-1].split('(')
-            rs1 = int(rs1_parts[1])
+            rs1_parts = line[2][:-1].split('(')
+            rs1 = int(rs1_parts[1][1:]) # Remove letter
             imm = int(rs1_parts[0])
 
             inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
