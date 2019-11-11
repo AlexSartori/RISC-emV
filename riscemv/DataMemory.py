@@ -9,5 +9,4 @@ class DataMemory:
 
 
     def load(self, address):
-        return 3
         return self.__memory[address]

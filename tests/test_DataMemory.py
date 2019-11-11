@@ -6,7 +6,7 @@ def test_DM():
     DM = DataMemory()
 
     address = "0"
-    value = "01" * 16
+    value = 16
     DM.store(address, value)
 
     assert DM.load(address) == value
