@@ -64,9 +64,23 @@ class Tomasulo:
                         fu.Qj = 0
                     fu.A = instruction.imm # store the immediate value
                     fu.Qk = 0
+                elif isinstance(instruction, SType_Instruction):
+                    if self.RegisterStat.get_int_status(instruction.rs1) is not None:
+                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs1)
+                    else:
+                        fu.Vj = self.Regs.readInt(instruction.rs1)
+                        fu.Qj = 0
+                    fu.A = instruction.imm # store the immediate value
+                    fu.Qk = 0
+                    if self.RegisterStat.get_int_status(instruction.rs2) is not None:
+                        fu.Qk = self.RegisterStat.get_int_status(instruction.rs2)
+                    else:
+                        fu.Vk = self.Regs.readInt(instruction.rs2)
+                        fu.Qk = 0
 
                 print(fu.Vj, fu.Vk, fu.Qj, fu.Qk)
-                self.RegisterStat.add_int_status(instruction.rd, fu.name)
+                if not isinstance(instruction, SType_Instruction):
+                    self.RegisterStat.add_int_status(instruction.rd, fu.name)
 
 
     def execute(self):
@@ -80,25 +94,30 @@ class Tomasulo:
                         fu.result = fu.instruction.execute(fu.Vj, fu.Vk)
                     elif isinstance(fu.instruction, IType_Instruction):
                         if fu.instruction.is_load():
-                            fu.A = fu.instruction.execute(fu.Vj)
+                            fu.A = fu.instruction.execute(fu.Vj) # TODO: split in two cycles
                             fu.result = self.DM.load(fu.A)
                         else:
                             fu.result = fu.instruction.execute(fu.Vj)
+                    elif isinstance(fu.instruction, SType_Instruction):
+                        fu.A = fu.instruction.execute(fu.Vj)
 
 
     def write(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining == 0:
-                self.RegisterStat.remove_int_status(fu.instruction.rd)
-                self.Regs.writeInt(fu.instruction.rd, fu.result)
+                if isinstance(fu.instruction, SType_Instruction):
+                    self.DM.store(fu.A, fu.Vk)
+                else:
+                    self.RegisterStat.remove_int_status(fu.instruction.rd)
+                    self.Regs.writeInt(fu.instruction.rd, fu.result)
 
-                # Write result
-                for other_fu in self.RS:
-                    if other_fu.Qj == fu.name:
-                        other_fu.Vj = fu.result
-                        other_fu.Qj = 0
-                    elif other_fu.Qk == fu.name:
-                        other_fu.Vk = fu.result
-                        other_fu.Qk = 0
+                    # Write result
+                    for other_fu in self.RS:
+                        if other_fu.Qj == fu.name:
+                            other_fu.Vj = fu.result
+                            other_fu.Qj = 0
+                        elif other_fu.Qk == fu.name:
+                            other_fu.Vk = fu.result
+                            other_fu.Qk = 0
 
                 fu.clear()

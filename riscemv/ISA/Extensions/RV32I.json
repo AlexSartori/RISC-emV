@@ -168,20 +168,20 @@
     "s-type": {
         "sb": {
             "funct3": "000",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "st",
             "clockNeeded": 1
         },
         "sh": {
             "funct3": "001",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "st",
             "clockNeeded": 1
         },
         "sw": {
             "funct3": "010",
-            "exec": "",
-            "funcUnit": "add",
+            "exec": "rs+imm",
+            "funcUnit": "st",
             "clockNeeded": 1
         }
     },

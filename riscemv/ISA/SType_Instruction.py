@@ -14,14 +14,17 @@ class SType_Instruction(Instruction):
     @staticmethod
     def parse(binary_code):
         imm11 = binary_code[:7]
-        rs2 = binary_code[7:12]
-        rs1 = binary_code[12:17]
+        rs2 = int(binary_code[7:12], 2)
+        rs1 = int(binary_code[12:17], 2)
         funct3 = binary_code[17:20]
         imm4 = binary_code[20:25]
         opcode = binary_code[25:32]
-        imm = imm11 + imm4
+        imm = int(imm11 + imm4, 2)
         return SType_Instruction(opcode, imm, funct3, rs1, rs2)
 
 
-    def execute(self):
-        raise NotImplementedError()
+    def execute(self, rs_value):
+        code = self.execution_code
+        code = code.replace('rs', str(rs_value))
+
+        return eval(code)
