@@ -58,7 +58,59 @@ class RegisterViewer(QtWidgets.QFrame):
         self.layout().addWidget(self.rf_int_table)
         self.layout().addWidget(self.rf_fp_table)
 
+        self.rf_int_table.cellChanged.connect(self.int_reg_changed)
+        self.rf_fp_table.cellChanged.connect(self.fp_reg_changed)
         self.load_contents()
+
+
+    def int_reg_changed(self, row, col):
+        new_val = self.rf_int_table.item(row, col).text()
+        if new_val is None or new_val.strip() == '':
+            return
+
+        try:
+            if self.format == 'BIN':
+                new_val = int(new_val, 2)
+            elif self.format == 'DEC':
+                new_val = int(new_val, 10)
+            else:
+                new_val = int(new_val, 16)
+        except ValueError:
+            # TODO: Rollback edit
+            raise ValueError("Invalid string for register " + str(new_val))
+
+        if col == 0: # PC
+            self.RF.PC.set_value(new_val)
+        elif col == 1: # IR
+            self.RF.IR.set_value(new_val)
+        elif col == 2: # reg zero
+            pass
+        else:
+            self.RF.writeInt(col - 2, new_val)
+
+
+    def fp_reg_changed(self, row, col):
+        new_val = self.rf_fp_table.item(row, col).text()
+        if new_val is None or new_val.strip() == '':
+            return
+
+        # def float_to_bin(num): bin(struct.unpack('!I', struct.pack('!f', num))[0])[2:].zfill(32)
+
+        def bin_to_float(binary):
+            return
+
+        try:
+            if self.format == 'BIN':
+                new_val = struct.unpack('!f', struct.pack('!I', int(new_val, 2)))[0]
+            elif self.format == 'DEC':
+                new_val = float(new_val)
+            else:
+                new_val = struct.unpack('!f', new_val.decode('hex'))[0]
+        except ValueError:
+            # TODO: Rollback edit
+            raise ValueError("Invalid string for register " + new_val)
+
+        self.RF.writeFP(col, new_val)
 
 
     def change_format(self):
@@ -73,30 +125,40 @@ class RegisterViewer(QtWidgets.QFrame):
         self.load_contents()
 
 
-    def load_contents(self):
-        def format_reg(r):
-            fmt_str = {
-                'BIN': '{:b}',
-                'DEC': '{:d}',
-                'HEX': '0x{:x}'
-            }
-            return '-' if r.get_value() is None else fmt_str[self.format].format(r.get_value())
+    def format_reg(self, r, fp=False):
+        fmt_str_int = {
+            'BIN': '{:b}',
+            'DEC': '{:d}',
+            'HEX': '0x{:x}'
+        }
+        fmt_str_fp = {
+            'BIN': '{:b}',
+            'DEC': '{:f}',
+            'HEX': '0x{:x}'
+        }
 
+        if fp:
+            return '' if r.get_value() is None else fmt_str_fp[self.format].format(r.get_value())
+        else:
+            return '' if r.get_value() is None else fmt_str_int[self.format].format(r.get_value())
+
+
+    def load_contents(self):
         self.rf_int_table.setItem(0, 0,
-            QtWidgets.QTableWidgetItem(format_reg(self.RF.PC))
+            QtWidgets.QTableWidgetItem(self.format_reg(self.RF.PC))
         )
         self.rf_int_table.setItem(0, 1,
-            QtWidgets.QTableWidgetItem(format_reg(self.RF.IR))
+            QtWidgets.QTableWidgetItem(self.format_reg(self.RF.IR))
         )
 
         for i, r in enumerate(self.RF.IntRegisters):
             self.rf_int_table.setItem(0, i + 2,
-                QtWidgets.QTableWidgetItem(format_reg(r))
+                QtWidgets.QTableWidgetItem(self.format_reg(r))
             )
 
         for i, r in enumerate(self.RF.FPRegisters):
             self.rf_fp_table.setItem(0, i,
-                QtWidgets.QTableWidgetItem(format_reg(r))
+                QtWidgets.QTableWidgetItem(self.format_reg(r, fp=True))
             )
 
         self.rf_int_table.resizeRowsToContents()
