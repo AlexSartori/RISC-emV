@@ -33,4 +33,4 @@ class RegStatusViewer(QtWidgets.QFrame):
             + self.rs_table.horizontalScrollBar().height()
         )
 
-        # self.rs_table.resizeColumnsToContents()
+        self.rs_table.resizeColumnsToContents()

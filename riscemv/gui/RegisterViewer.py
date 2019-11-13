@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 from riscemv.RegisterFile import RegisterFile
+import struct
 
 
 class RegisterViewer(QtWidgets.QFrame):
@@ -96,19 +97,17 @@ class RegisterViewer(QtWidgets.QFrame):
 
         # def float_to_bin(num): bin(struct.unpack('!I', struct.pack('!f', num))[0])[2:].zfill(32)
 
-        def bin_to_float(binary):
-            return
-
         try:
             if self.format == 'BIN':
                 new_val = struct.unpack('!f', struct.pack('!I', int(new_val, 2)))[0]
             elif self.format == 'DEC':
                 new_val = float(new_val)
             else:
-                new_val = struct.unpack('!f', new_val.decode('hex'))[0]
+                # bytes.fromhex(...) throws exceptions for some inputs (eg: "0" but not "00")
+                new_val = struct.unpack('!f', bytes.fromhex(new_val[2:]))[0] # Remove '0x'
         except ValueError:
             # TODO: Rollback edit
-            raise ValueError("Invalid string for register " + new_val)
+            raise ValueError("Invalid string for register: " + new_val)
 
         self.RF.writeFP(col, new_val)
 
@@ -131,16 +130,18 @@ class RegisterViewer(QtWidgets.QFrame):
             'DEC': '{:d}',
             'HEX': '0x{:x}'
         }
-        fmt_str_fp = {
-            'BIN': '{:b}',
-            'DEC': '{:f}',
-            'HEX': '0x{:x}'
-        }
 
-        if fp:
-            return '' if r.get_value() is None else fmt_str_fp[self.format].format(r.get_value())
+        if r.get_value() is None:
+            return ''
+        elif not fp:
+            return fmt_str_int[self.format].format(r.get_value())
         else:
-            return '' if r.get_value() is None else fmt_str_int[self.format].format(r.get_value())
+            if self.format == 'BIN':
+                return '{:b}'.format(struct.unpack('!I', struct.pack('!f', r.get_value()))[0])
+            elif self.format == 'DEC':
+                return '{:f}'.format(r.get_value())
+            else:
+                return '0x{:x}'.format(struct.unpack('!I', struct.pack('!f', r.get_value()))[0])
 
 
     def load_contents(self):

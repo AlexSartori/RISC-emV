@@ -109,5 +109,5 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def emulator_run(self):
-        while not self.emulator_instance.IFQ.empty():
+        while not self.emulator_instance.IFQ.empty(): # -> Wrong condition btw
             self.emulator_step()
