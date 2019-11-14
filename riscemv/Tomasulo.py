@@ -30,19 +30,22 @@ class Tomasulo:
 
 
     def issue(self):
-        if self.IFQ.empty():
+        pc = self.Regs.PC.get_value()
+
+        if self.IFQ.empty(pc):
             print("[TOM] IFQ is empty")
         else:
-            ifq_entry = self.IFQ.get()
+            ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
-            self.IFQ.set_instruction_issue(instruction.line_number, self.__steps)
+            self.IFQ.set_instruction_issue(pc, self.__steps)
             print("[TOM] Issuing", instruction)
             fu = self.RS.get_first_free(instruction.functional_unit)
 
             if fu is None:
-                # TODO: instruction gets lost
                 print("All RS busy, stalling")
             else:
+                pc += 4
+                self.Regs.PC.set_value(pc)
                 fu.instruction = instruction
                 fu.time_remaining = instruction.clock_needed
 
@@ -87,7 +90,7 @@ class Tomasulo:
     def execute(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
-                self.IFQ.set_instruction_execute(fu.instruction.line_number, self.__steps)
+                self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1
                 print("[TOM.EX]", fu.name, fu.time_remaining)
 
@@ -107,7 +110,7 @@ class Tomasulo:
     def write(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining == 0:
-                self.IFQ.set_instruction_write_result(fu.instruction.line_number, self.__steps)
+                self.IFQ.set_instruction_write_result(fu.instruction.program_counter, self.__steps)
                 if isinstance(fu.instruction, SType_Instruction):
                     self.DM.store(fu.A, fu.Vk)
                 else:

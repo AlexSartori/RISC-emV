@@ -8,7 +8,7 @@ class Instruction(abc.ABC):
         pass
 
 
-    line_number = None
+    program_counter = None
 
     execution_code = None # will be modified on loading
     functional_unit = None

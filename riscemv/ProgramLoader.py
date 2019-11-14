@@ -16,7 +16,7 @@ class ProgramLoader:
             binary_instruction = f.read(self.XLEN/8)
             bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
             instr = self.ISA.instruction_from_bin(bits_instruction)
-            instr.line_number = i
+            instr.program_counter = i * 4
             self.lines.append((bits_instruction, instr))
             i += 1
 
@@ -36,7 +36,7 @@ class ProgramLoader:
         for line in listing.split('\n'):
             if line.strip() != '':
                 inst = self.ISA.instruction_from_str(line)
-                inst.line_number = i
+                inst.program_counter = i * 4
                 self.lines.append((line, inst))
                 i += 1
 

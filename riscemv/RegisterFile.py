@@ -31,6 +31,7 @@ class Register:
 class RegisterFile:
     def __init__(self):
         self.PC = Register('PC')
+        self.PC.set_value(0)
         self.IR = Register('IR')
 
         self.IntRegisters = []
