@@ -53,7 +53,7 @@ class RegisterViewer(QtWidgets.QFrame):
         self.rf_fp_table.setRowCount(1)
         self.rf_fp_table.verticalHeader().setVisible(False)
         self.rf_fp_table.setHorizontalHeaderLabels(["FP" + str(r) for r in range(32)])
-        self.rf_fp_table.setFont(QtGui.QFont('monospace', 10))
+        self.rf_fp_table.setFont(QtGui.QFont('monospace'))
 
         self.layout().addWidget(format_chooser)
         self.layout().addWidget(self.rf_int_table)

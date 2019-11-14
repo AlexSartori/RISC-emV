@@ -90,3 +90,24 @@ class ReservationStations:
                 return fu
 
         return None # All busy
+
+
+    def set_adders_number(self, n):
+        # set variableand reinstantiate RSs
+        raise NotImplementedError()
+
+
+    def set_multipliers_number(self, n):
+        raise NotImplementedError()
+
+
+    def set_dividers_number(self, n):
+        raise NotImplementedError()
+
+
+    def set_loaders_number(self, n):
+        raise NotImplementedError()
+
+
+    def set_storers_number(self, n):
+        raise NotImplementedError()

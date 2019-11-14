@@ -8,6 +8,8 @@ from riscemv.gui.RegisterViewer import RegisterViewer
 from riscemv.gui.RegStatusViewer import RegStatusViewer
 from riscemv.gui.ResStationsViewer import ResStationsViewer
 
+from riscemv.gui.ConfWindow import ConfWindow
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, emulator_instance):
@@ -42,10 +44,16 @@ class MainWindow(QtWidgets.QMainWindow):
         stepAction.triggered.connect(self.emulator_step)
         stepAction.setShortcut('Ctrl+Shift+R')
 
+        confAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('preferences-system'), 'Configuration', self)
+        confAction.triggered.connect(self.open_conf_win)
+        confAction.setShortcut('Alt+C')
+
         self.toolbar = self.addToolBar('HomeToolbar')
+        self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon) # ToolButtonFollowStyle)
         self.toolbar.addAction(openAction)
         self.toolbar.addAction(startAction)
         self.toolbar.addAction(stepAction)
+        self.toolbar.addAction(confAction)
 
 
         self.central_split = QtWidgets.QSplitter()
@@ -111,3 +119,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def emulator_run(self):
         while not self.emulator_instance.IFQ.empty(): # -> Wrong condition btw
             self.emulator_step()
+
+
+    def open_conf_win(self):
+        ConfWindow(self).show()
+        print('fin')
