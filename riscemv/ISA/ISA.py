@@ -4,24 +4,31 @@ from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 
 
-# TODO: make static so it loads instructions only once
 class ISA:
-    def __init__(self):
-        self.ISA = {
-            "r-type":  {},
-            "i-type":  {},
-            "s-type":  {},
-            "sb-type": {},
-            "u-type":  {},
-            "uj-type": {}
-        }
+    ISA_singleton = None
 
-        # Load ISA
-        base_dir = os.path.join(os.path.dirname(__file__), "Extensions")
-        for ext_file in os.listdir(base_dir):
-            ext = json.load(open(os.path.join(base_dir, ext_file)))
-            for type in ext.keys():
-                self.ISA[type].update(ext[type])
+    def __init__(self):
+        if ISA.ISA_singleton is None:
+            print("Loading ISA...")
+            self.ISA = {
+                "r-type":  {},
+                "i-type":  {},
+                "s-type":  {},
+                "sb-type": {},
+                "u-type":  {},
+                "uj-type": {}
+            }
+
+            # Load ISA
+            base_dir = os.path.join(os.path.dirname(__file__), "Extensions")
+            for ext_file in os.listdir(base_dir):
+                ext = json.load(open(os.path.join(base_dir, ext_file)))
+                for type in ext.keys():
+                    self.ISA[type].update(ext[type])
+
+            ISA.ISA_singleton = self.ISA
+        else:
+            self.ISA = ISA.ISA_singleton
 
 
     def instruction_from_str(self, line):
