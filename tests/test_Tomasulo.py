@@ -1,4 +1,5 @@
 from riscemv.Tomasulo import Tomasulo
+from riscemv.ProgramLoader import ProgramLoader
 from riscemv.ISA.ISA import ISA
 
 
@@ -8,22 +9,19 @@ def test_tomasulo():
     code_text = "addi x10, x9, 12"
 
     tomasulo = Tomasulo(xlen, n_adders, n_mult, n_div, n_ld, n_st)
-    tomasulo.IFQ.put(ISA().instruction_from_str(code_text))
+    PL = ProgramLoader(xlen)
+    PL.load_assembly_code(code_text)
+    
+    for l in PL.lines:
+        tomasulo.IFQ.put(l[1])
 
     reg_addr = 9
     tomasulo.Regs.writeInt(reg_addr, 0)
 
     tomasulo.step()
-    # assert tomasulo.issue_fu != None
-    # assert tomasulo.exec_fu == tomasulo.exec_res == None
 
     tomasulo.step()
-    # assert tomasulo.issue_fu == None
-    # assert tomasulo.exec_fu != None
-    # assert tomasulo.exec_res != None
 
     tomasulo.step()
-    # assert tomasulo.issue_fu == None
-    # assert tomasulo.exec_fu == tomasulo.exec_res == None
 
     assert tomasulo.Regs.readInt(10) == 12
