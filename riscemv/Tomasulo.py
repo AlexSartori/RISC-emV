@@ -7,6 +7,7 @@ from riscemv.DataMemory import DataMemory
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
+from riscemv.ISA.BType_Instruction import BType_Instruction
 import queue
 
 class Tomasulo:
@@ -39,6 +40,17 @@ class Tomasulo:
             instruction = ifq_entry.instruction
             self.IFQ.set_instruction_issue(pc, self.__steps)
             print("[TOM] Issuing", instruction)
+
+            if isinstance(instruction, BType_Instruction):
+                if self.RegisterStat.get_int_status(instruction.rs1) is None and self.RegisterStat.get_int_status(instruction.rs2) is None:
+                    # can get value of registers
+                    rs1 = self.Regs.readInt(instruction.rs1)
+                    rs2 = self.Regs.readInt(instruction.rs2)
+
+                    pc += instruction.execute(rs1, rs2)
+                    self.Regs.PC.set_value(pc)
+                return
+
             fu = self.RS.get_first_free(instruction.functional_unit)
 
             if fu is None:
