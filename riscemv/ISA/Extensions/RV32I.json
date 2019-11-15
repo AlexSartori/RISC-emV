@@ -185,7 +185,44 @@
             "clockNeeded": 1
         }
     },
-    "sb-type": {},
+    "b-type": {
+        "beq": {
+            "funct3": "000",
+            "exec": "rs == rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "bne": {
+            "funct3": "001",
+            "exec": "rs != rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "blt": {
+            "funct3": "100",
+            "exec": "rs < rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "bge": {
+            "funct3": "101",
+            "exec": "rs <= rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "bltu": {
+            "funct3": "110",
+            "exec": "rs < rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "bgeu": {
+            "funct3": "111",
+            "exec": "rs >= rt",
+            "funcUnit": "",
+            "clockNeeded": 1
+        }
+    },
     "u-type": {},
     "uj-type": {}
 }
