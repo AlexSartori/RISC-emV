@@ -21,9 +21,9 @@ class Instruction(abc.ABC):
         else:
             return self.execution_code
 
-    # @abc.abstractmethod
-    # def to_binary(self):
-    #     pass
+    @abc.abstractmethod
+    def to_binary(self):
+        pass
 
     @abc.abstractmethod
     def execute(self):
