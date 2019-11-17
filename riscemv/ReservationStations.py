@@ -91,6 +91,13 @@ class ReservationStations:
 
         return None # All busy
 
+    
+    def all_empty(self):
+        for fu in self:
+            if fu.busy:
+                return False
+        return True
+
 
     def set_adders_number(self, n):
         # set variableand reinstantiate RSs

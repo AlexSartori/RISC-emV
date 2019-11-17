@@ -117,8 +117,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def emulator_run(self):
-        while not self.emulator_instance.IFQ.empty(): # -> Wrong condition btw
+        PC = self.emulator_instance.Regs.PC.get_value()
+        while not self.emulator_instance.IFQ.empty(PC) or not self.emulator_instance.RS.all_empty():
             self.emulator_step()
+            PC = self.emulator_instance.Regs.PC.get_value()
 
 
     def open_conf_win(self):
