@@ -223,6 +223,25 @@
             "clockNeeded": 1
         }
     },
-    "u-type": {},
-    "uj-type": {}
+    "u-type": {
+        "lui": {
+            "opcode": "0110111",
+            "exec": "imm << 12",
+            "funcUnit": "",
+            "clockNeeded": 1
+        },
+        "auipc": {
+            "opcode": "0010111",
+            "exec": "PC + (imm << 12)",
+            "funcUnit": "",
+            "clockNeeded": 1
+        }
+    },
+    "uj-type": {
+        "jal": {
+            "exec": "PC + 4",
+            "funcUnit": "",
+            "clockNeeded": 1
+        }
+    }
 }
