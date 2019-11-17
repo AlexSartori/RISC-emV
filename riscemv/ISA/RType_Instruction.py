@@ -12,10 +12,12 @@ class RType_Instruction(Instruction):
         self.funct7 = funct7
 
 
-    # def to_binary(self):
-    #     return "{0}$rs2$rs1{1}$rd{2}".format(
-    #         self.funct7, self.funct3, self.opcode
-    #     )
+    def to_binary(self):
+        return "{0}$rs2$rs1{1}$rd{2}".format(
+            self.funct7, self.funct3, self.opcode
+        ).replace("$rs2", "{:05b}".format(self.rs2)
+        ).replace("$rs1", "{:05b}".format(self.rs1)
+        ).replace("$rd", "{:05b}".format(self.rd))
 
 
     @staticmethod
