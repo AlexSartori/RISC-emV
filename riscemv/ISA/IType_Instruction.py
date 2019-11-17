@@ -11,6 +11,14 @@ class IType_Instruction(Instruction):
         self.imm = imm
 
 
+    def to_binary(self):
+        imm_bin = "{:05b}".format(self.imm)
+        return "{0}$rs{1}$rd{2}".format(
+            imm_bin, self.funct3, self.opcode
+        ).replace("$rs", "{:05b}".format(self.rs)
+        ).replace("$rd", "{:05b}".format(self.rd))
+
+
     @staticmethod
     def parse(binary_code):
         imm = int(binary_code[:12], 2)
