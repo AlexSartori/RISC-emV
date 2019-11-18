@@ -42,7 +42,7 @@ class ISA:
             rs1 = int(line[2][1:-1])
             rs2 = int(line[3][1:])
 
-            inst = RType_Instruction("?", rd, match['funct3'], rs1, rs2, match['funct7'])
+            inst = RType_Instruction("0110011", rd, match['funct3'], rs1, rs2, match['funct7'])
             inst.string = ' '.join(line)
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
