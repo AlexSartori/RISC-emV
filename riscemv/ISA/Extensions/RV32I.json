@@ -206,7 +206,7 @@
         },
         "bge": {
             "funct3": "101",
-            "exec": "rs <= rt",
+            "exec": "rs >= rt",
             "funcUnit": "",
             "clockNeeded": 1
         },
