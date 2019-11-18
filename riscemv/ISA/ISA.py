@@ -3,6 +3,7 @@ from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
+from riscemv.ISA.UType_Instruction import UType_Instruction
 
 
 class ISA:
@@ -87,6 +88,16 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+        elif line[0] in self.ISA['u-type']:
+            match = self.ISA['u-type'][line[0]]
+            rd = int(line[1][1:-1])
+            imm = int(line[2])
+
+            inst = UType_Instruction(match.opcode, rd, imm)
+            inst.string = ' '.join(line)
+            inst.execution_code = match['exec'].replace('imm', str(imm))
+            inst.functional_unit = match['funcUnit']
+            inst.clock_needed = match['clockNeeded']
         else:
             raise NotImplementedError()
 
@@ -139,5 +150,15 @@ class ISA:
                     inst.clock_needed = i['clockNeeded']
 
             return inst
+        elif opcode in ["0110111", "0010111"]: # u-type
+            inst = UType_Instruction.parse(binary_code)
+
+            for i in self.ISA['u-type'].values():
+                if i['opcode'] == inst.opcode:
+                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+                    inst.functional_unit = i['funcUnit']
+                    inst.clock_needed = i['clockNeeded']
+
+            return inst
         else:
-            raise NotImplementedError("Only r-type, i-type, s-type and b-type")
+            raise NotImplementedError("Only r-type, i-type, s-type, b-type and u-type")
