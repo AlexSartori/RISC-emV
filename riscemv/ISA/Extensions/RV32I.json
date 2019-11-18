@@ -169,19 +169,19 @@
         "sb": {
             "funct3": "000",
             "exec": "rs+imm",
-            "funcUnit": "st",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "sh": {
             "funct3": "001",
             "exec": "rs+imm",
-            "funcUnit": "st",
+            "funcUnit": "ld",
             "clockNeeded": 1
         },
         "sw": {
             "funct3": "010",
             "exec": "rs+imm",
-            "funcUnit": "st",
+            "funcUnit": "ld",
             "clockNeeded": 1
         }
     },
