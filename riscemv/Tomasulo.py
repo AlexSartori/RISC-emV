@@ -38,6 +38,7 @@ class Tomasulo:
         else:
             ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
+            self.Regs.IR.set_value(int(instruction.to_binary(), 2))
             self.IFQ.set_instruction_issue(pc, self.__steps)
             print("[TOM] Issuing", instruction)
 
