@@ -11,6 +11,16 @@ class SType_Instruction(Instruction):
         self.rs2 = rs2
 
 
+    def to_binary(self):
+        imm_bin = "{:012b}".format(self.imm)
+        imm11 = imm_bin[:7]
+        imm4 = imm_bin[7:]
+        return "{0}$rs2$rs1{1}{2}{3}".format(
+            imm11, self.funct3, imm4, self.opcode
+        ).replace("$rs1", "{:05b}".format(self.rs1)
+        ).replace("$rs2", "{:05b}".format(self.rs2))
+
+
     @staticmethod
     def parse(binary_code):
         imm11 = binary_code[:7]
