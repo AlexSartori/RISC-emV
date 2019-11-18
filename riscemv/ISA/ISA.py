@@ -96,7 +96,7 @@ class ISA:
 
             inst = UType_Instruction(match.opcode, rd, imm)
             inst.string = ' '.join(line)
-            inst.execution_code = match['exec'].replace('imm', str(imm))
+            inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
         elif line[0] in self.ISA['uj-type']:
@@ -166,7 +166,8 @@ class ISA:
 
             for i in self.ISA['u-type'].values():
                 if i['opcode'] == inst.opcode:
-                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
+                    imm_bin = "{:020b}".format(inst.imm)
+                    inst.execution_code = i['exec'].replace('imm', '0b' + str(imm_bin))
                     inst.functional_unit = i['funcUnit']
                     inst.clock_needed = i['clockNeeded']
 
