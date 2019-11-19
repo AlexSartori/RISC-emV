@@ -1,0 +1,60 @@
+{
+    "r-type": {
+        "mul": {
+            "funct3": "000",
+            "funct7": "0000001",
+            "exec": "rs * rt",
+            "funcUnit": "mult",
+            "clockNeeded": 1
+        },
+        "mulh": {
+            "funct3": "001",
+            "funct7": "0000001",
+            "exec": "rs * rt",
+            "funcUnit": "mult",
+            "clockNeeded": 1
+        },
+        "mulsu": {
+            "funct3": "010",
+            "funct7": "0000001",
+            "exec": "rs * rt",
+            "funcUnit": "mult",
+            "clockNeeded": 1
+        },
+        "mulu": {
+            "funct3": "011",
+            "funct7": "0000001",
+            "exec": "rs * rt",
+            "funcUnit": "mult",
+            "clockNeeded": 1
+        },
+        "div": {
+            "funct3": "100",
+            "funct7": "0000001",
+            "exec": "rs / rt",
+            "funcUnit": "div",
+            "clockNeeded": 1
+        },
+        "divu": {
+            "funct3": "101",
+            "funct7": "0000001",
+            "exec": "rs / rt",
+            "funcUnit": "div",
+            "clockNeeded": 1
+        },
+        "rem": {
+            "funct3": "110",
+            "funct7": "0000001",
+            "exec": "rs % rt",
+            "funcUnit": "div",
+            "clockNeeded": 1
+        },
+        "remu": {
+            "funct3": "111",
+            "funct7": "0000001",
+            "exec": "rs % rt",
+            "funcUnit": "div",
+            "clockNeeded": 1
+        }
+    }
+}
