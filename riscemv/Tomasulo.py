@@ -13,6 +13,7 @@ import queue
 class Tomasulo:
     def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, storers_number):
         self.__steps = 0
+        self.stall = False
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
@@ -35,6 +36,8 @@ class Tomasulo:
 
         if self.IFQ.empty(pc):
             print("[TOM] IFQ is empty")
+        elif self.stall:
+            print("[TOM] Stalling")
         else:
             ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
@@ -43,14 +46,7 @@ class Tomasulo:
             print("[TOM] Issuing", instruction)
 
             if isinstance(instruction, BType_Instruction):
-                if self.RegisterStat.get_int_status(instruction.rs1) is None and self.RegisterStat.get_int_status(instruction.rs2) is None:
-                    # can get value of registers
-                    rs1 = self.Regs.readInt(instruction.rs1)
-                    rs2 = self.Regs.readInt(instruction.rs2)
-
-                    pc += instruction.execute(rs1, rs2)
-                    self.Regs.PC.set_value(pc)
-                return
+                self.stall = True                
 
             fu = self.RS.get_first_free(instruction.functional_unit)
 
@@ -62,7 +58,7 @@ class Tomasulo:
                 fu.instruction = instruction
                 fu.time_remaining = instruction.clock_needed
 
-                if isinstance(instruction, RType_Instruction):
+                if isinstance(instruction, RType_Instruction) or isinstance(instruction, BType_Instruction):
                     if self.RegisterStat.get_int_status(instruction.rs1) is not None:
                         fu.Qj = self.RegisterStat.get_int_status(instruction.rs1)
                     else:
@@ -96,7 +92,7 @@ class Tomasulo:
                         fu.Qk = 0
 
                 print(fu.Vj, fu.Vk, fu.Qj, fu.Qk)
-                if not isinstance(instruction, SType_Instruction):
+                if not isinstance(instruction, SType_Instruction) and not isinstance(instruction, BType_Instruction):
                     self.RegisterStat.add_int_status(instruction.rd, fu.name)
 
 
@@ -118,6 +114,10 @@ class Tomasulo:
                             fu.result = fu.instruction.execute(fu.Vj)
                     elif isinstance(fu.instruction, SType_Instruction):
                         fu.A = fu.instruction.execute(fu.Vj)
+                    elif isinstance(fu.instruction, BType_Instruction):
+                        pc = self.Regs.PC.get_value() - 4
+                        pc += fu.instruction.execute(fu.Vj, fu.Vk)
+                        self.Regs.PC.set_value(pc)
 
 
     def write(self):
@@ -126,6 +126,8 @@ class Tomasulo:
                 self.IFQ.set_instruction_write_result(fu.instruction.program_counter, self.__steps)
                 if isinstance(fu.instruction, SType_Instruction):
                     self.DM.store(fu.A, fu.Vk)
+                elif isinstance(fu.instruction, BType_Instruction):
+                    self.stall = False
                 else:
                     self.RegisterStat.remove_int_status(fu.instruction.rd)
                     self.Regs.writeInt(fu.instruction.rd, fu.result)

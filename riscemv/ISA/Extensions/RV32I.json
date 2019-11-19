@@ -189,37 +189,37 @@
         "beq": {
             "funct3": "000",
             "exec": "rs == rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "bne": {
             "funct3": "001",
             "exec": "rs != rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "blt": {
             "funct3": "100",
             "exec": "rs < rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "bge": {
             "funct3": "101",
             "exec": "rs >= rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "bltu": {
             "funct3": "110",
             "exec": "rs < rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "bgeu": {
             "funct3": "111",
             "exec": "rs >= rt",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         }
     },
@@ -227,20 +227,20 @@
         "lui": {
             "opcode": "0110111",
             "exec": "imm << 12",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         },
         "auipc": {
             "opcode": "0010111",
             "exec": "PC + (imm << 12)",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         }
     },
     "uj-type": {
         "jal": {
             "exec": "PC + 4",
-            "funcUnit": "",
+            "funcUnit": "add",
             "clockNeeded": 1
         }
     }
