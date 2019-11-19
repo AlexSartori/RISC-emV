@@ -7,7 +7,7 @@ from riscemv.Tomasulo import Tomasulo
 def launch():
     app = QApplication(sys.argv)
 
-    emu = Tomasulo(32, 2, 2, 2, 2, 2)
+    emu = Tomasulo(32, 2, 2, 2, 2)
     win = MainWindow(emu)
     win.showMaximized()
 

@@ -14,12 +14,11 @@ class ReservationStation:
 
 
 class ReservationStations:
-    def __init__(self, adders_number, multipliers_number, dividers_number, loaders_number, storers_number):
+    def __init__(self, adders_number, multipliers_number, dividers_number, loaders_number):
         self.adders_number = adders_number
         self.multipliers_number = multipliers_number
         self.dividers_number = dividers_number
         self.loaders_number = loaders_number
-        self.storers_number = storers_number
 
         self.adders = []
         for i in range(self.adders_number):
@@ -37,18 +36,13 @@ class ReservationStations:
         for i in range(self.loaders_number):
             self.loaders.append(ReservationStation("LD" + str(i)))
 
-        self.storers = []
-        for i in range(self.storers_number):
-            self.storers.append(ReservationStation("ST" + str(i)))
-
 
     def __iter__(self):
         return iter(
             self.adders +
             self.multipliers +
             self.dividers +
-            self.loaders +
-            self.storers
+            self.loaders
         )
 
 
@@ -57,8 +51,7 @@ class ReservationStations:
             len(self.adders) +
             len(self.multipliers) +
             len(self.dividers) +
-            len(self.loaders) +
-            len(self.storers)
+            len(self.loaders)
         )
 
 
@@ -73,8 +66,6 @@ class ReservationStations:
             fu_type = self.dividers
         elif functional_unit == 'ld':
             fu_type = self.loaders
-        elif functional_unit == 'st':
-            fu_type = self.storers
         else:
             raise NotImplementedError("Unknown functional unit: " + functional_unit)
 

@@ -11,14 +11,14 @@ from riscemv.ISA.BType_Instruction import BType_Instruction
 import queue
 
 class Tomasulo:
-    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, storers_number):
+    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number):
         self.__steps = 0
         self.stall = False
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
-        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number, storers_number)
+        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number)
         self.DM = DataMemory()
 
 
