@@ -21,7 +21,7 @@ class ResStationsViewer(QtWidgets.QFrame):
         self.rs_table.setFont(QtGui.QFont('monospace'))
 
         self.layout().addWidget(self.rs_table)
-        self.setMinimumHeight(300)
+        # self.setMinimumHeight(300)
 
         self.load_contents()
 

@@ -3,7 +3,7 @@ from riscemv.DataMemory import DataMemory
 
 
 def test_DM():
-    DM = DataMemory()
+    DM = DataMemory(8)
 
     address = "0"
     value = 16

@@ -19,7 +19,7 @@ class Tomasulo:
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
         self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number)
-        self.DM = DataMemory()
+        self.DM = DataMemory(1*1024) # 1 Kb
 
 
     def step(self):
@@ -46,7 +46,7 @@ class Tomasulo:
             print("[TOM] Issuing", instruction)
 
             if isinstance(instruction, BType_Instruction):
-                self.stall = True                
+                self.stall = True
 
             fu = self.RS.get_first_free(instruction.functional_unit)
 

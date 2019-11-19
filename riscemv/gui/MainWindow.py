@@ -7,6 +7,7 @@ from riscemv.gui.InstBufferViewer import InstBufferViewer
 from riscemv.gui.RegisterViewer import RegisterViewer
 from riscemv.gui.RegStatusViewer import RegStatusViewer
 from riscemv.gui.ResStationsViewer import ResStationsViewer
+from riscemv.gui.DataMemoryViewer import DataMemoryViewer
 
 from riscemv.gui.ConfWindow import ConfWindow
 
@@ -29,6 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ResStations = emu.RS
         self.RegStatus = emu.RegisterStat
         self.IFQ = emu.IFQ
+        self.DM = emu.DM
 
 
     def initUI(self):
@@ -75,12 +77,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.register_view = RegisterViewer(self.RF)
         self.regstatus_view = RegStatusViewer(self.RegStatus)
         self.resstations_view = ResStationsViewer(self.ResStations)
+        self.datamemory_view = DataMemoryViewer(self.DM)
 
         self.status_pane = QtWidgets.QFrame()
         self.status_pane.setLayout(QtWidgets.QVBoxLayout())
         self.status_pane.layout().addWidget(self.register_view)
         self.status_pane.layout().addWidget(self.regstatus_view)
         self.status_pane.layout().addWidget(self.resstations_view)
+        self.status_pane.layout().addWidget(self.datamemory_view)
         self.status_pane.layout().addStretch(1)
 
 
@@ -114,6 +118,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.regstatus_view.load_contents()
         self.instbuffer_view.load_contents()
         self.resstations_view.load_contents()
+        self.datamemory_view.load_contents()
 
 
     def emulator_run(self):
