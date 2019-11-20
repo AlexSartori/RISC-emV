@@ -8,7 +8,7 @@ class DataMemory:
     def store(self, address, value):
         address = int(address)
         if address >= self.size:
-            raise Exception("Segmentation Fault: address is out of memory bounds")
+            raise MemoryError("Segmentation Fault: address is out of memory bounds")
         # TODO: elif len(bytes(value)) > 1:
         #     pass
         else:

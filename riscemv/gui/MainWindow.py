@@ -111,7 +111,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # options |= QtWidgets.QFileDialog.DontUseNativeDialog
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
         if not filename: return
-        self.PL.load_assembly_code(open(filename).read())
+
+        try:
+            self.PL.load_assembly_code(open(filename).read())
+        except SyntaxError as s:
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setText("File could not be opened because of a syntax error or unsupported instruction:")
+            msg.setInformativeText("\"{}\" at line {}".format(s.args[0], int(s.args[1])+1))
+            msg.setWindowTitle("Syntax Error")
+            msg.exec_()
 
         self.code_textbox.setText(
             '\n'.join([i[0] for i in self.PL.lines])

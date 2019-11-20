@@ -35,7 +35,11 @@ class ProgramLoader:
         i = 0
         for line in listing.split('\n'):
             if line.strip() != '':
-                inst = self.ISA.instruction_from_str(line)
+                try:
+                    inst = self.ISA.instruction_from_str(line)
+                except:
+                    raise SyntaxError(line, str(i), '')
+
                 inst.program_counter = i * 4
                 self.lines.append((line, inst))
                 i += 1
