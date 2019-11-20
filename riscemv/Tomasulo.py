@@ -91,7 +91,6 @@ class Tomasulo:
                         fu.Vk = self.Regs.readInt(instruction.rs2)
                         fu.Qk = 0
 
-                print(fu.Vj, fu.Vk, fu.Qj, fu.Qk)
                 if not isinstance(instruction, SType_Instruction) and not isinstance(instruction, BType_Instruction):
                     self.RegisterStat.add_int_status(instruction.rd, fu.name)
 
@@ -101,7 +100,6 @@ class Tomasulo:
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
                 self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1
-                print("[TOM.EX]", fu.name, fu.time_remaining)
 
                 if fu.time_remaining == 0:
                     if isinstance(fu.instruction, RType_Instruction):
@@ -142,3 +140,10 @@ class Tomasulo:
                             other_fu.Qk = 0
 
                 fu.clear()
+
+
+    def is_halted(self):
+        return (
+            self.IFQ.empty(self.Regs.PC.get_value()) and
+            self.RS.all_empty()
+        )

@@ -43,7 +43,7 @@ class InstructionBuffer():
     def empty(self, pc):
         line_number = self.__pc_to_line_number__(pc)
         return line_number == len(self.code_lines)
-    
-    
+
+
     def __iter__(self):
         return iter(self.code_lines)

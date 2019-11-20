@@ -1,3 +1,4 @@
+from time import sleep
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 from riscemv.ProgramLoader import ProgramLoader
@@ -19,6 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setMinimumSize(self.sizeHint())
 
         self.emulator_instance = emulator_instance
+        self.emulation_delay = 500
         self.init_emulator_components(emulator_instance)
         self.initUI()
         self.statusBar().showMessage("Ready")
@@ -42,6 +44,15 @@ class MainWindow(QtWidgets.QMainWindow):
         startAction.triggered.connect(self.emulator_run)
         startAction.setShortcut('Ctrl+R')
 
+        delay_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        delay_slider.setFixedWidth(200)
+        delay_slider.setMinimum(0)
+        delay_slider.setMaximum(1000)
+        delay_slider.setTickInterval(50)
+        delay_slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        delay_slider.setValue(self.emulation_delay)
+        delay_slider.valueChanged.connect(self.set_emulation_delay)
+
         stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
         stepAction.triggered.connect(self.emulator_step)
         stepAction.setShortcut('Ctrl+Shift+R')
@@ -54,6 +65,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon) # ToolButtonFollowStyle)
         self.toolbar.addAction(openAction)
         self.toolbar.addAction(startAction)
+        self.toolbar.addWidget(delay_slider)
         self.toolbar.addAction(stepAction)
         self.toolbar.addAction(confAction)
 
@@ -122,12 +134,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def emulator_run(self):
-        PC = self.emulator_instance.Regs.PC.get_value()
-        while not self.emulator_instance.IFQ.empty(PC) or not self.emulator_instance.RS.all_empty():
-            self.emulator_step()
-            PC = self.emulator_instance.Regs.PC.get_value()
+        self.emulator_step()
+        if not self.emulator_instance.is_halted():
+            QtCore.QTimer.singleShot(self.emulation_delay, self.emulator_run)
 
 
     def open_conf_win(self):
         ConfWindow(self).show()
-        print('fin')
+
+
+    def set_emulation_delay(self, v):
+        self.emulation_delay = v
