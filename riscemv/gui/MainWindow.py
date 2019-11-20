@@ -121,16 +121,25 @@ class MainWindow(QtWidgets.QMainWindow):
             self.IFQ.put(l[1])
         self.instbuffer_view.load_contents()
 
+        # Reset emulator
+        self.RF.PC.set_value(0)
+
         self.statusBar().showMessage("Document loaded.")
 
 
     def emulator_step(self):
-        self.emulator_instance.step()
+        # Highlight line
+        self.code_textbox.highlight_line(self.RF.PC.get_value() // 4)
+
+        s = self.emulator_instance.step()
+        self.statusBar().showMessage("Performed step #" + str(s))
+
         self.register_view.load_contents()
         self.regstatus_view.load_contents()
         self.instbuffer_view.load_contents()
         self.resstations_view.load_contents()
         self.datamemory_view.load_contents()
+
 
 
     def emulator_run(self):
