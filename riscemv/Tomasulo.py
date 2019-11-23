@@ -1,14 +1,13 @@
 from riscemv.ReservationStations import ReservationStations
 from riscemv.RegisterFile import RegisterFile
 from riscemv.RegisterStatus import RegisterStatus
-from riscemv.ProgramLoader import ProgramLoader
 from riscemv.InstructionBuffer import InstructionBuffer
 from riscemv.DataMemory import DataMemory
+
 from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
-import queue
 
 class Tomasulo:
     def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number):

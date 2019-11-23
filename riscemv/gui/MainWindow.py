@@ -1,9 +1,9 @@
 from time import sleep
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-from riscemv.ProgramLoader import ProgramLoader
+from riscemv.Program import Program
 
-from riscemv.gui.CodeTextBox import CodeTextBox
+from riscemv.gui.CodeEditor import CodeEditor
 from riscemv.gui.InstBufferViewer import InstBufferViewer
 from riscemv.gui.RegisterViewer import RegisterViewer
 from riscemv.gui.RegStatusViewer import RegStatusViewer
@@ -27,7 +27,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def init_emulator_components(self, emu):
-        self.PL = ProgramLoader(32)
         self.RF = emu.Regs
         self.ResStations = emu.RS
         self.RegStatus = emu.RegisterStat
@@ -36,10 +35,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def initUI(self):
-        openAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('document-open'), 'Open', self)
-        openAction.triggered.connect(self.open_document)
-        openAction.setShortcut('Ctrl+O')
-
         startAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('media-playback-start'), 'Start', self)
         startAction.triggered.connect(self.emulator_run)
         startAction.setShortcut('Ctrl+R')
@@ -63,7 +58,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon) # ToolButtonFollowStyle)
-        self.toolbar.addAction(openAction)
         self.toolbar.addAction(startAction)
         self.toolbar.addWidget(delay_slider)
         self.toolbar.addAction(stepAction)
@@ -74,16 +68,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_split)
 
 
-        self.code_textbox = CodeTextBox()
+        self.code_textbox = CodeEditor(self.load_program)
         self.instbuffer_view = InstBufferViewer(self.IFQ)
 
-        self.code_pane = QtWidgets.QSplitter()
-        self.code_pane.setOrientation(QtCore.Qt.Vertical)
+        self.code_pane = QtWidgets.QTabWidget()
         self.code_pane.setMinimumWidth(250)
-        self.code_pane.addWidget(self.code_textbox)
-        self.code_pane.addWidget(self.instbuffer_view)
-        self.code_pane.setStretchFactor(0, 3)
-        self.code_pane.setStretchFactor(1, 1)
+        self.code_pane.addTab(self.code_textbox, "Code Editor")
+        self.code_pane.addTab(self.instbuffer_view, "Instruction Memory")
 
 
         self.register_view = RegisterViewer(self.RF)
@@ -106,40 +97,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_split.setStretchFactor(1, 3)
 
 
-    def open_document(self):
-        # options = QtWidgets.QFileDialog.Options()
-        # options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
-        if not filename: return
-
-        try:
-            self.PL.load_assembly_code(open(filename).read())
-        except SyntaxError as s:
-            msg = QtWidgets.QMessageBox()
-            msg.setIcon(QtWidgets.QMessageBox.Critical)
-            msg.setText("File could not be opened because of a syntax error or unsupported instruction:")
-            msg.setInformativeText("\"{}\" at line {}".format(s.args[0], int(s.args[1])+1))
-            msg.setWindowTitle("Syntax Error")
-            msg.exec_()
-
-        self.code_textbox.setText(
-            '\n'.join([i[0] for i in self.PL.lines])
-        )
-
-        for l in self.PL.lines:
-            self.IFQ.put(l[1])
+    def load_program(self, prog):
+        for inst in prog:
+            self.IFQ.put(inst)
         self.instbuffer_view.load_contents()
-
-        # Reset emulator
-        self.RF.PC.set_value(0)
-
-        self.statusBar().showMessage("Document loaded.")
 
 
     def emulator_step(self):
-        # Highlight line
-        self.code_textbox.highlight_line(self.RF.PC.get_value() // 4)
-
         s = self.emulator_instance.step()
         self.statusBar().showMessage("Performed step #" + str(s))
 
@@ -148,7 +112,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.instbuffer_view.load_contents()
         self.resstations_view.load_contents()
         self.datamemory_view.load_contents()
-
 
 
     def emulator_run(self):

@@ -1,6 +1,35 @@
 import json, os, re
 from riscemv.ISA.ISA import ISA
 
+
+class Program:
+    def __init__(self):
+        self.ISA = ISA()
+
+        self.syntax_errors = []
+        self.IM = [] # Instruction Memory
+
+
+    def load_text(self, text):
+        pc = 0
+        for l_n, line in enumerate(text.split('\n')):
+            line = line.split(';')[0]
+
+            if line.strip() != '':
+                try:
+                    inst = self.ISA.instruction_from_str(line)
+                    inst.program_counter = pc * 4
+                    self.IM.append(inst)
+                except:
+                    self.syntax_errors.append((l_n, line))
+
+                pc += 1
+
+
+    def __iter__(self):
+        return iter(self.IM)
+
+
 class ProgramLoader:
     def __init__(self, XLEN):
         self.XLEN = XLEN
@@ -34,6 +63,9 @@ class ProgramLoader:
 
         i = 0
         for line in listing.split('\n'):
+            line = line.split(';')[0]
+            inst = None
+
             if line.strip() != '':
                 try:
                     inst = self.ISA.instruction_from_str(line)
@@ -41,8 +73,9 @@ class ProgramLoader:
                     raise SyntaxError(line, str(i), '')
 
                 inst.program_counter = i * 4
-                self.lines.append((line, inst))
                 i += 1
+
+                self.lines.append((line, inst))
 
 
     # def asm_to_binary(self, l):

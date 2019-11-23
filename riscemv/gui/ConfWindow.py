@@ -1,9 +1,7 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-from riscemv.ProgramLoader import ProgramLoader
 from riscemv.ISA.ISA import ISA
 
-from riscemv.gui.CodeTextBox import CodeTextBox
 from riscemv.gui.InstBufferViewer import InstBufferViewer
 from riscemv.gui.RegisterViewer import RegisterViewer
 from riscemv.gui.RegStatusViewer import RegStatusViewer
