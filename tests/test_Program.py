@@ -1,5 +1,5 @@
 import os
-from riscemv.ProgramLoader import ProgramLoader
+from riscemv.Program import Program
 
 
 

@@ -30,52 +30,25 @@ class Program:
         return iter(self.IM)
 
 
-class ProgramLoader:
-    def __init__(self, XLEN):
-        self.XLEN = XLEN
-        self.ISA = ISA()
-        self.lines = []
-
-
-    def load_machine_code(self, filename):
-        self.lines = []
-
-        i = 0
-        with open(filename, 'rb') as f:
-            binary_instruction = f.read(self.XLEN/8)
-            bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
-            instr = self.ISA.instruction_from_bin(bits_instruction)
-            instr.program_counter = i * 4
-            self.lines.append((bits_instruction, instr))
-            i += 1
-
-            # 6 types of instructions: R/I/S/SB/U/UJ
-            #   - R-Format:  3 register inputs (add, xor, mul)
-            #   - I-Format:  immediates or loads (addi, lw, jalr, ...)
-            #   - S-Format:  store (sw, sb)
-            #   - SB-Format: branch instructions (beq, bge)
-            #   - U-Format:  upper immediates (?) (lui, auipc)
-            #   - UJ-Format: jumps (jal)
-
-
-    def load_assembly_code(self, listing):
-        self.lines = []
-
-        i = 0
-        for line in listing.split('\n'):
-            line = line.split(';')[0]
-            inst = None
-
-            if line.strip() != '':
-                try:
-                    inst = self.ISA.instruction_from_str(line)
-                except:
-                    raise SyntaxError(line, str(i), '')
-
-                inst.program_counter = i * 4
-                i += 1
-
-                self.lines.append((line, inst))
+    # def load_machine_code(self, filename):
+    #     self.lines = []
+    #
+    #     i = 0
+    #     with open(filename, 'rb') as f:
+    #         binary_instruction = f.read(self.XLEN/8)
+    #         bits_instruction = ("{:0" + str(self.XLEN) + "b}").format(binary_instruction)
+    #         instr = self.ISA.instruction_from_bin(bits_instruction)
+    #         instr.program_counter = i * 4
+    #         self.lines.append((bits_instruction, instr))
+    #         i += 1
+    #
+    #         # 6 types of instructions: R/I/S/SB/U/UJ
+    #         #   - R-Format:  3 register inputs (add, xor, mul)
+    #         #   - I-Format:  immediates or loads (addi, lw, jalr, ...)
+    #         #   - S-Format:  store (sw, sb)
+    #         #   - SB-Format: branch instructions (beq, bge)
+    #         #   - U-Format:  upper immediates (?) (lui, auipc)
+    #         #   - UJ-Format: jumps (jal)
 
 
     # def asm_to_binary(self, l):
