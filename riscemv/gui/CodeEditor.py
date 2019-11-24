@@ -80,7 +80,7 @@ class CodeEditor(QtWidgets.QFrame):
             msg.setText("One or more syntax errors or unsupported instructions were encountered:")
             msg.setInformativeText(
                 '\n'.join(
-                    ["\"{}\" at line {}".format(s.args[1]+1, s.args[0]) for s in p.syntax_errors]
+                    ["\"{}\" at line {}".format(s[1], s[0]+1) for s in p.syntax_errors]
                 )
             )
             msg.setWindowTitle("Error")

@@ -88,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.status_pane.layout().addWidget(self.regstatus_view)
         self.status_pane.layout().addWidget(self.resstations_view)
         self.status_pane.layout().addWidget(self.datamemory_view)
-        
+
 
         self.central_split.addWidget(self.code_pane)
         self.central_split.setStretchFactor(0, 1)
@@ -100,6 +100,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for inst in prog:
             self.IFQ.put(inst)
         self.instbuffer_view.load_contents()
+
+        self.RF.PC.set_value(prog.sections['.text'])
 
 
     def emulator_step(self):

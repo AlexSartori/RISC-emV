@@ -8,22 +8,35 @@ class Program:
 
         self.syntax_errors = []
         self.IM = [] # Instruction Memory
+        self.sections = { '.text': 0 }
+        self.symbol_table = {}
 
 
     def load_text(self, text):
         pc = 0
         for l_n, line in enumerate(text.split('\n')):
-            line = line.split(';')[0]
+            line = line.split(';')[0].strip()
 
-            if line.strip() != '':
-                try:
-                    inst = self.ISA.instruction_from_str(line)
-                    inst.program_counter = pc * 4
-                    self.IM.append(inst)
-                except:
-                    self.syntax_errors.append((l_n, line))
+            if line != '':
+                if re.match('\.[a-zA-Z0-9]+', line):
+                    # Section
+                    sec = re.match('\.[a-zA-Z0-9]+', line).group(0)
+                    self.sections[sec] = pc
+                elif re.match('[a-zA-Z0-9]+:', line):
+                    # Label
+                    label = re.match('[a-zA-Z0-9]+:', line).group(0)
+                    label = label[:-1] # Remove colon
+                    self.symbol_table[label] = pc
+                else:
+                    # Instruction
+                    try:
+                        inst = self.ISA.instruction_from_str(line, self.symbol_table)
+                        inst.program_counter = pc
+                        self.IM.append(inst)
+                    except:
+                        self.syntax_errors.append((l_n, line))
 
-                pc += 1
+                    pc += 4
 
 
     def __iter__(self):

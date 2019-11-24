@@ -12,7 +12,6 @@ class ISA:
 
     def __init__(self):
         if ISA.ISA_singleton is None:
-            print("Loading ISA...")
             self.ISA = {
                 "r-type":  {},
                 "i-type":  {},
@@ -34,7 +33,7 @@ class ISA:
             self.ISA = ISA.ISA_singleton
 
 
-    def instruction_from_str(self, line):
+    def instruction_from_str(self, line, symbol_table):
         line = [l.lower().strip() for l in line.split(' ')]
         inst = None
 
@@ -82,7 +81,11 @@ class ISA:
             match = self.ISA['b-type'][line[0]]
             rs2  = int(line[1][1:-1]) # Remove letter and comma
             rs1 = int(line[2][1:-1]) # Remove letter and comma
-            imm = int(line[3])
+
+            try:
+                imm = int(line[3])
+            except ValueError:
+                imm = symbol_table[line[3]]
 
             inst = BType_Instruction("1100011", imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)
