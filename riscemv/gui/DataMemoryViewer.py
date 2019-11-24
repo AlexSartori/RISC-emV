@@ -6,7 +6,6 @@ class DataMemoryViewer(QtWidgets.QFrame):
     def __init__(self, DM):
         super(DataMemoryViewer, self).__init__()
         self.setLayout(QtWidgets.QVBoxLayout())
-
         self.DM = DM
 
         title = QtWidgets.QLabel()
@@ -15,15 +14,18 @@ class DataMemoryViewer(QtWidgets.QFrame):
 
         sub_frame = QtWidgets.QFrame()
         sub_frame.setLayout(QtWidgets.QHBoxLayout())
+        sub_frame.layout().setContentsMargins(0, 0, 0, 0)
         self.layout().addWidget(sub_frame)
 
         self.hex_box = QtWidgets.QPlainTextEdit()
         self.hex_box.setFont(QtGui.QFont('monospace'))
         self.hex_box.setOverwriteMode(True)
+        self.hex_box.setMinimumWidth(210)
 
         self.ascii_box = QtWidgets.QPlainTextEdit()
         self.ascii_box.setFont(QtGui.QFont('monospace'))
         self.ascii_box.setOverwriteMode(True)
+        self.ascii_box.setMinimumWidth(70)
 
         # Hex.width() = 3*ASCII.width()    :   '00 ' -> 'c'
         sub_frame.layout().addWidget(self.hex_box, 3)

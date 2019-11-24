@@ -6,10 +6,12 @@ class RegStatusViewer(QtWidgets.QFrame):
         super(RegStatusViewer, self).__init__()
         self.RS = RS
         self.setLayout(QtWidgets.QVBoxLayout())
+        self.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
 
         title = QtWidgets.QLabel()
         title.setText("Registers Status Viewer:")
         self.layout().addWidget(title)
+
 
         self.rs_table = QtWidgets.QTableWidget()
         self.rs_table.setColumnCount(64)

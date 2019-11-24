@@ -88,8 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.status_pane.layout().addWidget(self.regstatus_view)
         self.status_pane.layout().addWidget(self.resstations_view)
         self.status_pane.layout().addWidget(self.datamemory_view)
-        self.status_pane.layout().addStretch(1)
-
+        
 
         self.central_split.addWidget(self.code_pane)
         self.central_split.setStretchFactor(0, 1)

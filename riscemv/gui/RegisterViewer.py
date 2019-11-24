@@ -7,9 +7,10 @@ class RegisterViewer(QtWidgets.QFrame):
     def __init__(self, RF):
         super(RegisterViewer, self).__init__()
         self.setLayout(QtWidgets.QVBoxLayout())
+        self.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
 
         self.RF = RF
-        self.format = 'DEC'
+        self.format = 'BIN'
 
         title = QtWidgets.QLabel()
         title.setText("Registers Viewer:")
@@ -22,11 +23,11 @@ class RegisterViewer(QtWidgets.QFrame):
         fmt_label.setText("Display:")
         fmt_bin = QtWidgets.QPushButton()
         fmt_bin.setText("BIN")
+        fmt_bin.setDown(True)
         fmt_bin.setStyleSheet("QPushButton { padding: 1px 5px; }")
         fmt_bin.clicked.connect(self.change_format)
         fmt_dec = QtWidgets.QPushButton()
         fmt_dec.setText("DEC")
-        fmt_dec.setDown(True)
         fmt_dec.setStyleSheet("QPushButton { padding: 1px 5px; }")
         fmt_dec.clicked.connect(self.change_format)
         fmt_hex = QtWidgets.QPushButton()
