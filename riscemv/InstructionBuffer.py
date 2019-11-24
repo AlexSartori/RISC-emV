@@ -47,3 +47,7 @@ class InstructionBuffer():
 
     def __iter__(self):
         return iter(self.code_lines)
+
+
+    def clear(self):
+        self.code_lines = []

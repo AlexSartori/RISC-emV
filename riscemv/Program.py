@@ -1,5 +1,6 @@
 import json, os, re
 from riscemv.ISA.ISA import ISA
+from riscemv.ISA.BType_Instruction import BType_Instruction
 
 
 class Program:
@@ -30,7 +31,7 @@ class Program:
                 else:
                     # Instruction
                     try:
-                        inst = self.ISA.instruction_from_str(line, self.symbol_table)
+                        inst = self.ISA.instruction_from_str(line, self.symbol_table, pc)
                         inst.program_counter = pc
                         self.IM.append(inst)
                     except:

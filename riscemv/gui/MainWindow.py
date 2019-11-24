@@ -97,6 +97,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def load_program(self, prog):
+        self.IFQ.clear()
+        
         for inst in prog:
             self.IFQ.put(inst)
         self.instbuffer_view.load_contents()

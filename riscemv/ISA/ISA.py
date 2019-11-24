@@ -33,7 +33,7 @@ class ISA:
             self.ISA = ISA.ISA_singleton
 
 
-    def instruction_from_str(self, line, symbol_table):
+    def instruction_from_str(self, line, symbol_table, pc):
         line = [l.lower().strip() for l in line.split(' ')]
         inst = None
 
@@ -82,10 +82,10 @@ class ISA:
             rs2  = int(line[1][1:-1]) # Remove letter and comma
             rs1 = int(line[2][1:-1]) # Remove letter and comma
 
-            try:
+            if line[3].isdigit():
                 imm = int(line[3])
-            except ValueError:
-                imm = symbol_table[line[3]]
+            else:
+                imm = symbol_table[line[3]] - pc
 
             inst = BType_Instruction("1100011", imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)

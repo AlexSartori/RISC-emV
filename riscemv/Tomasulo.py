@@ -25,9 +25,9 @@ class Tomasulo:
         self.__steps += 1
         print("[TOM] Performing step number", self.__steps)
 
-        self.write()
-        self.execute()
         self.issue()
+        self.execute()
+        self.write()
 
         return self.__steps
 
@@ -35,10 +35,10 @@ class Tomasulo:
     def issue(self):
         pc = self.Regs.PC.get_value()
 
-        if self.IFQ.empty(pc):
+        if self.stall:
+            print("[TOM] self.stall = True, not issuing anything")
+        elif self.IFQ.empty(pc):
             print("[TOM] IFQ is empty")
-        elif self.stall:
-            print("[TOM] Stalling")
         else:
             ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
@@ -52,12 +52,12 @@ class Tomasulo:
             fu = self.RS.get_first_free(instruction.functional_unit)
 
             if fu is None:
-                print("All RS busy, stalling")
+                print("No available Reservation Station, stalling")
             else:
                 pc += 4
                 self.Regs.PC.set_value(pc)
                 fu.instruction = instruction
-                fu.time_remaining = instruction.clock_needed
+                fu.time_remaining = instruction.clock_needed + 1
 
                 if isinstance(instruction, RType_Instruction) or isinstance(instruction, BType_Instruction):
                     if self.RegisterStat.get_int_status(instruction.rs1) is not None:
@@ -136,7 +136,7 @@ class Tomasulo:
                         if other_fu.Qj == fu.name:
                             other_fu.Vj = fu.result
                             other_fu.Qj = 0
-                        elif other_fu.Qk == fu.name:
+                        if other_fu.Qk == fu.name:
                             other_fu.Vk = fu.result
                             other_fu.Qk = 0
 
