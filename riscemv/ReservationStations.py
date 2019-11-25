@@ -15,26 +15,10 @@ class ReservationStation:
 
 class ReservationStations:
     def __init__(self, adders_number, multipliers_number, dividers_number, loaders_number):
-        self.adders_number = adders_number
-        self.multipliers_number = multipliers_number
-        self.dividers_number = dividers_number
-        self.loaders_number = loaders_number
-
-        self.adders = []
-        for i in range(self.adders_number):
-            self.adders.append(ReservationStation("ADD" + str(i)))
-
-        self.multipliers = []
-        for i in range(self.multipliers_number):
-            self.multipliers.append(ReservationStation("MULT" + str(i)))
-
-        self.dividers = []
-        for i in range(self.dividers_number):
-            self.dividers.append(ReservationStation("DIV" + str(i)))
-
-        self.loaders = []
-        for i in range(self.loaders_number):
-            self.loaders.append(ReservationStation("LD" + str(i)))
+        self.set_adders_number(adders_number)
+        self.set_multipliers_number(multipliers_number)
+        self.set_dividers_number(dividers_number)
+        self.set_loaders_number(loaders_number)
 
 
     def __iter__(self):
@@ -91,21 +75,32 @@ class ReservationStations:
 
 
     def set_adders_number(self, n):
-        # set variableand reinstantiate RSs
-        raise NotImplementedError()
+        self.adders_number = n
+
+        self.adders = []
+        for i in range(self.adders_number):
+            self.adders.append(ReservationStation("ADD" + str(i)))
 
 
-    def set_multipliers_number(self, n):
-        raise NotImplementedError()
+    def set_multipliers_number(self, n):        
+        self.multipliers_number = n
+
+        self.multipliers = []
+        for i in range(self.multipliers_number):
+            self.multipliers.append(ReservationStation("MULT" + str(i)))
 
 
     def set_dividers_number(self, n):
-        raise NotImplementedError()
+        self.dividers_number = n
+
+        self.dividers = []
+        for i in range(self.dividers_number):
+            self.dividers.append(ReservationStation("DIV" + str(i)))
 
 
     def set_loaders_number(self, n):
-        raise NotImplementedError()
+        self.loaders_number = n
 
-
-    def set_storers_number(self, n):
-        raise NotImplementedError()
+        self.loaders = []
+        for i in range(self.loaders_number):
+            self.loaders.append(ReservationStation("LD" + str(i)))
