@@ -59,12 +59,6 @@ class ConfWindow(QtWidgets.QDialog):
         loaders_num.valueChanged.connect(self.MW.ResStations.set_loaders_number)
         frame.layout().addRow("Number of loaders:", loaders_num)
 
-        storers_num = QtWidgets.QSpinBox()
-        storers_num.setMinimum(1)
-        storers_num.setValue(self.MW.ResStations.storers_number)
-        storers_num.valueChanged.connect(self.MW.ResStations.set_storers_number)
-        frame.layout().addRow("Number of storers:", storers_num)
-
         return frame
 
 
