@@ -104,6 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.instbuffer_view.load_contents()
 
         self.RF.PC.set_value(prog.sections['.text'])
+        self.emulator_instance.reset_steps()
 
 
     def emulator_step(self):

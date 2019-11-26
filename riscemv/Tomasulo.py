@@ -31,6 +31,10 @@ class Tomasulo:
 
         return self.__steps
 
+    
+    def reset_steps(self):
+        self.__steps = 0
+
 
     def issue(self):
         pc = self.Regs.PC.get_value()
