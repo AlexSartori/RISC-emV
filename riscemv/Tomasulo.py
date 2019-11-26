@@ -25,9 +25,9 @@ class Tomasulo:
         self.__steps += 1
         print("[TOM] Performing step number", self.__steps)
 
-        self.issue()
-        self.execute()
         self.write()
+        self.execute() # order is inverted to avoid skipping steps
+        self.issue()
 
         return self.__steps
 
@@ -57,7 +57,7 @@ class Tomasulo:
                 pc += 4
                 self.Regs.PC.set_value(pc)
                 fu.instruction = instruction
-                fu.time_remaining = instruction.clock_needed + 1
+                fu.time_remaining = instruction.clock_needed
 
                 if isinstance(instruction, RType_Instruction) or isinstance(instruction, BType_Instruction):
                     if self.RegisterStat.get_int_status(instruction.rs1) is not None:
@@ -99,7 +99,6 @@ class Tomasulo:
     def execute(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
-                print(fu.instruction, fu.time_remaining)
                 self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1
 
