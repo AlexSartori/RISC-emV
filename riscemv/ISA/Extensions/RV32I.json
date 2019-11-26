@@ -133,6 +133,7 @@
             "opcode": "0000011",
             "funct3": "000",
             "exec": "rs + imm",
+            "length": 8,
             "funcUnit": "ld",
             "clockNeeded": 1
         },
@@ -140,6 +141,7 @@
             "opcode": "0000011",
             "funct3": "001",
             "exec": "rs + imm",
+            "length": 16,
             "funcUnit": "ld",
             "clockNeeded": 1
         },
@@ -147,6 +149,7 @@
             "opcode": "0000011",
             "funct3": "010",
             "exec": "rs + imm",
+            "length": 32,
             "funcUnit": "ld",
             "clockNeeded": 1
         },
@@ -154,6 +157,7 @@
             "opcode": "0000011",
             "funct3": "100",
             "exec": "rs + imm",
+            "length": 8,
             "funcUnit": "ld",
             "clockNeeded": 1
         },
@@ -161,6 +165,7 @@
             "opcode": "0000011",
             "funct3": "101",
             "exec": "rs + imm",
+            "length": 16,
             "funcUnit": "ld",
             "clockNeeded": 1
         }

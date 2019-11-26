@@ -65,6 +65,9 @@ class ISA:
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+
+            if inst.is_load():
+                inst.length = match['length']
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
             rs2  = int(line[1][1:-1]) # Remove letter and comma
@@ -143,6 +146,8 @@ class ISA:
                         inst.execution_code = i['exec'].replace('imm', '0b'+str(imm_bin))
                         inst.functional_unit = i['funcUnit']
                         inst.clock_needed = i['clockNeeded']
+                        if inst.is_load():
+                            inst.length = i['length']
 
             return inst
         elif opcode == "0100011": # s-type

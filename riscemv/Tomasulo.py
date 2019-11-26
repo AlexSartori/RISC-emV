@@ -99,6 +99,7 @@ class Tomasulo:
     def execute(self):
         for fu in self.RS:
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
+                print(fu.instruction, fu.time_remaining)
                 self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1
 
@@ -108,7 +109,8 @@ class Tomasulo:
                     elif isinstance(fu.instruction, IType_Instruction):
                         if fu.instruction.is_load():
                             fu.A = fu.instruction.execute(fu.Vj) # TODO: split in two cycles
-                            fu.result = self.DM.load(fu.A)
+                            val = "{:032b}".format(self.DM.load(fu.A))
+                            fu.result = int(val[-fu.instruction.length:], 2)
                         else:
                             fu.result = fu.instruction.execute(fu.Vj)
                     elif isinstance(fu.instruction, SType_Instruction):
