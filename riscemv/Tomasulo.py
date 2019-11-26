@@ -102,12 +102,14 @@ class Tomasulo:
                 self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1
 
-                if fu.time_remaining == 0:
+                if fu.time_remaining == 1 and isinstance(fu.instruction, IType_Instruction):
+                    if fu.instruction.is_load():
+                        fu.A = fu.instruction.execute(fu.Vj) # load first clock cycle
+                elif fu.time_remaining == 0:
                     if isinstance(fu.instruction, RType_Instruction):
                         fu.result = fu.instruction.execute(fu.Vj, fu.Vk)
                     elif isinstance(fu.instruction, IType_Instruction):
-                        if fu.instruction.is_load():
-                            fu.A = fu.instruction.execute(fu.Vj) # TODO: split in two cycles
+                        if fu.instruction.is_load():  # load second clock cycle
                             val = "{:032b}".format(self.DM.load(fu.A))
                             fu.result = int(val[-fu.instruction.length:], 2)
                         else:

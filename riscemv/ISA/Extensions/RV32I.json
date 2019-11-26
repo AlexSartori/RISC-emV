@@ -135,7 +135,7 @@
             "exec": "rs + imm",
             "length": 8,
             "funcUnit": "ld",
-            "clockNeeded": 1
+            "clockNeeded": 2
         },
         "lh": {
             "opcode": "0000011",
@@ -143,7 +143,7 @@
             "exec": "rs + imm",
             "length": 16,
             "funcUnit": "ld",
-            "clockNeeded": 1
+            "clockNeeded": 2
         },
         "lw": {
             "opcode": "0000011",
@@ -151,7 +151,7 @@
             "exec": "rs + imm",
             "length": 32,
             "funcUnit": "ld",
-            "clockNeeded": 1
+            "clockNeeded": 2
         },
         "lbu": {
             "opcode": "0000011",
@@ -159,7 +159,7 @@
             "exec": "rs + imm",
             "length": 8,
             "funcUnit": "ld",
-            "clockNeeded": 1
+            "clockNeeded": 2
         },
         "lhu": {
             "opcode": "0000011",
@@ -167,7 +167,7 @@
             "exec": "rs + imm",
             "length": 16,
             "funcUnit": "ld",
-            "clockNeeded": 1
+            "clockNeeded": 2
         }
     },
     "s-type": {
