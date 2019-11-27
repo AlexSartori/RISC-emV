@@ -1,6 +1,5 @@
-import json, os, re
+import re
 from riscemv.ISA.ISA import ISA
-from riscemv.ISA.BType_Instruction import BType_Instruction
 
 
 class Program:
@@ -8,8 +7,8 @@ class Program:
         self.ISA = ISA()
 
         self.syntax_errors = []
-        self.IM = [] # Instruction Memory
-        self.sections = { '.text': 0 }
+        self.IM = []  # Instruction Memory
+        self.sections = {'.text': 0}
         self.symbol_table = {}
 
 

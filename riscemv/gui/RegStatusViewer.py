@@ -17,7 +17,10 @@ class RegStatusViewer(QtWidgets.QFrame):
         self.rs_table.setColumnCount(64)
         self.rs_table.setRowCount(1)
         self.rs_table.verticalHeader().setVisible(False)
-        self.rs_table.setHorizontalHeaderLabels(["X" + str(r) for r in range(32)]+["FP" + str(r) for r in range(32)])
+        self.rs_table.setHorizontalHeaderLabels(
+            ["X" + str(r) for r in range(32)]
+            + ["FP" + str(r) for r in range(32)]
+        )
         self.rs_table.setFont(QtGui.QFont('monospace'))
 
         self.layout().addWidget(self.rs_table)

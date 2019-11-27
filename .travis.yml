@@ -3,4 +3,5 @@ python:
     - "3.6"
 before_install:
   - pip install -e .
+  - pip install pytest pytest-qt
 script: pytest

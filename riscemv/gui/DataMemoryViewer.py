@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from riscemv.DataMemory import DataMemory
 
 
 class DataMemoryViewer(QtWidgets.QFrame):

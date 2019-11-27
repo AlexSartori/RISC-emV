@@ -4,7 +4,7 @@ from riscemv.ISA.ISA import ISA
 def test_r_instruction_from_string():
     instruction = "add r4, r3, r2"
 
-    res = ISA().instruction_from_str(instruction)
+    res = ISA().instruction_from_str(instruction, None, None)
     assert res.rd  == 4
     assert res.rs1 == 3
     assert res.rs2 == 2
@@ -22,7 +22,7 @@ def test_r_instruction_from_binary():
 def test_i_instruction_from_string():
     instruction = "addi r4, r3, 12"
 
-    res = ISA().instruction_from_str(instruction)
+    res = ISA().instruction_from_str(instruction, None, None)
     assert res.rd  == 4
     assert res.rs == 3
     assert res.imm == 12

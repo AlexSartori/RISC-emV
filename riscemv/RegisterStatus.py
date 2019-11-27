@@ -15,7 +15,7 @@ class RegisterStatus:
 
     def remove_int_status(self, register):
         # if 'register' not in '__reg_status' -> RD collision
-        if self.int_reg_status != None:
+        if self.int_reg_status is not None:
             self.int_reg_status[register] = None
         else:
             print("[RegStatus] ERROR: int RD collision")
@@ -23,7 +23,7 @@ class RegisterStatus:
 
     def remove_fp_status(self, register):
         # if 'register' not in '__reg_status' -> RD collision
-        if self.fp_reg_status != None:
+        if self.fp_reg_status is not None:
             self.fp_reg_status[register] = None
         else:
             print("[RegStatus] ERROR: fp RD collision")
