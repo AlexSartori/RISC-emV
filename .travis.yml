@@ -2,6 +2,11 @@ language: python
 python:
     - "3.6"
 before_install:
-  - pip install -e .
-  - pip install pytest pytest-qt
+    - pip install -e .
+    # pytest-qt dependencies on travis:
+    - sudo apt-get install -y libdbus-1-3 libxkbcommon-x11-0
+    - pip install pytest pytest-qt
 script: pytest
+notifications:
+    # Telegram bot hook:
+    webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
