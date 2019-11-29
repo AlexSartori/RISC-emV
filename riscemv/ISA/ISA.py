@@ -63,6 +63,7 @@ class ISA:
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
@@ -78,6 +79,7 @@ class ISA:
 
             inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
@@ -94,6 +96,7 @@ class ISA:
 
             inst = BType_Instruction("1100011", imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
@@ -104,6 +107,7 @@ class ISA:
 
             inst = UType_Instruction(match.opcode, rd, imm)
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
@@ -114,6 +118,7 @@ class ISA:
 
             inst = UJType_Instruction(match.opcode, rd, imm)
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
@@ -125,7 +130,7 @@ class ISA:
         return inst
 
 
-    def instruction_from_bin(self, binary_code):
+    def instruction_from_bin(self, binary_code, pc):
         opcode = binary_code[25:32]
         print("OPCODE:", opcode)
 
@@ -137,6 +142,7 @@ class ISA:
                     inst.execution_code = i['exec']
                     inst.functional_unit = i['funcUnit']
                     inst.clock_needed = i['clockNeeded']
+                    inst.program_counter = pc
 
             return inst
         elif opcode in ["0010011", "0000011"]:  # i-type
@@ -149,6 +155,7 @@ class ISA:
                         inst.execution_code = i['exec'].replace('imm', '0b'+str(imm_bin))
                         inst.functional_unit = i['funcUnit']
                         inst.clock_needed = i['clockNeeded']
+                        inst.program_counter = pc
                         if inst.is_load():
                             inst.length = i['length']
 
@@ -162,6 +169,7 @@ class ISA:
                     inst.functional_unit = i['funcUnit']
                     inst.clock_needed = i['clockNeeded']
                     inst.length = i['length']
+                    inst.program_counter = pc
 
             return inst
         elif opcode == "1100011":  # b-type
@@ -172,6 +180,7 @@ class ISA:
                     inst.execution_code = i['exec']
                     inst.functional_unit = i['funcUnit']
                     inst.clock_needed = i['clockNeeded']
+                    inst.program_counter = pc
 
             return inst
         elif opcode in ["0110111", "0010111"]:  # u-type
@@ -183,6 +192,7 @@ class ISA:
                     inst.execution_code = i['exec'].replace('imm', '0b' + str(imm_bin))
                     inst.functional_unit = i['funcUnit']
                     inst.clock_needed = i['clockNeeded']
+                    inst.program_counter = pc
 
             return inst
         elif opcode == "1101111":  # uj-type
@@ -192,6 +202,7 @@ class ISA:
                 inst.execution_code = i['exec']
                 inst.functional_unit = i['funcUnit']
                 inst.clock_needed = i['clockNeeded']
+                inst.program_counter = pc
 
             return inst
         else:

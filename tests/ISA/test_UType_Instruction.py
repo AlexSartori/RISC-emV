@@ -9,7 +9,7 @@ def test_lui():
     instruction = instruction.replace("$rd", rd)
     exp = "10101010000000000000"
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert int(exp, 2) == instr.execute(None)
 
 
@@ -23,5 +23,5 @@ def test_auipc():
     PC = 24
     exp = int(exp_par, 2) + PC
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(PC)

@@ -11,7 +11,7 @@ def test_addi():
     rs1 = 0b00000000000000000000000000001101 # 13
     exp = 0b00000000000000000000000000011000 # 24
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -25,7 +25,7 @@ def test_xori():
     rs1 = 0b00000000000000000000000000001101 # 13
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -39,7 +39,7 @@ def test_ori():
     rs1 = 0b00000000000000000000000000001101 # 13
     exp = 0b00000000000000000000000000001111
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -53,7 +53,7 @@ def test_andi():
     rs1 = 0b00000000000000000000000000001101 # 13
     exp = 0b00000000000000000000000000001001
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -67,7 +67,7 @@ def test_slli():
     rs1 = 0b00000000000000000000000000001101 # 13
     exp = 0b00000000000000000000000000011010
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -81,7 +81,7 @@ def test_srli():
     rs1 = 0b00000000000000000000000000001100 # 12
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -95,7 +95,7 @@ def test_srai():
     rs1 = 0b00000000000000000000000000001100 # 12
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -109,7 +109,7 @@ def test_slti():
     rs1 = 0b00000000000000000000000000001100 # 12
     exp = 0b00000000000000000000000000000000
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)
 
 
@@ -123,5 +123,5 @@ def test_sltui():
     rs1 = 0b00000000000000000000000000001100 # 12
     exp = 0b00000000000000000000000000000000
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1)

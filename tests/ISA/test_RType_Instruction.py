@@ -11,7 +11,7 @@ def test_add():
     rs2 = 0b00000000000000000000000000001011 # 11
     exp = 0b00000000000000000000000000011000 # 24
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -25,7 +25,7 @@ def test_sub():
     rs2 = 0b00000000000000000000000000001011 # 11
     exp = 0b00000000000000000000000000000010 # 2
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -39,7 +39,7 @@ def test_xor():
     rs2 = 0b00000000000000000000000000001011 # 11
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -53,7 +53,7 @@ def test_or():
     rs2 = 0b00000000000000000000000000001011 # 11
     exp = 0b00000000000000000000000000001111
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -67,7 +67,7 @@ def test_and():
     rs2 = 0b00000000000000000000000000001011 # 11
     exp = 0b00000000000000000000000000001001
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -81,7 +81,7 @@ def test_sll():
     rs2 = 0b00000000000000000000000000000001 # 1
     exp = 0b00000000000000000000000000011010
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -95,7 +95,7 @@ def test_srl():
     rs2 = 0b00000000000000000000000000000001 # 1
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -109,7 +109,7 @@ def test_sra():
     rs2 = 0b00000000000000000000000000000001 # 1
     exp = 0b00000000000000000000000000000110
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -123,7 +123,7 @@ def test_slt():
     rs2 = 0b00000000000000000000000000000001 # 1
     exp = 0b00000000000000000000000000000000
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)
 
 
@@ -137,5 +137,5 @@ def test_sltu():
     rs2 = 0b00000000000000000000000000000001 # 1
     exp = 0b00000000000000000000000000000000
 
-    instr = ISA().instruction_from_bin(instruction)
+    instr = ISA().instruction_from_bin(instruction, 0)
     assert exp == instr.execute(rs1, rs2)

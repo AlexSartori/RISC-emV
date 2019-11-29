@@ -9,6 +9,7 @@ from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
 
+
 class Tomasulo:
     def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number):
         self.__steps = 0
@@ -31,7 +32,7 @@ class Tomasulo:
 
         return self.__steps
 
-    
+
     def reset_steps(self):
         self.__steps = 0
 

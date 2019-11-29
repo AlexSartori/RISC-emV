@@ -1,6 +1,5 @@
 from riscemv.Tomasulo import Tomasulo
 from riscemv.Program import Program
-from riscemv.ISA.ISA import ISA
 
 
 def test_tomasulo():
@@ -9,7 +8,7 @@ def test_tomasulo():
     code_text = "addi x10, x9, 12"
 
     tomasulo = Tomasulo(xlen, n_adders, n_mult, n_div, n_ld)
-    P = Program()
+    P = Program(tomasulo.DM)
     P.load_text(code_text)
 
     for l in P:

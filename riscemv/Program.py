@@ -97,7 +97,7 @@ class Program:
                 self.DM.store(addr, ord(c))
                 addr += 1
 
-            pc = addr
+            pc += addr
         else:
             raise SyntaxError("Unknown directive")
 
