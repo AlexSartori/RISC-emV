@@ -1,11 +1,14 @@
 language: python
 python:
     - "3.6"
+env:
+    - CODECOV_TOKEN="aebc8f34-b027-475f-9900-147a1e318e85"
 before_install:
     - pip install -e .
-    - sudo apt-get install -y libdbus-1-3 libxkbcommon-x11-0
-    - pip install pytest pytest-qt pytest-xvfb
+    - pip install pytest pytest-qt pytest-xvfb codecov
 script: pytest
 notifications:
     # Telegram bot hook:
     webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
+after_success:
+    - codecov
