@@ -48,16 +48,16 @@ class MainWindow(QtWidgets.QMainWindow):
         delay_slider.setValue(self.emulation_delay)
         delay_slider.valueChanged.connect(self.set_emulation_delay)
 
-        stepAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
+        stepAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('go-next'), 'Step Forward', self)
         stepAction.triggered.connect(self.emulator_step)
         stepAction.setShortcut('Ctrl+Shift+R')
 
-        confAction  = QtWidgets.QAction(QtGui.QIcon.fromTheme('preferences-system'), 'Configuration', self)
+        confAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('preferences-system'), 'Configuration', self)
         confAction.triggered.connect(self.open_conf_win)
         confAction.setShortcut('Alt+C')
 
         self.toolbar = self.addToolBar('HomeToolbar')
-        self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon) # ToolButtonFollowStyle)
+        self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toolbar.addAction(startAction)
         self.toolbar.addWidget(delay_slider)
         self.toolbar.addAction(stepAction)
@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_split)
 
 
-        self.code_textbox = CodeEditor(self.load_program)
+        self.code_textbox = CodeEditor(self.DM, self.load_program)
         self.instbuffer_view = InstBufferViewer(self.IFQ)
 
         self.code_pane = QtWidgets.QTabWidget()
@@ -98,12 +98,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_program(self, prog):
         self.IFQ.clear()
-        
+
         for inst in prog:
             self.IFQ.put(inst)
         self.instbuffer_view.load_contents()
+        self.datamemory_view.load_contents()
 
-        self.RF.PC.set_value(prog.sections['.text'])
+        self.RF.PC.set_value(prog.get_entry_point())
         self.emulator_instance.reset_steps()
 
 

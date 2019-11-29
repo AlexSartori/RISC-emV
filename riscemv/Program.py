@@ -3,13 +3,34 @@ from riscemv.ISA.ISA import ISA
 
 
 class Program:
-    def __init__(self):
+    def __init__(self, DM):
+        self.DM = DM
         self.ISA = ISA()
 
         self.syntax_errors = []
         self.IM = []  # Instruction Memory
         self.sections = {'.text': 0}
         self.symbol_table = {}
+        self.alignment = 4
+        self.directives = {
+            '.byte':  1,
+            '.2byte': 2,
+            '.4byte': 4,
+            '.8byte': 8,
+            '.half':  2,
+            '.word':  4,
+            '.dword': 8,
+            # '.asciz': None,
+            # '.string': None,
+            # '.zero': None
+        }
+
+
+    def get_entry_point(self):
+        if '_start' in self.symbol_table:
+            return self.symbol_table['_start']
+        else:
+            return self.sections['.text']
 
 
     def load_text(self, text):
@@ -19,24 +40,68 @@ class Program:
 
             if line != '':
                 if re.match('\.[a-zA-Z0-9]+', line):
-                    # Section
-                    sec = re.match('\.[a-zA-Z0-9]+', line).group(0)
-                    self.sections[sec] = pc
+                    # Directive
+                    try:
+                        pc = self.__parse_directive__(line, pc)
+                    except SyntaxError as s:
+                        self.syntax_errors.append((l_n, line, s))
                 elif re.match('[a-zA-Z0-9]+:', line):
                     # Label
                     label = re.match('[a-zA-Z0-9]+:', line).group(0)
-                    label = label[:-1] # Remove colon
+                    label = label[:-1]  # Remove colon
                     self.symbol_table[label] = pc
                 else:
                     # Instruction
                     try:
                         inst = self.ISA.instruction_from_str(line, self.symbol_table, pc)
-                        inst.program_counter = pc
                         self.IM.append(inst)
-                    except:
-                        self.syntax_errors.append((l_n, line))
+
+                        # Load 32 bits into memory
+                        for i in range(4):
+                            self.DM.store(pc+i, int(inst.to_binary()[8*i:(8*i)+8], 2))
+                    except NotImplementedError:
+                        self.syntax_errors.append((l_n, line, "Instruction not yet implemented"))
+                    except SyntaxError:
+                        self.syntax_errors.append((l_n, line, "Unknown instruction"))
 
                     pc += 4
+
+
+    def __parse_directive__(self, line, pc):
+        line = line.split(' ')
+
+        if line[0] in ['.text', '.data', '.rodata', 'bss']:
+            self.sections[line[0]] = pc
+        elif line[0] == '.align' or line[0] == '.p2align':
+            self.alignment = 2**int(line[1])
+        elif line[0] == '.balign':
+            self.alignment = int(line[1])
+        elif line[0] in self.directives:
+            # TODO: store value byte per byte
+            dir = self.directives[line[0]]
+            val = line[1]
+
+            for offset in range(self.alignment):
+                self.DM.store(pc, val)
+        elif line[0] == '.zero':
+            addr = pc
+            while addr < int(line[1]):
+                self.DM.store(addr, 0)
+                addr += 1
+            pc += addr
+        elif line[0] == '.string' or line[0] == '.asciz':
+            s = line[1][1:-1]  # Remove quotes
+            addr = pc
+
+            for c in s:
+                self.DM.store(addr, ord(c))
+                addr += 1
+
+            pc = addr
+        else:
+            raise SyntaxError("Unknown directive")
+
+        return pc
 
 
     def __iter__(self):

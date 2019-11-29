@@ -3,7 +3,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 class CodeEditor(QtWidgets.QFrame):
-    def __init__(self, prog_loaded_callback=None):
+    def __init__(self, DM, prog_loaded_callback=None):
+        self.DM = DM
         self.prog_loaded_callback = prog_loaded_callback
 
         super(CodeEditor, self).__init__()
@@ -68,7 +69,7 @@ class CodeEditor(QtWidgets.QFrame):
 
 
     def load_program(self):
-        p = Program()
+        p = Program(self.DM)
         p.load_text(self.text_edit.toPlainText())
 
         if len(p.syntax_errors) > 0:
@@ -80,7 +81,7 @@ class CodeEditor(QtWidgets.QFrame):
             msg.setText("One or more syntax errors or unsupported instructions were encountered:")
             msg.setInformativeText(
                 '\n'.join(
-                    ["\"{}\" at line {}".format(s[1], s[0]+1) for s in p.syntax_errors]
+                    ["\"{}\" at line {}: {}".format(s[1], s[0]+1, s[2]) for s in p.syntax_errors]
                 )
             )
             msg.setWindowTitle("Error")

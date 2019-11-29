@@ -39,25 +39,26 @@ class ISA:
 
         if line[0] in self.ISA['r-type']:
             match = self.ISA['r-type'][line[0]]
-            rd  = int(line[1][1:-1]) # Remove letter and comma
+            rd  = int(line[1][1:-1])  # Remove letter and comma
             rs1 = int(line[2][1:-1])
             rs2 = int(line[3][1:])
 
             inst = RType_Instruction("0110011", rd, match['funct3'], rs1, rs2, match['funct7'])
             inst.string = ' '.join(line)
+            inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
-            rd  = int(line[1][1:-1]) # Remove letter and comma
+            rd = int(line[1][1:-1])  # Remove letter and comma
 
-            if match['opcode'] == "0000011": # Load instruction
+            if match['opcode'] == "0000011":  # Load instruction
                 _rexp = re.search(r'([0-9]{1,2})\([x|fp]([0-9]{1,2})\)', line[2])
                 imm = int(_rexp.group(1))
-                rs = int(_rexp.group(2))
+                rs  = int(_rexp.group(2))
             else:
-                rs = int(line[2][1:-1])
+                rs  = int(line[2][1:-1])
                 imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
@@ -70,9 +71,9 @@ class ISA:
                 inst.length = match['length']
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
-            rs2  = int(line[1][1:-1]) # Remove letter and comma
+            rs2 = int(line[1][1:-1])  # Remove letter and comma
             rs1_parts = line[2][:-1].split('(')
-            rs1 = int(rs1_parts[1][1:]) # Remove letter
+            rs1 = int(rs1_parts[1][1:])  # Remove letter
             imm = int(rs1_parts[0])
 
             inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
@@ -83,8 +84,8 @@ class ISA:
             inst.length = match['length']
         elif line[0] in self.ISA['b-type']:
             match = self.ISA['b-type'][line[0]]
-            rs2  = int(line[1][1:-1]) # Remove letter and comma
-            rs1 = int(line[2][1:-1]) # Remove letter and comma
+            rs2 = int(line[1][1:-1])  # Remove letter and comma
+            rs1 = int(line[2][1:-1])  # Remove letter and comma
 
             if line[3].isdigit():
                 imm = int(line[3])
@@ -98,7 +99,7 @@ class ISA:
             inst.clock_needed = match['clockNeeded']
         elif line[0] in self.ISA['u-type']:
             match = self.ISA['u-type'][line[0]]
-            rd = int(line[1][1:-1])
+            rd  = int(line[1][1:-1])
             imm = int(line[2])
 
             inst = UType_Instruction(match.opcode, rd, imm)
@@ -116,8 +117,10 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-        else:
+        elif line[0] in ['nop', 'ecall']:
             raise NotImplementedError()
+        else:
+            raise SyntaxError()
 
         return inst
 
@@ -126,7 +129,7 @@ class ISA:
         opcode = binary_code[25:32]
         print("OPCODE:", opcode)
 
-        if opcode == "0110011": # r-type
+        if opcode == "0110011":  # r-type
             inst = RType_Instruction.parse(binary_code)
 
             for i in self.ISA['r-type'].values():
@@ -136,7 +139,7 @@ class ISA:
                     inst.clock_needed = i['clockNeeded']
 
             return inst
-        elif opcode in ["0010011", "0000011"]: # i-type
+        elif opcode in ["0010011", "0000011"]:  # i-type
             inst = IType_Instruction.parse(binary_code)
 
             for i in self.ISA['i-type'].values():
@@ -150,7 +153,7 @@ class ISA:
                             inst.length = i['length']
 
             return inst
-        elif opcode == "0100011": # s-type
+        elif opcode == "0100011":  # s-type
             inst = SType_Instruction.parse(binary_code)
 
             for i in self.ISA['s-type'].values():
@@ -161,7 +164,7 @@ class ISA:
                     inst.length = i['length']
 
             return inst
-        elif opcode == "1100011": # b-type
+        elif opcode == "1100011":  # b-type
             inst = BType_Instruction.parse(binary_code)
 
             for i in self.ISA['b-type'].values():
@@ -171,7 +174,7 @@ class ISA:
                     inst.clock_needed = i['clockNeeded']
 
             return inst
-        elif opcode in ["0110111", "0010111"]: # u-type
+        elif opcode in ["0110111", "0010111"]:  # u-type
             inst = UType_Instruction.parse(binary_code)
 
             for i in self.ISA['u-type'].values():
@@ -182,7 +185,7 @@ class ISA:
                     inst.clock_needed = i['clockNeeded']
 
             return inst
-        elif opcode == "1101111": # uj-type
+        elif opcode == "1101111":  # uj-type
             inst = UJType_Instruction.parse(binary_code)
 
             for i in self.ISA['uj-type'].values():
