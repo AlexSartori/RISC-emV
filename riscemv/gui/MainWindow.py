@@ -1,7 +1,7 @@
-from time import sleep
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 from riscemv.Program import Program
+from riscemv.Tomasulo import Tomasulo
 
 from riscemv.gui.CodeEditor import CodeEditor
 from riscemv.gui.InstBufferViewer import InstBufferViewer
@@ -14,14 +14,14 @@ from riscemv.gui.ConfWindow import ConfWindow
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, emulator_instance):
+    def __init__(self,):
         super(MainWindow, self).__init__()
         self.setWindowTitle("RISC-emV")
         self.setMinimumSize(self.sizeHint())
 
-        self.emulator_instance = emulator_instance
+        self.emulator_instance = Tomasulo(32, 2, 2, 2, 2)
         self.emulation_delay = 500
-        self.init_emulator_components(emulator_instance)
+        self.init_emulator_components(self.emulator_instance)
         self.initUI()
         self.statusBar().showMessage("Ready")
 

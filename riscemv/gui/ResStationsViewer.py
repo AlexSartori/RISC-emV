@@ -17,7 +17,7 @@ class ResStationsViewer(QtWidgets.QFrame):
         self.rs_table.setHorizontalHeaderLabels(
             ['Cycles Left', 'Tag', 'Busy', 'Instruction', 'Vj', 'Vk', 'Qj', 'Qk', 'A', 'Result']
         )
-        self.rs_table.horizontalHeader().setStretchLastSection(True) # setResizeMode(QtWidgets.QTableWidget.QHeaderView.Stretch)
+        self.rs_table.horizontalHeader().setStretchLastSection(True)
         self.rs_table.setFont(QtGui.QFont('monospace'))
 
         self.layout().addWidget(self.rs_table)

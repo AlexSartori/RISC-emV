@@ -23,19 +23,19 @@ class ReservationStations:
 
     def __iter__(self):
         return iter(
-            self.adders +
-            self.multipliers +
-            self.dividers +
-            self.loaders
+            self.adders
+            + self.multipliers
+            + self.dividers
+            + self.loaders
         )
 
 
     def __len__(self):
         return (
-            len(self.adders) +
-            len(self.multipliers) +
-            len(self.dividers) +
-            len(self.loaders)
+            len(self.adders)
+            + len(self.multipliers)
+            + len(self.dividers)
+            + len(self.loaders)
         )
 
 
@@ -64,9 +64,9 @@ class ReservationStations:
                 fu.busy = True
                 return fu
 
-        return None # All busy
+        return None  # All busy
 
-    
+
     def all_empty(self):
         for fu in self:
             if fu.busy:
@@ -82,7 +82,7 @@ class ReservationStations:
             self.adders.append(ReservationStation("ADD" + str(i)))
 
 
-    def set_multipliers_number(self, n):        
+    def set_multipliers_number(self, n):
         self.multipliers_number = n
 
         self.multipliers = []

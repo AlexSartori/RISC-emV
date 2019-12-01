@@ -19,7 +19,7 @@ class Tomasulo:
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
         self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number)
-        self.DM = DataMemory(1*1024) # 1 Kb
+        self.DM = DataMemory(1*1024)  # 1 Kb
 
 
     def step(self):
@@ -159,6 +159,10 @@ class Tomasulo:
 
     def is_halted(self):
         return (
-            self.IFQ.empty(self.Regs.PC.get_value()) and
-            self.RS.all_empty()
+            self.IFQ.empty(self.Regs.PC.get_value())
+            and self.RS.all_empty()
         )
+
+
+    def get_steps(self):
+        return self.__steps

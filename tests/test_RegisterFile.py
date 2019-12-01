@@ -1,4 +1,4 @@
-import os
+import pytest
 from riscemv.RegisterFile import RegisterFile
 
 
@@ -27,7 +27,7 @@ def test__int_registers():
 
     for reg_n in range(1, 32):
         RF.writeInt(reg_n, value)
-        
+
         assert RF.readInt(reg_n) == value
 
 
@@ -38,5 +38,12 @@ def test__fp_registers():
 
     for reg_n in range(1, 32):
         RF.writeFP(reg_n, value)
-        
+
         assert RF.readFP(reg_n) == value
+
+
+def test_RF_readonly():
+    RF = RegisterFile()
+
+    with pytest.raises(PermissionError):
+        RF.IntRegisters[0].set_value(10)

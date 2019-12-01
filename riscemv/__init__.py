@@ -1,5 +1,5 @@
-import sys
 name = "riscemv"
+
 
 def main_gui():
     from riscemv.gui.main import launch
