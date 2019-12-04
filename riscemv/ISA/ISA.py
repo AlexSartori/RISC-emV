@@ -5,6 +5,7 @@ from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
 from riscemv.ISA.UType_Instruction import UType_Instruction
 from riscemv.ISA.UJType_Instruction import UJType_Instruction
+from riscemv.ISA.R4Type_Instruction import R4Type_Instruction
 
 
 class ISA:
@@ -18,7 +19,8 @@ class ISA:
                 "s-type":  {},
                 "b-type": {},
                 "u-type":  {},
-                "uj-type": {}
+                "uj-type": {},
+                "r4-type": {}
             }
 
             # Load ISA
@@ -152,6 +154,29 @@ class ISA:
             
             if 'rdType' in match:
                 inst.rd_type = match['rdType']
+        elif line[0] in self.ISA['r4-type']:
+            match = self.ISA['r4-type'][line[0]]
+            rd  = int(line[1][1:-1])  # Remove letter and comma
+            rs1 = int(line[2][1:-1])
+            rs2 = int(line[3][1:-1])
+            rs3 = int(line[4][1:])
+
+            fmt = match['fmt']
+            inst = R4Type_Instruction(match["opcode"], rd, funct3, rs1, rs2, rs3, fmt)
+            inst.string = ' '.join(line)
+            inst.program_counter = pc
+            inst.execution_code = match['exec']
+            inst.functional_unit = match['funcUnit']
+            inst.clock_needed = match['clockNeeded']
+
+            if 'rdType' in match:
+                inst.rd_type = match['rdType']
+            if 'rs1Type' in match:
+                inst.rs1_type = match['rs1Type']
+            if 'rs2Type' in match:
+                inst.rs2_type = match['rs2Type']
+            if 'rs3Type' in match:
+                inst.rs3_type = match['rs3Type']
         elif line[0] in ['nop', 'ecall']:
             raise NotImplementedError()
         else:
@@ -261,5 +286,24 @@ class ISA:
                             inst.rd_type = instr_match['rdType']
 
                         return inst
+                    elif instr_type == "r4-type":
+                        inst = R4Type_Instruction.parse(binary_code)
+
+                        if instr_match['opcode'] == inst.opcode and instr_match['fmt'] == inst.fmt:
+                            inst.execution_code = instr_match['exec']
+                            inst.functional_unit = instr_match['funcUnit']
+                            inst.clock_needed = instr_match['clockNeeded']
+                            inst.program_counter = pc
+
+                            if 'rdType' in instr_match:
+                                inst.rd_type = instr_match['rdType']
+                            if 'rs1Type' in instr_match:
+                                inst.rs1_type = instr_match['rs1Type']
+                            if 'rs2Type' in instr_match:
+                                inst.rs2_type = instr_match['rs2Type']
+                            if 'rs3Type' in instr_match:
+                                inst.rs3_type = instr_match['rs3Type']
+
+                            return inst
                     else:
                         raise NotImplementedError()
