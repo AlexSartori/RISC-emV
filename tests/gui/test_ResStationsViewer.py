@@ -3,7 +3,7 @@ from riscemv.gui.ResStationsViewer import ResStationsViewer
 
 
 def test_add_status(qtbot):
-    RS = ReservationStations(1, 1, 1, 1)
+    RS = ReservationStations(1, 1, 1, 1, 1, 1, 1, 1)
     rs_v = ResStationsViewer(RS)
 
     fu = RS.get_first_free("ADD")
