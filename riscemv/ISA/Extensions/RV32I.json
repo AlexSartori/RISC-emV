@@ -1,60 +1,70 @@
 {
     "r-type": {
         "add": {
+            "opcode": "0110011",
             "funct3": "000",
             "funct7": "0000000",
             "exec": "rs + rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "sub": {
+            "opcode": "0110011",
             "funct3": "000",
             "funct7": "0100000",
             "exec": "rs - rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "sll": {
+            "opcode": "0110011",
             "funct3": "001",
             "funct7": "0000000",
             "exec": "rs << rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "slt": {
+            "opcode": "0110011",
             "funct3": "010",
             "funct7": "0000000",
             "exec": "1 if (rs < rt) else 0",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "sltu": {
+            "opcode": "0110011",
             "funct3": "011",
             "funct7": "0000000",
             "exec": "1 if (rs < rt) else 0",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "xor": {
+            "opcode": "0110011",
             "funct3": "100",
             "funct7": "0000000",
             "exec": "rs ^ rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "srl": {
+            "opcode": "0110011",
             "funct3": "101",
             "funct7": "0000000",
             "exec": "rs >> rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "sra": {
+            "opcode": "0110011",
             "funct3": "101",
             "funct7": "0100000",
             "exec": "rs >> rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "or": {
+            "opcode": "0110011",
             "funct3": "110",
             "funct7": "0000000",
             "exec": "rs | rt",
             "funcUnit": "add",
             "clockNeeded": 1
         }, "and": {
+            "opcode": "0110011",
             "funct3": "111",
             "funct7": "0000000",
             "exec": "rs & rt",
@@ -172,6 +182,7 @@
     },
     "s-type": {
         "sb": {
+            "opcode": "0100011",
             "funct3": "000",
             "exec": "rs + imm",
             "length": 8,
@@ -179,6 +190,7 @@
             "clockNeeded": 1
         },
         "sh": {
+            "opcode": "0100011",
             "funct3": "001",
             "exec": "rs + imm",
             "length": 16,
@@ -186,6 +198,7 @@
             "clockNeeded": 1
         },
         "sw": {
+            "opcode": "0100011",
             "funct3": "010",
             "exec": "rs + imm",
             "length": 32,
@@ -195,36 +208,42 @@
     },
     "b-type": {
         "beq": {
+            "opcode": "1100011",
             "funct3": "000",
             "exec": "rs == rt",
             "funcUnit": "add",
             "clockNeeded": 1
         },
         "bne": {
+            "opcode": "1100011",
             "funct3": "001",
             "exec": "rs != rt",
             "funcUnit": "add",
             "clockNeeded": 1
         },
         "blt": {
+            "opcode": "1100011",
             "funct3": "100",
             "exec": "rs < rt",
             "funcUnit": "add",
             "clockNeeded": 1
         },
         "bge": {
+            "opcode": "1100011",
             "funct3": "101",
             "exec": "rs >= rt",
             "funcUnit": "add",
             "clockNeeded": 1
         },
         "bltu": {
+            "opcode": "1100011",
             "funct3": "110",
             "exec": "rs < rt",
             "funcUnit": "add",
             "clockNeeded": 1
         },
         "bgeu": {
+            "opcode": "1100011",
             "funct3": "111",
             "exec": "rs >= rt",
             "funcUnit": "add",
@@ -247,6 +266,7 @@
     },
     "uj-type": {
         "jal": {
+            "opcode": "1101111",
             "exec": "PC + 4",
             "funcUnit": "add",
             "clockNeeded": 1

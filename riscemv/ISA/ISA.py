@@ -43,7 +43,7 @@ class ISA:
             rs1 = int(line[2][1:-1])
             rs2 = int(line[3][1:])
 
-            inst = RType_Instruction("0110011", rd, match['funct3'], rs1, rs2, match['funct7'])
+            inst = RType_Instruction(match["opcode"], rd, match['funct3'], rs1, rs2, match['funct7'])
             inst.string = ' '.join(line)
             inst.program_counter = pc
             inst.execution_code = match['exec']
@@ -77,7 +77,7 @@ class ISA:
             rs1 = int(rs1_parts[1][1:])  # Remove letter
             imm = int(rs1_parts[0])
 
-            inst = SType_Instruction("0100011", imm, match['funct3'], rs1, rs2)
+            inst = SType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
@@ -94,7 +94,7 @@ class ISA:
             else:
                 imm = symbol_table[line[3]] - pc
 
-            inst = BType_Instruction("1100011", imm, match['funct3'], rs1, rs2)
+            inst = BType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
             inst.string = ' '.join(line)
             inst.program_counter = pc
             inst.execution_code = match['exec']
@@ -134,76 +134,74 @@ class ISA:
         opcode = binary_code[25:32]
         print("OPCODE:", opcode)
 
-        if opcode == "0110011":  # r-type
-            inst = RType_Instruction.parse(binary_code)
+        for instr_type in self.ISA:
+            for instr_code in self.ISA[instr_type]:
+                instr_match = self.ISA[instr_type][instr_code]
+                if instr_match["opcode"] == opcode:
+                    if instr_type == "r-type":
+                        inst = RType_Instruction.parse(binary_code)
 
-            for i in self.ISA['r-type'].values():
-                if i['funct7'] == inst.funct7 and i['funct3'] == inst.funct3:
-                    inst.execution_code = i['exec']
-                    inst.functional_unit = i['funcUnit']
-                    inst.clock_needed = i['clockNeeded']
-                    inst.program_counter = pc
+                        if instr_match['funct7'] == inst.funct7 and instr_match['funct3'] == inst.funct3:
+                            inst.execution_code = instr_match['exec']
+                            inst.functional_unit = instr_match['funcUnit']
+                            inst.clock_needed = instr_match['clockNeeded']
+                            inst.program_counter = pc
 
-            return inst
-        elif opcode in ["0010011", "0000011"]:  # i-type
-            inst = IType_Instruction.parse(binary_code)
+                            return inst
+                    elif instr_type == "i-type":
+                        inst = IType_Instruction.parse(binary_code)
 
-            for i in self.ISA['i-type'].values():
-                if i['opcode'] == inst.opcode and i['funct3'] == inst.funct3:
-                    imm_bin = '{:032b}'.format(inst.imm)
-                    if ('imm' in i and imm_bin[:7] == i['imm']) or 'imm' not in i:
-                        inst.execution_code = i['exec'].replace('imm', '0b'+str(imm_bin))
-                        inst.functional_unit = i['funcUnit']
-                        inst.clock_needed = i['clockNeeded']
+                        if instr_match['opcode'] == inst.opcode and instr_match['funct3'] == inst.funct3:
+                            imm_bin = '{:032b}'.format(inst.imm)
+                            if ('imm' in instr_match and imm_bin[:7] == instr_match['imm']) or 'imm' not in instr_match:
+                                inst.execution_code = instr_match['exec'].replace('imm', '0b'+str(imm_bin))
+                                inst.functional_unit = instr_match['funcUnit']
+                                inst.clock_needed = instr_match['clockNeeded']
+                                inst.program_counter = pc
+                                if inst.is_load():
+                                    inst.length = instr_match['length']
+
+                            return inst
+                    elif instr_type == "s-type":
+                        inst = SType_Instruction.parse(binary_code)
+
+                        if instr_match['funct3'] == inst.funct3:
+                            inst.execution_code = instr_match['exec'].replace('imm', '0b'+str(inst.imm))
+                            inst.functional_unit = instr_match['funcUnit']
+                            inst.clock_needed = instr_match['clockNeeded']
+                            inst.length = instr_match['length']
+                            inst.program_counter = pc
+
+                            return inst
+                    elif instr_type == "b-type":
+                        inst = BType_Instruction.parse(binary_code)
+
+                        if instr_match['funct3'] == inst.funct3:
+                            inst.execution_code = instr_match['exec']
+                            inst.functional_unit = instr_match['funcUnit']
+                            inst.clock_needed = instr_match['clockNeeded']
+                            inst.program_counter = pc
+
+                            return inst
+                    elif instr_type == "u-type":
+                        inst = UType_Instruction.parse(binary_code)
+
+                        if instr_match['opcode'] == inst.opcode:
+                            imm_bin = "{:020b}".format(inst.imm)
+                            inst.execution_code = instr_match['exec'].replace('imm', '0b' + str(imm_bin))
+                            inst.functional_unit = instr_match['funcUnit']
+                            inst.clock_needed = instr_match['clockNeeded']
+                            inst.program_counter = pc
+
+                            return inst
+                    elif instr_type == "uj-type":
+                        inst = UJType_Instruction.parse(binary_code)
+
+                        inst.execution_code = instr_match['exec']
+                        inst.functional_unit = instr_match['funcUnit']
+                        inst.clock_needed = instr_match['clockNeeded']
                         inst.program_counter = pc
-                        if inst.is_load():
-                            inst.length = i['length']
 
-            return inst
-        elif opcode == "0100011":  # s-type
-            inst = SType_Instruction.parse(binary_code)
-
-            for i in self.ISA['s-type'].values():
-                if i['funct3'] == inst.funct3:
-                    inst.execution_code = i['exec'].replace('imm', '0b'+str(inst.imm))
-                    inst.functional_unit = i['funcUnit']
-                    inst.clock_needed = i['clockNeeded']
-                    inst.length = i['length']
-                    inst.program_counter = pc
-
-            return inst
-        elif opcode == "1100011":  # b-type
-            inst = BType_Instruction.parse(binary_code)
-
-            for i in self.ISA['b-type'].values():
-                if i['funct3'] == inst.funct3:
-                    inst.execution_code = i['exec']
-                    inst.functional_unit = i['funcUnit']
-                    inst.clock_needed = i['clockNeeded']
-                    inst.program_counter = pc
-
-            return inst
-        elif opcode in ["0110111", "0010111"]:  # u-type
-            inst = UType_Instruction.parse(binary_code)
-
-            for i in self.ISA['u-type'].values():
-                if i['opcode'] == inst.opcode:
-                    imm_bin = "{:020b}".format(inst.imm)
-                    inst.execution_code = i['exec'].replace('imm', '0b' + str(imm_bin))
-                    inst.functional_unit = i['funcUnit']
-                    inst.clock_needed = i['clockNeeded']
-                    inst.program_counter = pc
-
-            return inst
-        elif opcode == "1101111":  # uj-type
-            inst = UJType_Instruction.parse(binary_code)
-
-            for i in self.ISA['uj-type'].values():
-                inst.execution_code = i['exec']
-                inst.functional_unit = i['funcUnit']
-                inst.clock_needed = i['clockNeeded']
-                inst.program_counter = pc
-
-            return inst
-        else:
-            raise NotImplementedError()
+                        return inst
+                    else:
+                        raise NotImplementedError()
