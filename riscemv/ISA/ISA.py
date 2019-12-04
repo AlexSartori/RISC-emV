@@ -43,17 +43,25 @@ class ISA:
             rs1 = int(line[2][1:-1])
             rs2 = int(line[3][1:])
 
-            inst = RType_Instruction(match["opcode"], rd, match['funct3'], rs1, rs2, match['funct7'])
+            funct3 = match['funct3'] if 'funct3' in match else '000'
+            inst = RType_Instruction(match["opcode"], rd, funct3, rs1, rs2, match['funct7'])
             inst.string = ' '.join(line)
             inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+
+            if 'rdType' in match:
+                inst.rd_type = match['rdType']
+            if 'rsType' in match:
+                inst.rs1_type = match['rsType']
+            if 'rtType' in match:
+                inst.rs2_type = match['rtType']
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
             rd = int(line[1][1:-1])  # Remove letter and comma
 
-            if match['opcode'] == "0000011":  # Load instruction
+            if match['opcode'] in ["0000011", "0000111"]:  # Load instructions
                 _rexp = re.search(r'([0-9]{1,2})\([x|fp]([0-9]{1,2})\)', line[2])
                 imm = int(_rexp.group(1))
                 rs  = int(_rexp.group(2))
@@ -67,6 +75,11 @@ class ISA:
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+            
+            if 'rdType' in match:
+                inst.rd_type = match['rdType']
+            if 'rsType' in match:
+                inst.rs_type = match['rsType']
 
             if inst.is_load():
                 inst.length = match['length']
@@ -82,7 +95,13 @@ class ISA:
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
-            inst.clock_needed = match['clockNeeded']
+            inst.clock_needed = match['clockNeeded']            
+
+            if 'rsType' in match:
+                inst.rs1_type = match['rsType']
+            if 'rtType' in match:
+                inst.rs2_type = match['rtType']
+
             inst.length = match['length']
         elif line[0] in self.ISA['b-type']:
             match = self.ISA['b-type'][line[0]]
@@ -100,6 +119,11 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+            
+            if 'rsType' in match:
+                inst.rs1_type = match['rsType']
+            if 'rtType' in match:
+                inst.rs2_type = match['rtType']
         elif line[0] in self.ISA['u-type']:
             match = self.ISA['u-type'][line[0]]
             rd  = int(line[1][1:-1])
@@ -111,6 +135,9 @@ class ISA:
             inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+            
+            if 'rdType' in match:
+                inst.rd_type = match['rdType']
         elif line[0] in self.ISA['uj-type']:
             match = self.ISA['uj-type'][line[0]]
             rd = int(line[1][1:-1])
@@ -122,6 +149,9 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
+            
+            if 'rdType' in match:
+                inst.rd_type = match['rdType']
         elif line[0] in ['nop', 'ecall']:
             raise NotImplementedError()
         else:
@@ -147,6 +177,13 @@ class ISA:
                             inst.clock_needed = instr_match['clockNeeded']
                             inst.program_counter = pc
 
+                            if 'rdType' in instr_match:
+                                inst.rd_type = instr_match['rdType']
+                            if 'rsType' in instr_match:
+                                inst.rs1_type = instr_match['rsType']
+                            if 'rtType' in instr_match:
+                                inst.rs2_type = instr_match['rtType']
+
                             return inst
                     elif instr_type == "i-type":
                         inst = IType_Instruction.parse(binary_code)
@@ -161,6 +198,11 @@ class ISA:
                                 if inst.is_load():
                                     inst.length = instr_match['length']
 
+                                if 'rdType' in instr_match:
+                                    inst.rd_type = instr_match['rdType']
+                                if 'rsType' in instr_match:
+                                    inst.rs_type = instr_match['rsType']
+
                             return inst
                     elif instr_type == "s-type":
                         inst = SType_Instruction.parse(binary_code)
@@ -172,6 +214,11 @@ class ISA:
                             inst.length = instr_match['length']
                             inst.program_counter = pc
 
+                            if 'rsType' in instr_match:
+                                inst.rs1_type = instr_match['rsType']
+                            if 'rtType' in instr_match:
+                                inst.rs2_type = instr_match['rtType']
+
                             return inst
                     elif instr_type == "b-type":
                         inst = BType_Instruction.parse(binary_code)
@@ -181,6 +228,11 @@ class ISA:
                             inst.functional_unit = instr_match['funcUnit']
                             inst.clock_needed = instr_match['clockNeeded']
                             inst.program_counter = pc
+
+                            if 'rsType' in instr_match:
+                                inst.rs1_type = instr_match['rsType']
+                            if 'rtType' in instr_match:
+                                inst.rs2_type = instr_match['rtType']
 
                             return inst
                     elif instr_type == "u-type":
@@ -193,6 +245,9 @@ class ISA:
                             inst.clock_needed = instr_match['clockNeeded']
                             inst.program_counter = pc
 
+                            if 'rdType' in instr_match:
+                                inst.rd_type = instr_match['rdType']
+
                             return inst
                     elif instr_type == "uj-type":
                         inst = UJType_Instruction.parse(binary_code)
@@ -201,6 +256,9 @@ class ISA:
                         inst.functional_unit = instr_match['funcUnit']
                         inst.clock_needed = instr_match['clockNeeded']
                         inst.program_counter = pc
+
+                        if 'rdType' in instr_match:
+                            inst.rd_type = instr_match['rdType']
 
                         return inst
                     else:

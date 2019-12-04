@@ -11,14 +11,14 @@ from riscemv.ISA.BType_Instruction import BType_Instruction
 
 
 class Tomasulo:
-    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number):
+    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number):
         self.__steps = 0
         self.stall = False
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
         self.RegisterStat = RegisterStatus()
-        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number)
+        self.RS = ReservationStations(adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number)
         self.DM = DataMemory(1*1024)  # 1 Kb
 
 
@@ -65,40 +65,40 @@ class Tomasulo:
                 fu.time_remaining = instruction.clock_needed
 
                 if isinstance(instruction, RType_Instruction) or isinstance(instruction, BType_Instruction):
-                    if self.RegisterStat.get_int_status(instruction.rs1) is not None:
-                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs1)
+                    if self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type) is not None:
+                        fu.Qj = self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type)
                     else:
-                        fu.Vj = self.Regs.readInt(instruction.rs1)
+                        fu.Vj = self.Regs.read(instruction.rs1, instruction.rs1_type)
                         fu.Qj = 0
-                    if self.RegisterStat.get_int_status(instruction.rs2) is not None:
-                        fu.Qk = self.RegisterStat.get_int_status(instruction.rs2)
+                    if self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type) is not None:
+                        fu.Qk = self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type)
                     else:
-                        fu.Vk = self.Regs.readInt(instruction.rs2)
+                        fu.Vk = self.Regs.read(instruction.rs2, instruction.rs2_type)
                         fu.Qk = 0
                 elif isinstance(instruction, IType_Instruction):
-                    if self.RegisterStat.get_int_status(instruction.rs) is not None:
-                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs)
+                    if self.RegisterStat.get_status(instruction.rs, instruction.rs_type) is not None:
+                        fu.Qj = self.RegisterStat.get_status(instruction.rs, instruction.rs_type)
                     else:
-                        fu.Vj = self.Regs.readInt(instruction.rs)
+                        fu.Vj = self.Regs.read(instruction.rs, instruction.rs_type)
                         fu.Qj = 0
                     fu.A = instruction.imm # store the immediate value
                     fu.Qk = 0
                 elif isinstance(instruction, SType_Instruction):
-                    if self.RegisterStat.get_int_status(instruction.rs1) is not None:
-                        fu.Qj = self.RegisterStat.get_int_status(instruction.rs1)
+                    if self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type) is not None:
+                        fu.Qj = self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type)
                     else:
-                        fu.Vj = self.Regs.readInt(instruction.rs1)
+                        fu.Vj = self.Regs.read(instruction.rs1, instruction.rs1_type)
                         fu.Qj = 0
                     fu.A = instruction.imm # store the immediate value
                     fu.Qk = 0
-                    if self.RegisterStat.get_int_status(instruction.rs2) is not None:
-                        fu.Qk = self.RegisterStat.get_int_status(instruction.rs2)
+                    if self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type) is not None:
+                        fu.Qk = self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type)
                     else:
-                        fu.Vk = self.Regs.readInt(instruction.rs2)
+                        fu.Vk = self.Regs.read(instruction.rs2, instruction.rs2_type)
                         fu.Qk = 0
 
                 if not isinstance(instruction, SType_Instruction) and not isinstance(instruction, BType_Instruction):
-                    self.RegisterStat.add_int_status(instruction.rd, fu.name)
+                    self.RegisterStat.add_status(instruction.rd, fu.name, instruction.rd_type)
 
 
     def execute(self):
@@ -142,8 +142,8 @@ class Tomasulo:
                 elif isinstance(fu.instruction, BType_Instruction):
                     self.stall = False
                 else:
-                    self.RegisterStat.remove_int_status(fu.instruction.rd)
-                    self.Regs.writeInt(fu.instruction.rd, fu.result)
+                    self.RegisterStat.remove_status(fu.instruction.rd, fu.instruction.rd_type)
+                    self.Regs.write(fu.instruction.rd, fu.result, fu.instruction.rd_type)
 
                     # Write result
                     for other_fu in self.RS:
