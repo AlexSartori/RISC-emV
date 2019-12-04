@@ -19,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("RISC-emV")
         self.setMinimumSize(self.sizeHint())
 
-        self.emulator_instance = Tomasulo(32, 2, 2, 2, 2)
+        self.emulator_instance = Tomasulo(32, 2, 2, 2, 2, 2, 2, 2, 2)
         self.emulation_delay = 500
         self.init_emulator_components(self.emulator_instance)
         self.initUI()

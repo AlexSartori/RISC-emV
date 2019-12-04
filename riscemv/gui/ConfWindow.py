@@ -59,6 +59,30 @@ class ConfWindow(QtWidgets.QDialog):
         loaders_num.valueChanged.connect(self.MW.ResStations.set_loaders_number)
         frame.layout().addRow("Number of loaders:", loaders_num)
 
+        fp_adders_num = QtWidgets.QSpinBox()
+        fp_adders_num.setMinimum(1)
+        fp_adders_num.setValue(self.MW.ResStations.fp_adders_number)
+        fp_adders_num.valueChanged.connect(self.MW.ResStations.set_fp_adders_number)
+        frame.layout().addRow("Number of FP adders:", fp_adders_num)
+
+        fp_multipliers_num = QtWidgets.QSpinBox()
+        fp_multipliers_num.setMinimum(1)
+        fp_multipliers_num.setValue(self.MW.ResStations.fp_multipliers_number)
+        fp_multipliers_num.valueChanged.connect(self.MW.ResStations.set_fp_multipliers_number)
+        frame.layout().addRow("Number of FP multipliers:", fp_multipliers_num)
+
+        fp_dividers_num = QtWidgets.QSpinBox()
+        fp_dividers_num.setMinimum(1)
+        fp_dividers_num.setValue(self.MW.ResStations.fp_dividers_number)
+        fp_dividers_num.valueChanged.connect(self.MW.ResStations.set_fp_dividers_number)
+        frame.layout().addRow("Number of FP dividers:", fp_dividers_num)
+
+        fp_loaders_num = QtWidgets.QSpinBox()
+        fp_loaders_num.setMinimum(1)
+        fp_loaders_num.setValue(self.MW.ResStations.fp_loaders_number)
+        fp_loaders_num.valueChanged.connect(self.MW.ResStations.set_fp_loaders_number)
+        frame.layout().addRow("Number of FP loaders:", fp_loaders_num)
+
         return frame
 
 
