@@ -58,4 +58,18 @@ class RegisterFile:
 
 
     def writeFP(self, reg_name, value):
-        self.FPRegisters[reg_name].set_value(value)       
+        self.FPRegisters[reg_name].set_value(value)
+
+
+    def read(self, reg_name, reg_type):
+        if reg_type == "fp":
+            return self.readFP(reg_name)
+        else:
+            return self.readInt(reg_name)
+
+    
+    def write(self, reg_name, value, reg_type):
+        if reg_type == "fp":
+            self.writeFP(reg_name, value)
+        else:
+            self.writeInt(reg_name, value)
