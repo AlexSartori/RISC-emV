@@ -1,0 +1,290 @@
+{
+    "i-type": {
+        "flw": {
+            "opcode": "0000111",
+            "funct3": "010",
+            "exec": "rs + imm",
+            "funcUnit": "fld",
+            "clockNeeded": 2,
+            "length": 32,
+            "rdType": "fp",
+            "rsType": "int"
+        },
+        "fsw": {
+            "opcode": "0100111",
+            "funct3": "010",
+            "exec": "rs + imm",
+            "funcUnit": "fld",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "int"
+        }
+    },
+    "r-type": {
+        "fadd.s": {
+            "opcode": "1010011",
+            "funct7": "0000000",
+            "exec": "rs + rt",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fsub.s": {
+            "opcode": "1010011",
+            "funct7": "0000100",
+            "exec": "rs - rt",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fmul.s": {
+            "opcode": "1010011",
+            "funct7": "0001000",
+            "exec": "rs * rt",
+            "funcUnit": "fmult",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fdiv.s": {
+            "opcode": "1010011",
+            "funct7": "0001100",
+            "exec": "rs / rt",
+            "funcUnit": "fdiv",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fsgnj.s": {
+            "opcode": "1010011",
+            "funct3": "000",
+            "funct7": "0010000",
+            "exec": "math.copysign(abs(rs), rt)",
+            "funcUnit": "fmult",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fsgnjn.s": {
+            "opcode": "1010011",
+            "funct3": "001",
+            "funct7": "0010000",
+            "exec": "math.copysign(abs(rs), rt * -1)",
+            "funcUnit": "fmult",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fsgnjx.s": {
+            "opcode": "1010011",
+            "funct3": "010",
+            "funct7": "0010000",
+            "exec": "math.copysign(rs, rt)",
+            "funcUnit": "fmult",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fmin.s": {
+            "opcode": "1010011",
+            "funct3": "000",
+            "funct7": "0010100",
+            "exec": "min(rs, rt)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fmax.s": {
+            "opcode": "1010011",
+            "funct3": "001",
+            "funct7": "0010100",
+            "exec": "max(rs, rt)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fsqrt.s": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct7": "0101100",
+            "exec": "sqrt(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fle.s": {
+            "opcode": "1010011",
+            "funct3": "000",
+            "funct7": "1010000",
+            "exec": "1 if rs <= rt else 0",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "flt.s": {
+            "opcode": "1010011",
+            "funct3": "001",
+            "funct7": "1010000",
+            "exec": "1 if rs < rt else 0",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "feq.s": {
+            "opcode": "1010011",
+            "funct3": "010",
+            "funct7": "1010000",
+            "exec": "1 if rs == rt else 0",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fcvt.w.s": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct7": "1100000",
+            "exec": "int(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fcvt.wu.s": {
+            "opcode": "1010011",
+            "rs2": "00001",
+            "funct7": "1100000",
+            "exec": "int(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fmv.x.w": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct3": "000",
+            "funct7": "1110000",
+            "exec": "int(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fclass.s": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct3": "001",
+            "funct7": "1110000",
+            "exec": "",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fcvt.s.w": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct7": "1101000",
+            "exec": "float(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fcvt.s.wu": {
+            "opcode": "1010011",
+            "rs2": "00001",
+            "funct7": "1101000",
+            "exec": "float(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        },
+        "fmv.w.x": {
+            "opcode": "1010011",
+            "rs2": "00000",
+            "funct3": "000",
+            "funct7": "1111000",
+            "exec": "float(rs)",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rsType": "fp",
+            "rtType": "fp"
+        }
+    },
+    "r4-type": {
+        "fmadd.s": {
+            "opcode": "1000011",
+            "fmt": "00",
+            "exec": "rs1 * rs2 + rs3",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rs1Type": "fp",
+            "rs2Type": "fp",
+            "rs3Type": "fp"
+        },
+        "fmsub.s": {
+            "opcode": "1000111",
+            "fmt": "00",
+            "exec": "rs1 * rs2 - rs3",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rs1Type": "fp",
+            "rs2Type": "fp",
+            "rs3Type": "fp"
+        },
+        "fnmadd.s": {
+            "opcode": "1001011",
+            "fmt": "00",
+            "exec": "-rs1 * rs2 + rs3",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rs1Type": "fp",
+            "rs2Type": "fp",
+            "rs3Type": "fp"
+        },
+        "fnmsub.s": {
+            "opcode": "1001111",
+            "fmt": "00",
+            "exec": "-rs1 * rs2 - rs3",
+            "funcUnit": "fadd",
+            "clockNeeded": 1,
+            "rdType": "fp",
+            "rs1Type": "fp",
+            "rs2Type": "fp",
+            "rs3Type": "fp"
+        }
+    }
+}
