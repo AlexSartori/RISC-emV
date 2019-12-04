@@ -167,7 +167,7 @@
             "exec": "int(rs)",
             "funcUnit": "fadd",
             "clockNeeded": 1,
-            "rdType": "fp",
+            "rdType": "int",
             "rsType": "fp",
             "rtType": "fp"
         },
@@ -178,7 +178,7 @@
             "exec": "int(rs)",
             "funcUnit": "fadd",
             "clockNeeded": 1,
-            "rdType": "fp",
+            "rdType": "int",
             "rsType": "fp",
             "rtType": "fp"
         },
@@ -190,7 +190,7 @@
             "exec": "int(rs)",
             "funcUnit": "fadd",
             "clockNeeded": 1,
-            "rdType": "fp",
+            "rdType": "int",
             "rsType": "fp",
             "rtType": "fp"
         },
@@ -214,7 +214,7 @@
             "funcUnit": "fadd",
             "clockNeeded": 1,
             "rdType": "fp",
-            "rsType": "fp",
+            "rsType": "int",
             "rtType": "fp"
         },
         "fcvt.s.wu": {
@@ -225,7 +225,7 @@
             "funcUnit": "fadd",
             "clockNeeded": 1,
             "rdType": "fp",
-            "rsType": "fp",
+            "rsType": "int",
             "rtType": "fp"
         },
         "fmv.w.x": {
@@ -237,7 +237,7 @@
             "funcUnit": "fadd",
             "clockNeeded": 1,
             "rdType": "fp",
-            "rsType": "fp",
+            "rsType": "int",
             "rtType": "fp"
         }
     },
