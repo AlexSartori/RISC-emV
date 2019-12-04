@@ -7,7 +7,7 @@ def test_tomasulo():
     n_adders = n_mult = n_div = n_ld = 1
     code_text = "addi x10, x9, 12"
 
-    tomasulo = Tomasulo(xlen, n_adders, n_mult, n_div, n_ld)
+    tomasulo = Tomasulo(xlen, n_adders, n_mult, n_div, n_ld, n_adders, n_mult, n_div, n_ld)
     P = Program(tomasulo.DM)
     P.load_text(code_text)
 
