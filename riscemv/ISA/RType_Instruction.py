@@ -3,6 +3,11 @@ from riscemv.ISA.Instruction import Instruction
 
 
 class RType_Instruction(Instruction):
+    rd_type = "int"
+    rs1_type = "int"
+    rs2_type = "int"
+
+
     def __init__(self, opcode, rd, funct3, rs1, rs2, funct7):
         self.opcode = opcode
         self.rd = rd

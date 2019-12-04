@@ -3,6 +3,10 @@ from riscemv.ISA.Instruction import Instruction
 
 
 class IType_Instruction(Instruction):
+    rd_type = "int"
+    rs_type = "int"
+
+
     def __init__(self, opcode, rd, funct3, rs, imm):
         self.opcode = opcode
         self.rd = rd
@@ -37,4 +41,4 @@ class IType_Instruction(Instruction):
 
 
     def is_load(self):
-        return self.opcode == "0000011"
+        return self.opcode in ["0000011", "0000111"]

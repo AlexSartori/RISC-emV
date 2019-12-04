@@ -3,6 +3,9 @@ from riscemv.ISA.Instruction import Instruction
 
 
 class UJType_Instruction(Instruction):
+    rd_type = "int"
+
+
     def __init__(self, opcode, rd, imm):
         self.opcode = opcode
         self.imm = imm
