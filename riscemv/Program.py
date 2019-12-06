@@ -37,6 +37,7 @@ class Program:
         pc = 0
         for l_n, line in enumerate(text.split('\n')):
             line = line.split(';')[0].strip()
+            line = line.replace('\t', ' ')
 
             if line != '':
                 if re.match('\.[a-zA-Z0-9]+', line):
@@ -70,7 +71,7 @@ class Program:
     def __parse_directive__(self, line, pc):
         line = line.split(' ')
 
-        if line[0] in ['.text', '.data', '.rodata', 'bss']:
+        if line[0] in ['.text', '.data', '.rodata', '.bss']:
             self.sections[line[0]] = pc
         elif line[0] == '.align' or line[0] == '.p2align':
             self.alignment = 2**int(line[1])

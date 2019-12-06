@@ -33,16 +33,18 @@ class ISA:
             ISA.ISA_singleton = self.ISA
         else:
             self.ISA = ISA.ISA_singleton
-
+        
 
     def instruction_from_str(self, line, symbol_table, pc):
-        line = [l.lower().strip() for l in line.split(' ')]
+        line = [l.lower().strip() for l in re.split(' |,', line)]
+        line = list(filter(None, line))
+
         inst = None
 
         if line[0] in self.ISA['r-type']:
             match = self.ISA['r-type'][line[0]]
-            rd  = int(line[1][1:-1])  # Remove letter and comma
-            rs1 = int(line[2][1:-1])
+            rd  = int(line[1][1:])  # Remove letter
+            rs1 = int(line[2][1:])
             rs2 = int(line[3][1:])
 
             funct3 = match['funct3'] if 'funct3' in match else '000'
@@ -61,14 +63,14 @@ class ISA:
                 inst.rs2_type = match['rtType']
         elif line[0] in self.ISA['i-type']:
             match = self.ISA['i-type'][line[0]]
-            rd = int(line[1][1:-1])  # Remove letter and comma
+            rd = int(line[1][1:])  # Remove letter
 
             if match['opcode'] in ["0000011", "0000111"]:  # Load instructions
                 _rexp = re.search(r'([0-9]{1,2})\([x|fp]([0-9]{1,2})\)', line[2])
                 imm = int(_rexp.group(1))
                 rs  = int(_rexp.group(2))
             else:
-                rs  = int(line[2][1:-1])
+                rs  = int(line[2][1:])
                 imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
@@ -87,7 +89,7 @@ class ISA:
                 inst.length = match['length']
         elif line[0] in self.ISA['s-type']:
             match = self.ISA['s-type'][line[0]]
-            rs2 = int(line[1][1:-1])  # Remove letter and comma
+            rs2 = int(line[1][1:])  # Remove letter
             rs1_parts = line[2][:-1].split('(')
             rs1 = int(rs1_parts[1][1:])  # Remove letter
             imm = int(rs1_parts[0])
@@ -107,8 +109,8 @@ class ISA:
             inst.length = match['length']
         elif line[0] in self.ISA['b-type']:
             match = self.ISA['b-type'][line[0]]
-            rs2 = int(line[1][1:-1])  # Remove letter and comma
-            rs1 = int(line[2][1:-1])  # Remove letter and comma
+            rs2 = int(line[1][1:])  # Remove letter
+            rs1 = int(line[2][1:])  # Remove letter
 
             if line[3].isdigit():
                 imm = int(line[3])
@@ -128,7 +130,7 @@ class ISA:
                 inst.rs2_type = match['rtType']
         elif line[0] in self.ISA['u-type']:
             match = self.ISA['u-type'][line[0]]
-            rd  = int(line[1][1:-1])
+            rd  = int(line[1][1:])
             imm = int(line[2])
 
             inst = UType_Instruction(match.opcode, rd, imm)
@@ -142,7 +144,7 @@ class ISA:
                 inst.rd_type = match['rdType']
         elif line[0] in self.ISA['uj-type']:
             match = self.ISA['uj-type'][line[0]]
-            rd = int(line[1][1:-1])
+            rd = int(line[1][1:])
             imm = int(line[2])
 
             inst = UJType_Instruction(match.opcode, rd, imm)
@@ -156,9 +158,9 @@ class ISA:
                 inst.rd_type = match['rdType']
         elif line[0] in self.ISA['r4-type']:
             match = self.ISA['r4-type'][line[0]]
-            rd  = int(line[1][1:-1])  # Remove letter and comma
-            rs1 = int(line[2][1:-1])
-            rs2 = int(line[3][1:-1])
+            rd  = int(line[1][1:])  # Remove letter
+            rs1 = int(line[2][1:])
+            rs2 = int(line[3][1:])
             rs3 = int(line[4][1:])
 
             fmt = match['fmt']
