@@ -6,6 +6,7 @@ from riscemv.ISA.BType_Instruction import BType_Instruction
 from riscemv.ISA.UType_Instruction import UType_Instruction
 from riscemv.ISA.UJType_Instruction import UJType_Instruction
 from riscemv.ISA.R4Type_Instruction import R4Type_Instruction
+from riscemv.RegisterFile import RegisterFile
 
 
 class ISA:
@@ -33,11 +34,24 @@ class ISA:
             ISA.ISA_singleton = self.ISA
         else:
             self.ISA = ISA.ISA_singleton
+
+    
+    def __map_register_name__(self, reg_name):
+        rf = RegisterFile()
+        for idx, reg in enumerate(rf.IntRegisters):
+            if reg.symbolic_name == reg_name:
+                return 'x' + str(idx)
+
+        for idx, reg in enumerate(rf.FPRegisters):
+            if reg.symbolic_name == reg_name:
+                return 'f' + str(idx)
+        return reg_name
         
 
     def instruction_from_str(self, line, symbol_table, pc):
         line = [l.lower().strip() for l in re.split(' |,', line)]
         line = list(filter(None, line))
+        line = [self.__map_register_name__(reg_name) for reg_name in line]
 
         inst = None
 
