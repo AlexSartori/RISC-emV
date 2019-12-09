@@ -11,10 +11,10 @@ from riscemv.ISA.BType_Instruction import BType_Instruction
 
 
 class Tomasulo:
-    def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number):
+    def __init__(self, XLEN, thread_id, adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number):
         self.__steps = 0
         self.stall = False
-        self.thread_id = None
+        self.thread_id = thread_id
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
@@ -129,7 +129,7 @@ class Tomasulo:
 
 
     def write(self):
-        for fu in self.RS:
+        for fu in self.RS.get_fus_of_thread(self.thread_id):
             if fu.busy and fu.time_remaining == 0:
                 self.IFQ.set_instruction_write_result(fu.instruction.program_counter, self.__steps)
                 if isinstance(fu.instruction, SType_Instruction):

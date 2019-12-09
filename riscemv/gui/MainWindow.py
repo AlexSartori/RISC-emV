@@ -14,15 +14,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.emulation_delay = 500
         self.initUI()
         self.add_program_tab()
+        self.init_emulator_components(self.emulators[0])
         self.statusBar().showMessage("Ready")
 
 
     def init_emulator_components(self, emu):
-        self.RF = emu.Regs
-        self.ResStations = emu.RS
-        self.RegStatus = emu.RegisterStat
-        self.IFQ = emu.IFQ
-        self.DM = emu.DM
+        self.ResStations = emu.ResStations
 
 
     def initUI(self):
@@ -47,12 +44,18 @@ class MainWindow(QtWidgets.QMainWindow):
         confAction.triggered.connect(self.open_conf_win)
         confAction.setShortcut('Alt+C')
 
+        addProgAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-add'), 'Add program', self)
+        addProgAction.triggered.connect(self.add_program_tab)
+        addProgAction.setShortcut('Ctrl+N')
+
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toolbar.addAction(startAction)
         self.toolbar.addWidget(delay_slider)
         self.toolbar.addAction(stepAction)
         self.toolbar.addAction(confAction)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(addProgAction)
 
 
         self.programs_tab = QtWidgets.QTabWidget()
@@ -60,15 +63,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
     
     def add_program_tab(self):
-        tab = TomasuloView()
+        thread_id = len(self.emulators)
+        tab = TomasuloView(thread_id)
         self.emulators.append(tab)
-        self.programs_tab.addTab(tab, "Program #" + str(len(self.emulators)))
+        self.programs_tab.addTab(tab, "Program #" + str(thread_id))
 
 
     def emulator_step(self):
         step = 0
         for emu in self.emulators:
-            step = max(emu.emulator_step(), step)
+            if not emu.emulator_instance.is_halted():
+                step = max(emu.emulator_step(), step)
+
+        for emu in self.emulators: # update all reservation stations
+            emu.resstations_view.load_contents()
+
         self.statusBar().showMessage("Performed step #" + str(step))
 
 

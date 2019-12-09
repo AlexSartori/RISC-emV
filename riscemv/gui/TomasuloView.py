@@ -12,9 +12,10 @@ from riscemv.gui.DataMemoryViewer import DataMemoryViewer
 
 
 class TomasuloView(QtWidgets.QSplitter):
-    def __init__(self):
+    def __init__(self, thread_id):
         super(TomasuloView, self).__init__()
-        self.emulator_instance = Tomasulo(32, 2, 2, 2, 2, 2, 2, 2, 2)
+        self.thread_id = thread_id
+        self.emulator_instance = Tomasulo(32, thread_id, 2, 2, 2, 2, 2, 2, 2, 2)
         self.init_emulator_components(self.emulator_instance)
         self.initUI()
 
