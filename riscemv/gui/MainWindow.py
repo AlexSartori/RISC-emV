@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 
+from riscemv.gui.ResStationsViewer import ResStationsViewer
 from riscemv.gui.TomasuloView import TomasuloView
 from riscemv.gui.ConfWindow import ConfWindow
 
@@ -59,6 +60,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         self.programs_tab = QtWidgets.QTabWidget()
+        self.programs_tab.setTabBar(TabBar(self.programs_tab))
         self.setCentralWidget(self.programs_tab)
 
     
@@ -98,3 +100,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def set_emulation_delay(self, v):
         self.emulation_delay = v
+
+
+class TabBar(QtWidgets.QTabBar):
+    def __init__(self, parent):
+        QtWidgets.QTabBar.__init__(self, parent)
+
+    def paintEvent(self, event):
+        qp = QtGui.QPainter(self)
+        for index in range(self.count()):
+            option = QtWidgets.QStyleOptionTab()
+            self.initStyleOption(option, index)
+            palette = self.palette()
+            palette.setColor(palette.Button, ResStationsViewer.get_color(index))
+            option.palette = palette
+            self.style().drawControl(QtWidgets.QStyle.CE_TabBarTab, option, qp, self)

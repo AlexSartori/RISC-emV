@@ -44,7 +44,7 @@ class ResStationsViewer(QtWidgets.QFrame):
             self.rs_table.setItem(i, 9, QtWidgets.QTableWidgetItem(str(r.result) if r.result is not None else ''))
 
             if r.busy:
-                self.set_row_color(i, self.colors[r.thread_id % len(self.colors)])
+                self.set_row_color(i, self.get_color(r.thread_id))
 
         # self.rs_table.setMaximumHeight(
         #     self.rs_table.horizontalHeader().height()
@@ -67,3 +67,8 @@ class ResStationsViewer(QtWidgets.QFrame):
         QtGui.QColor(119, 0, 255),
         QtGui.QColor(255, 230, 0)
     ]
+
+
+    @staticmethod
+    def get_color(idx):
+        return ResStationsViewer.colors[idx % len(ResStationsViewer.colors)]
