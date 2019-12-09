@@ -14,6 +14,7 @@ class Tomasulo:
     def __init__(self, XLEN, adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number):
         self.__steps = 0
         self.stall = False
+        self.thread_id = None
 
         self.IFQ = InstructionBuffer()
         self.Regs = RegisterFile()
@@ -54,7 +55,7 @@ class Tomasulo:
             if isinstance(instruction, BType_Instruction):
                 self.stall = True
 
-            fu = self.RS.get_first_free(instruction.functional_unit)
+            fu = self.RS.get_first_free(instruction.functional_unit, self.thread_id)
 
             if fu is None:
                 print("No available Reservation Station, stalling")
@@ -102,7 +103,7 @@ class Tomasulo:
 
 
     def execute(self):
-        for fu in self.RS:
+        for fu in self.RS.get_fus_of_thread(self.thread_id):
             if fu.busy and fu.time_remaining > 0 and fu.Qj == 0 and fu.Qk == 0:
                 self.IFQ.set_instruction_execute(fu.instruction.program_counter, self.__steps)
                 fu.time_remaining -= 1

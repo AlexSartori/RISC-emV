@@ -10,19 +10,43 @@ class ReservationStation:
         self.busy = False
         self.instruction = None
         self.result = None
+        self.thread_id = None
         self.Vj = self.Vk = self.Qj = self.Qk = self.A = None
 
 
 class ReservationStations:
+    RS_singleton = None
+
     def __init__(self, adders_number, multipliers_number, dividers_number, loaders_number, fp_adders_number, fp_multipliers_number, fp_dividers_number, fp_loaders_number):
-        self.set_adders_number(adders_number)
-        self.set_multipliers_number(multipliers_number)
-        self.set_dividers_number(dividers_number)
-        self.set_loaders_number(loaders_number)
-        self.set_fp_adders_number(fp_adders_number)
-        self.set_fp_multipliers_number(fp_multipliers_number)
-        self.set_fp_dividers_number(fp_dividers_number)
-        self.set_fp_loaders_number(fp_loaders_number)
+        if ReservationStations.RS_singleton is None:
+            self.set_adders_number(adders_number)
+            self.set_multipliers_number(multipliers_number)
+            self.set_dividers_number(dividers_number)
+            self.set_loaders_number(loaders_number)
+            self.set_fp_adders_number(fp_adders_number)
+            self.set_fp_multipliers_number(fp_multipliers_number)
+            self.set_fp_dividers_number(fp_dividers_number)
+            self.set_fp_loaders_number(fp_loaders_number)
+
+            ReservationStations.RS_singleton = {
+                'add': self.adders,
+                'mul': self.multipliers,
+                'div': self.dividers,
+                'ld': self.loaders,
+                'fadd': self.fp_adders,
+                'fmul': self.fp_multipliers,
+                'fdiv': self.fp_dividers,
+                'fld': self.fp_loaders
+            }
+        else:
+            self.adders = ReservationStations.RS_singleton['add']
+            self.multipliers = ReservationStations.RS_singleton['mul']
+            self.dividers = ReservationStations.RS_singleton['div']
+            self.loaders = ReservationStations.RS_singleton['ld']
+            self.fp_adders = ReservationStations.RS_singleton['fadd']
+            self.fp_multipliers = ReservationStations.RS_singleton['fmul']
+            self.fp_dividers = ReservationStations.RS_singleton['fdiv']
+            self.fp_loaders = ReservationStations.RS_singleton['fld']
 
 
     def __iter__(self):
@@ -76,15 +100,20 @@ class ReservationStations:
         return fu_type
 
 
-    def get_first_free(self, functional_unit):
+    def get_first_free(self, functional_unit, thread_id):
         fu_type = self.get_function_units(functional_unit)
 
         for fu in fu_type:
             if not fu.busy:
                 fu.busy = True
+                fu.thread_id = thread_id
                 return fu
 
         return None  # All busy
+
+    
+    def get_fus_of_thread(self, thread_id):
+        return list(filter(lambda fu: fu.thread_id == thread_id, self))
 
 
     def all_empty(self):
@@ -95,64 +124,48 @@ class ReservationStations:
 
 
     def set_adders_number(self, n):
-        self.adders_number = n
-
         self.adders = []
-        for i in range(self.adders_number):
+        for i in range(n):
             self.adders.append(ReservationStation("ADD" + str(i)))
 
 
     def set_multipliers_number(self, n):
-        self.multipliers_number = n
-
         self.multipliers = []
-        for i in range(self.multipliers_number):
+        for i in range(n):
             self.multipliers.append(ReservationStation("MULT" + str(i)))
 
 
     def set_dividers_number(self, n):
-        self.dividers_number = n
-
         self.dividers = []
-        for i in range(self.dividers_number):
+        for i in range(n):
             self.dividers.append(ReservationStation("DIV" + str(i)))
 
 
     def set_loaders_number(self, n):
-        self.loaders_number = n
-
         self.loaders = []
-        for i in range(self.loaders_number):
+        for i in range(n):
             self.loaders.append(ReservationStation("LD" + str(i)))
 
 
     def set_fp_adders_number(self, n):
-        self.fp_adders_number = n
-
         self.fp_adders = []
-        for i in range(self.fp_adders_number):
+        for i in range(n):
             self.fp_adders.append(ReservationStation("FADD" + str(i)))
 
 
     def set_fp_multipliers_number(self, n):
-        self.fp_multipliers_number = n
-
         self.fp_multipliers = []
-        for i in range(self.fp_multipliers_number):
+        for i in range(n):
             self.fp_multipliers.append(ReservationStation("FMULT" + str(i)))
 
 
     def set_fp_dividers_number(self, n):
-        self.fp_dividers_number = n
-
         self.fp_dividers = []
-        for i in range(self.fp_dividers_number):
+        for i in range(n):
             self.fp_dividers.append(ReservationStation("FDIV" + str(i)))
 
 
     def set_fp_loaders_number(self, n):
-        self.fp_loaders_number = n
-
         self.fp_loaders = []
-        for i in range(self.fp_loaders_number):
+        for i in range(n):
             self.fp_loaders.append(ReservationStation("FLD" + str(i)))

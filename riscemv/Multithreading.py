@@ -5,6 +5,7 @@ class Multithreading():
 
 
     def add_thread(self, thread:Tomasulo):
+        thread.id = len(self.threads)
         self.threads.append(thread)
 
 
