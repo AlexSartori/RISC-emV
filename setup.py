@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/alexsartori/RISC-emV",
     install_requires=["pyqt5"],
     packages=setuptools.find_packages(),
-    package_data={ },
+    package_data={},
     entry_points={
         # 'console_scripts': [
         #     'foo = my_package.some_module:main_func',
