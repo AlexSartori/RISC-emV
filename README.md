@@ -6,4 +6,12 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/alexsartori/risc-emv/badge)](https://www.codefactor.io/repository/github/alexsartori/risc-emv)
 
 
-Graphical emulator for the RISC-V architecture
+Graphical emulator for the RISC-V architecture, implementing the Tomasulo algorithm and the Simultaneous Multi-Threading.
+
+
+
+## How to install
+
+```
+pip install -e .
+```
