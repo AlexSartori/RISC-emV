@@ -49,6 +49,10 @@ class MainWindow(QtWidgets.QMainWindow):
         addProgAction.triggered.connect(self.add_program_tab)
         addProgAction.setShortcut('Ctrl+N')
 
+        delProgAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove'), 'Delete selected program', self)
+        delProgAction.triggered.connect(self.del_program_tab)
+        delProgAction.setShortcut('Ctrl+D')
+        
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toolbar.addAction(startAction)
@@ -57,6 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.toolbar.addAction(confAction)
         self.toolbar.addSeparator()
         self.toolbar.addAction(addProgAction)
+        self.toolbar.addAction(delProgAction)
 
 
         self.programs_tab = QtWidgets.QTabWidget()
@@ -69,6 +74,12 @@ class MainWindow(QtWidgets.QMainWindow):
         tab = TomasuloView(thread_id)
         self.emulators.append(tab)
         self.programs_tab.addTab(tab, "Program #" + str(thread_id))
+
+
+    def del_program_tab(self):
+        thread_id = self.programs_tab.currentIndex()
+        del self.emulators[thread_id]
+        self.programs_tab.removeTab(thread_id)
 
 
     def emulator_step(self):
