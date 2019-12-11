@@ -46,5 +46,5 @@ class BType_Instruction(Instruction):
         code = self.execution_code
         code = code.replace('rs', str(rs1_value))
         code = code.replace('rt', str(rs2_value))
-        
+
         return self.imm if eval(code) else 4

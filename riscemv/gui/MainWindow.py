@@ -52,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
         delProgAction = QtWidgets.QAction(QtGui.QIcon.fromTheme('list-remove'), 'Delete selected program', self)
         delProgAction.triggered.connect(self.del_program_tab)
         delProgAction.setShortcut('Ctrl+D')
-        
+
         self.toolbar = self.addToolBar('HomeToolbar')
         self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toolbar.addAction(startAction)
@@ -68,12 +68,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.programs_tab.setTabBar(TabBar(self.programs_tab))
         self.setCentralWidget(self.programs_tab)
 
-    
+
     def add_program_tab(self):
         thread_id = len(self.emulators)
         tab = TomasuloView(thread_id)
         self.emulators.append(tab)
-        self.programs_tab.addTab(tab, "Program #" + str(thread_id))
+        self.programs_tab.addTab(tab, "Thread #" + str(thread_id))
 
 
     def del_program_tab(self):
@@ -88,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if not emu.emulator_instance.is_halted():
                 step = max(emu.emulator_step(), step)
 
-        for emu in self.emulators: # update all reservation stations
+        for emu in self.emulators:  # Update all reservation stations
             emu.resstations_view.load_contents()
 
         self.statusBar().showMessage("Performed step #" + str(step))
@@ -100,7 +100,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for emu in self.emulators:
             if not emu.emulator_instance.is_halted():
                 all_halted = False
-        
+
         if not all_halted:
             QtCore.QTimer.singleShot(self.emulation_delay, self.emulator_run)
 

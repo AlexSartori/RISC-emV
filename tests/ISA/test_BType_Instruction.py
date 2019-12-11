@@ -1,4 +1,5 @@
 from riscemv.ISA.ISA import ISA
+from riscemv.ISA.BType_Instruction import BType_Instruction
 
 
 def test_beq():
@@ -14,3 +15,8 @@ def test_beq():
     assert exp == instr.execute(rs1, rs1)
 
     assert 4 == instr.execute(rs1, rs2)
+
+
+def test_to_bin():
+    inst = ISA().instruction_from_str('beq x5, x0, 4', None, 0)  # BType_Instruction(1100011, 5, '000', 1, 2)
+    assert inst.to_binary() == '00000000010100000000001001100011'

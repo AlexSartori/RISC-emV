@@ -35,7 +35,7 @@ class ISA:
         else:
             self.ISA = ISA.ISA_singleton
 
-    
+
     def __map_register_name__(self, reg_name):
         rf = RegisterFile()
         for idx, reg in enumerate(rf.IntRegisters):
@@ -46,7 +46,7 @@ class ISA:
             if reg.symbolic_name == reg_name:
                 return 'f' + str(idx)
         return reg_name
-        
+
 
     def instruction_from_str(self, line, symbol_table, pc):
         line = [l.lower().strip() for l in re.split(' |,', line)]
@@ -93,7 +93,7 @@ class ISA:
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            
+
             if 'rdType' in match:
                 inst.rd_type = match['rdType']
             if 'rsType' in match:
@@ -113,7 +113,7 @@ class ISA:
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
-            inst.clock_needed = match['clockNeeded']            
+            inst.clock_needed = match['clockNeeded']
 
             if 'rsType' in match:
                 inst.rs1_type = match['rsType']
@@ -137,7 +137,7 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            
+
             if 'rsType' in match:
                 inst.rs1_type = match['rsType']
             if 'rtType' in match:
@@ -153,7 +153,7 @@ class ISA:
             inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            
+
             if 'rdType' in match:
                 inst.rd_type = match['rdType']
         elif line[0] in self.ISA['uj-type']:
@@ -167,7 +167,7 @@ class ISA:
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
-            
+
             if 'rdType' in match:
                 inst.rd_type = match['rdType']
         elif line[0] in self.ISA['r4-type']:

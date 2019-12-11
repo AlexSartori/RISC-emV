@@ -52,14 +52,16 @@ class Tomasulo:
             self.IFQ.set_instruction_issue(pc, self.__steps)
             print("[TOM #", self.thread_id,"] Issuing", instruction)
 
-            fu = self.RS.get_first_free(instruction.functional_unit, self.thread_id)
+            fu = self.RS.get_first_free(instruction.functional_unit)
 
             if fu is None:
                 print("[TOM #", self.thread_id,"] No available Reservation Station, stalling")
             else:
+                fu.busy = True
+                fu.thread_id = self.thread_id
                 if isinstance(instruction, BType_Instruction):
                     self.stall = True
-                
+
                 pc += 4
                 self.Regs.PC.set_value(pc)
                 fu.instruction = instruction

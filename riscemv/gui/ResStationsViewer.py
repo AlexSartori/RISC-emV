@@ -31,17 +31,20 @@ class ResStationsViewer(QtWidgets.QFrame):
         self.rs_table.setRowCount(0)
         self.rs_table.setRowCount(len(self.RS))
 
+        def fmt_int(n):
+            return str(n) if n is not None else ''
+
         for i, r in enumerate(self.RS):
-            self.rs_table.setItem(i, 0, QtWidgets.QTableWidgetItem(str(r.time_remaining) if r.time_remaining is not None else ''))
+            self.rs_table.setItem(i, 0, QtWidgets.QTableWidgetItem(fmt_int(r.time_remaining)))
             self.rs_table.setItem(i, 1, QtWidgets.QTableWidgetItem(r.name))
             self.rs_table.setItem(i, 2, QtWidgets.QTableWidgetItem('Yes' if r.busy else 'No'))
-            self.rs_table.setItem(i, 3, QtWidgets.QTableWidgetItem(str(r.instruction) if r.instruction is not None else ''))
-            self.rs_table.setItem(i, 4, QtWidgets.QTableWidgetItem(str(r.Vj) if r.Vj is not None else ''))
-            self.rs_table.setItem(i, 5, QtWidgets.QTableWidgetItem(str(r.Vk) if r.Vk is not None else ''))
-            self.rs_table.setItem(i, 6, QtWidgets.QTableWidgetItem(str(r.Qj) if r.Qj is not None else ''))
-            self.rs_table.setItem(i, 7, QtWidgets.QTableWidgetItem(str(r.Qk) if r.Qk is not None else ''))
-            self.rs_table.setItem(i, 8, QtWidgets.QTableWidgetItem(str(r.A) if r.A is not None else ''))
-            self.rs_table.setItem(i, 9, QtWidgets.QTableWidgetItem(str(r.result) if r.result is not None else ''))
+            self.rs_table.setItem(i, 3, QtWidgets.QTableWidgetItem(fmt_int(r.instruction)))
+            self.rs_table.setItem(i, 4, QtWidgets.QTableWidgetItem(fmt_int(r.Vj)))
+            self.rs_table.setItem(i, 5, QtWidgets.QTableWidgetItem(fmt_int(r.Vk)))
+            self.rs_table.setItem(i, 6, QtWidgets.QTableWidgetItem(fmt_int(r.Qj)))
+            self.rs_table.setItem(i, 7, QtWidgets.QTableWidgetItem(fmt_int(r.Qk)))
+            self.rs_table.setItem(i, 8, QtWidgets.QTableWidgetItem(fmt_int(r.A)))
+            self.rs_table.setItem(i, 9, QtWidgets.QTableWidgetItem(fmt_int(r.result)))
 
             if r.busy:
                 self.set_row_color(i, self.get_color(r.thread_id))
@@ -59,7 +62,7 @@ class ResStationsViewer(QtWidgets.QFrame):
         for j in range(self.rs_table.columnCount()):
             self.rs_table.item(rowIndex, j).setBackground(color)
 
-        
+
     colors = [
         QtGui.QColor(66, 135, 245),
         QtGui.QColor(255, 102, 8),

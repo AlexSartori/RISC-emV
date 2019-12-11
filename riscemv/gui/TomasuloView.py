@@ -1,6 +1,5 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-from riscemv.Program import Program
 from riscemv.Tomasulo import Tomasulo
 
 from riscemv.gui.CodeEditor import CodeEditor

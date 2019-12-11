@@ -7,6 +7,8 @@ def test_add_status(qtbot):
     rs_v = ResStationsViewer(RS)
 
     fu = RS.get_first_free("ADD")
+    fu.busy = True
+    fu.thread_id = 0
     fu.instruction = "ADD x1, x0, 3"
     fu.time_remaining = 3
 

@@ -100,18 +100,16 @@ class ReservationStations:
         return fu_type
 
 
-    def get_first_free(self, functional_unit, thread_id):
+    def get_first_free(self, functional_unit):
         fu_type = self.get_function_units(functional_unit)
 
         for fu in fu_type:
             if not fu.busy:
-                fu.busy = True
-                fu.thread_id = thread_id
                 return fu
 
         return None  # All busy
 
-    
+
     def get_fus_of_thread(self, thread_id):
         return list(filter(lambda fu: fu.thread_id == thread_id, self))
 
