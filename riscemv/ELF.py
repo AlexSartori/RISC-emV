@@ -111,7 +111,8 @@ class ELF:
                 print("    Found SHT_STRTAB at {} of {} bytes".format(s.sh_offset, s.sh_size))
                 self.file.seek(s.sh_offset)
                 data = self.file.read(s.sh_size)
-                strtab += ''.join([chr(c) for c in data])
+
+                strtab = ''.join([chr(c) for c in data]) + strtab
 
         print("    .strtab: " + ''.join([c if c != '\0' else '_' for c in strtab]))
 
@@ -168,3 +169,4 @@ class ELF:
                 self.sh_entsize = self.__read_bytes__(4)
             else:
                 self.sh_entsize = self.__read_bytes__(8)
+
