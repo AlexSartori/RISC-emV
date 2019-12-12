@@ -105,13 +105,10 @@ class ELF:
             self.sections.append(self.Section(self))
 
         # Read sections names
-        strtab = ''
-        for s in self.sections:
-            if s.sh_type == 3:  # SHT_STRTAB
-                print("    Found SHT_STRTAB at {} of {} bytes".format(s.sh_offset, s.sh_size))
-                self.file.seek(s.sh_offset)
-                data = self.file.read(s.sh_size)
-                strtab += ''.join([chr(c) for c in data])
+        strtab_sec = self.sections[self.eheader['e_shstrndx']]
+        self.file.seek(strtab_sec.sh_offset)
+        data = self.file.read(strtab_sec.sh_size)
+        strtab = ''.join([chr(c) for c in data])
 
         print("    .strtab: " + ''.join([c if c != '\0' else '_' for c in strtab]))
 
@@ -123,8 +120,8 @@ class ELF:
                 name += strtab[idx]
                 idx += 1
 
-            print("        {} -> {}".format(s.sh_name, name))
             s.sh_name = name
+            print("        {}".format(s.sh_name))
 
 
     class Section:
