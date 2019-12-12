@@ -203,7 +203,7 @@ class ISA:
 
     def instruction_from_bin(self, binary_code, pc):
         opcode = binary_code[25:32]
-        print("OPCODE:", opcode)
+        # print("OPCODE:", opcode)
 
         for instr_type in self.ISA:
             for instr_code in self.ISA[instr_type]:

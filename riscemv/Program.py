@@ -1,5 +1,6 @@
 import re
 from riscemv.ISA.ISA import ISA
+from riscemv.ELF import ELF
 
 
 class Program:
@@ -109,7 +110,9 @@ class Program:
         return iter(self.IM)
 
 
-    # def load_machine_code(self, filename):
+    def load_machine_code(self, filename):
+        file = ELF(filename)
+        file.load(self)
     #     self.lines = []
     #
     #     i = 0
