@@ -45,7 +45,9 @@ class ELF:
                 for offset, byte in enumerate(s.content):
                     prog.DM.store(s.sh_addr + offset, byte)
 
-            print("        > Loaded {} bytes from {} to {} (excluded)".format(s.sh_size, s.sh_addr, s.sh_addr + s.sh_size))
+            print("        > Loaded {} bytes from {} to {} excluded. (Read from offset {})".format(
+                s.sh_size, s.sh_addr, s.sh_addr + s.sh_size, s.sh_offset
+            ))
             next_addr += s.sh_size
 
             # Insert start address in program's section array
@@ -74,7 +76,7 @@ class ELF:
         pc = prog.sections['.text']
         self.file.seek(self.sections['.text'].sh_offset)
         while self.file.tell() < self.sections['.text'].sh_offset + self.sections['.text'].sh_size:
-            bin = ["{:08b}".format(b) for b in self.file.read(6)]
+            bin = ["{:08b}".format(b) for b in reversed(self.file.read(4))]
             print(bin)
 
             bin = ''.join(''.join((byte)) for byte in bin)
