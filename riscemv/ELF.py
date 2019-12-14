@@ -1,10 +1,15 @@
 from riscemv.ISA.ISA import ISA
+from riscemv.ISA.IType_Instruction import IType_Instruction
+from riscemv.ISA.UType_Instruction import UType_Instruction
+from riscemv.ISA.UJType_Instruction import UJType_Instruction
 
 
 class ELF:
     def __init__(self, filename):
         self.file = open(filename, 'rb')
         print("Parsing ELF file:", self.file.name)
+
+        self.symbols = []
 
         self.eheader = {}
         self.parse_eh()  # ELF Header
@@ -70,11 +75,17 @@ class ELF:
             print(''.join(ascii[ascii_idx:ascii_idx+8]))
             ascii_idx += 8
 
+        # Make relocation of symbols
+        symbol_bindings = self.parse_rs()  # Relocation section
+        
+
         # Parse .text section to instructions
         print("\nParsing .text section into ISA.Instruction objects...")
         isa = ISA()
         pc = prog.sections['.text']
         self.file.seek(self.sections['.text'].sh_offset)
+
+
         while self.file.tell() < self.sections['.text'].sh_offset + self.sections['.text'].sh_size:
             bin = ["{:08b}".format(b) for b in reversed(self.file.read(4))]
 
@@ -84,6 +95,14 @@ class ELF:
                 inst = isa.instruction_from_bin(bin, pc)
             except:
                 inst = None
+
+            if len(prog.IM) in symbol_bindings:  # Relocate symbol in the instruction
+                sym = symbol_bindings[len(prog.IM)]
+                print("Relocated a symbol: ", sym)
+                if (isinstance(inst, IType_Instruction) or isinstance(inst, UType_Instruction) 
+                    or isinstance(inst, UJType_Instruction)):
+                    inst.imm = sym
+                    inst.string = inst.string[:-1] + sym
 
             print('   ', bin, '->', inst)
             prog.IM.append(inst)
@@ -99,6 +118,33 @@ class ELF:
             return int.from_bytes(data, self.eheader['EI_DATA'])
         else:
             return int.from_bytes(data, 'little')
+
+
+    def parse_rs(self):
+        print("\nParsing .rela.text section...")
+        
+        binding = {}
+
+        self.file.seek(self.sections['.rela.text'].sh_offset)
+        while self.file.tell() < self.sections['.rela.text'].sh_offset + self.sections['.rela.text'].sh_size:
+            r_offset = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
+            r_info = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
+            r_addend = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
+            
+            r_offset = int(''.join(r_offset), 2) / 4
+            r_info = ''.join(r_info)
+           
+            r_info_sym_num = int(r_info[:32], 2)
+            r_info_type = int(r_info[32:], 2)
+
+            symbol = self.symbols[r_info_sym_num]
+
+            if r_info_type == 26:  # %hi
+                binding[r_offset] = '%hi({})'.format(symbol.st_name)
+            elif r_info_type == 27:  # %lo
+                binding[r_offset] = '%lo({})'.format(symbol.st_name)
+                
+        return binding
 
 
     def parse_eh(self):
@@ -220,6 +266,7 @@ class ELF:
                 name += strtab.content[idx]
                 idx += 1
             sym.st_name = name
+            self.symbols.append(sym)
 
             if name != '':
                 print("    {} := {}".format(sym.st_name, sym.st_value))
