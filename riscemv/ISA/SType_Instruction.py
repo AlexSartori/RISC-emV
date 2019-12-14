@@ -33,7 +33,7 @@ class SType_Instruction(Instruction):
         funct3 = binary_code[17:20]
         imm4 = binary_code[20:25]
         opcode = binary_code[25:32]
-        imm = int(imm11 + imm4, 2)
+        imm = Instruction.imm_to_bin(imm11 + imm4)
         return SType_Instruction(opcode, imm, funct3, rs1, rs2)
 
 

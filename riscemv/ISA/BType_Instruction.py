@@ -38,7 +38,7 @@ class BType_Instruction(Instruction):
         imm11 = binary_code[24]
         opcode = binary_code[25:32]
         imm_bin = imm12 + imm11 + imm10 + imm4 + "0"
-        imm = int(imm_bin, 2)
+        imm = Instruction.imm_bin_to_int(imm_bin)
         return BType_Instruction(opcode, imm, funct3, rs1, rs2)
 
 

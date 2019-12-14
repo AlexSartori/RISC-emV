@@ -21,9 +21,21 @@ class Instruction(abc.ABC):
         else:
             return self.execution_code
 
+    
+    @staticmethod
+    def imm_bin_to_int(value):
+        bits = len(value)
+        dec = int(value, 2)
+
+        if int(value[0]) == 1:
+            dec = -1 * (2**bits - dec)
+        return dec
+
+
     @abc.abstractmethod
     def to_binary(self):
         pass
+
 
     @abc.abstractmethod
     def execute(self):
