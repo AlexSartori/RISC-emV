@@ -77,13 +77,14 @@ class ELF:
         self.file.seek(self.sections['.text'].sh_offset)
         while self.file.tell() < self.sections['.text'].sh_offset + self.sections['.text'].sh_size:
             bin = ["{:08b}".format(b) for b in reversed(self.file.read(4))]
-            print(bin)
 
             bin = ''.join(''.join((byte)) for byte in bin)
-            print(bin)
-            print(bin[:12], bin[12:17], bin[17:20], bin[20:25], bin[25:32])
 
-            inst = isa.instruction_from_bin(bin, pc)
+            try:
+                inst = isa.instruction_from_bin(bin, pc)
+            except:
+                inst = None
+
             print('   ', bin, '->', inst)
             prog.IM.append(inst)
 
