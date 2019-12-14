@@ -112,7 +112,7 @@ class Program:
 
     def load_machine_code(self, filename):
         file = ELF(filename)
-        file.load(self)
+        file.load_program(self)
     #     self.lines = []
     #
     #     i = 0
