@@ -45,11 +45,28 @@ class ELF:
                 for offset, byte in enumerate(s.content):
                     prog.DM.store(s.sh_addr + offset, byte)
 
-            print("        > Loaded {} bytes from {} to {}".format(s.sh_size, s.sh_addr, s.sh_addr + s.sh_size - 1))
+            print("        > Loaded {} bytes from {} to {} (excluded)".format(s.sh_size, s.sh_addr, s.sh_addr + s.sh_size))
             next_addr += s.sh_size
 
             # Insert start address in program's section array
             prog.sections[s.sh_name] = s.sh_addr
+
+        # Dump DM
+        print("\nData Memory dump:")
+        bin, hex, ascii = [], [], []
+        for addr, val in enumerate(prog.DM):
+            bin.append('{:08b}'.format(val))
+            hex.append('{:02x}'.format(val))
+            ascii.append(chr(val) if chr(val).isprintable() and chr(val) != '\n' else '.')
+
+        bin_idx, hex_idx, ascii_idx = 0, 0, 0
+        while bin_idx < len(bin):
+            print('   ', ' '.join(bin[bin_idx:bin_idx+8]), end=' │ ')
+            bin_idx += 8
+            print(' '.join(hex[hex_idx:hex_idx+8]), end=' │ ')
+            hex_idx += 8
+            print(''.join(ascii[ascii_idx:ascii_idx+8]))
+            ascii_idx += 8
 
         # Parse .text section to instructions
         print("\nParsing .text section into ISA.Instruction objects...")
@@ -57,7 +74,13 @@ class ELF:
         pc = prog.sections['.text']
         self.file.seek(self.sections['.text'].sh_offset)
         while self.file.tell() < self.sections['.text'].sh_offset + self.sections['.text'].sh_size:
-            bin = ''.join(["{:08b}".format(b) for b in reversed(self.file.read(4))])
+            bin = ["{:08b}".format(b) for b in self.file.read(6)]
+            print(bin)
+
+            bin = ''.join(''.join((byte)) for byte in bin)
+            print(bin)
+            print(bin[:12], bin[12:17], bin[17:20], bin[20:25], bin[25:32])
+
             inst = isa.instruction_from_bin(bin, pc)
             print('   ', bin, '->', inst)
             prog.IM.append(inst)
