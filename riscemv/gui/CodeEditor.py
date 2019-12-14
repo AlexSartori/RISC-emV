@@ -1,5 +1,7 @@
 from riscemv.Program import Program
+from riscemv.ELF import ELF
 from PyQt5 import QtWidgets, QtGui, QtCore
+import os
 
 
 class CodeEditor(QtWidgets.QFrame):
@@ -62,10 +64,19 @@ class CodeEditor(QtWidgets.QFrame):
 
 
     def open_document(self):
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s)") # TODO: only .s or ELF
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s);; ELF file (*.o)")
 
         if filename:
-            self.setText(open(filename, 'r').read())
+            ext = os.path.splitext(filename)[1]
+            if ext == '.s':
+                self.setText(open(filename, 'r').read())
+            else:  # ELF file
+                p = Program(self.DM)
+                elf = ELF(filename)
+                elf.load_program(p)
+                code = elf.generate_code_text(p)
+                
+                self.setText(code)
 
 
     def load_program(self):

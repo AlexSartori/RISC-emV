@@ -108,6 +108,24 @@ class ELF:
             prog.IM.append(inst)
 
 
+    def generate_code_text(self, prog):
+        code = ''
+
+        # Section .data ecc 
+        code += '\n.data\n'
+        for sym in self.symbols:
+            if sym.st_name != '':
+                code += '{}:\n.string "{}"\n'.format(sym.st_name, self.sections['.rodata'].content.decode('UTF-8')) # TODO: fix
+            
+
+
+        # Section .text
+        code += '\n.text\n'
+        for inst in prog.IM:
+            code += str(inst) + '\n'
+
+        return code
+
 
     def __read_bytes__(self, n, to_int=True):
         data = self.file.read(n)
