@@ -25,7 +25,7 @@ class IType_Instruction(Instruction):
 
     @staticmethod
     def parse(binary_code):
-        imm = int(binary_code[:12], 2)
+        imm = Instruction.imm_bin_to_int(binary_code[:12])
         rs = int(binary_code[12:17], 2)
         funct3 = binary_code[17:20]
         rd = int(binary_code[20:25], 2)
