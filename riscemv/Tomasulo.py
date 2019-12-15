@@ -48,6 +48,7 @@ class Tomasulo:
         else:
             ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
+            instruction.program_counter = pc
             self.Regs.IR.set_value(int(instruction.to_binary(), 2))
             self.IFQ.set_instruction_issue(pc, self.__steps)
             print("[TOM #", self.thread_id,"] Issuing", instruction)

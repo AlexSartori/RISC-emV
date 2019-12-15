@@ -100,13 +100,13 @@ class ELF:
             if symbol_bindings is not None and len(prog.IM) in symbol_bindings:  # Relocate symbol in the instruction
                 sym = symbol_bindings[len(prog.IM)]
                 print("    (relocating a symbol: {})".format(sym))
-                if (isinstance(inst, IType_Instruction) or isinstance(inst, UType_Instruction)
-                    or isinstance(inst, UJType_Instruction)):
+                if isinstance(inst, (IType_Instruction, UType_Instruction, UJType_Instruction)):
                     inst.imm = sym
                     inst.string = inst.string[:-1] + sym
 
             print('   ', bin, '->', inst if inst is not None else "! [error]")
-            prog.IM.append(inst)
+            if inst is not None:
+                prog.IM.append(inst)
 
 
     def __read_bytes__(self, n, to_int=True):
