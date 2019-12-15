@@ -1,4 +1,5 @@
 from riscemv.Program import Program
+from riscemv.ELF import ELF
 from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 

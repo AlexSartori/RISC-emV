@@ -224,6 +224,7 @@ class ISA:
                             if 'rtType' in instr_match:
                                 inst.rs2_type = instr_match['rtType']
 
+
                             inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
                                     self.__map_reg_name__(inst.rs1, inst.rs1_type), self.__map_reg_name__(inst.rs2, inst.rs2_type))
 
@@ -244,6 +245,14 @@ class ISA:
                                     inst.rd_type = instr_match['rdType']
                                 if 'rsType' in instr_match:
                                     inst.rs_type = instr_match['rsType']
+
+                                if inst.is_load():
+                                    inst.length = instr_match['length']
+                                    inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
+                                            inst.imm, self.__map_reg_name__(inst.rs, inst.rs_type))
+                                else:
+                                    inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
+                                            self.__map_reg_name__(inst.rs, inst.rs_type), inst.imm)
 
                                 if inst.is_load():
                                     inst.length = instr_match['length']
