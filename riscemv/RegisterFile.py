@@ -44,14 +44,16 @@ class RegisterFile:
         for fp_reg in rf_config['FPRegisters']:
             self.FPRegisters.append(Register.parse(fp_reg))
 
+        self.SP = self.IntRegisters[2]
+
 
     def readInt(self, reg_name):
         return self.IntRegisters[reg_name].get_value()
 
 
     def writeInt(self, reg_name, value):
-        self.IntRegisters[reg_name].set_value(value)    
-        
+        self.IntRegisters[reg_name].set_value(value)
+
 
     def readFP(self, reg_name):
         return self.FPRegisters[reg_name].get_value()
@@ -67,7 +69,7 @@ class RegisterFile:
         else:
             return self.readInt(reg_name)
 
-    
+
     def write(self, reg_name, value, reg_type):
         if reg_type == "fp":
             self.writeFP(reg_name, value)

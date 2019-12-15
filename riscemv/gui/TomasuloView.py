@@ -65,6 +65,7 @@ class TomasuloView(QtWidgets.QSplitter):
         self.datamemory_view.load_contents()
 
         self.RF.PC.set_value(prog.get_entry_point())
+        self.RF.SP.set_value(self.DM.size)
         self.emulator_instance.reset_steps()
 
 

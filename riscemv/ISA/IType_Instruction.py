@@ -1,4 +1,3 @@
-import os, json
 from riscemv.ISA.Instruction import Instruction
 
 

@@ -235,7 +235,7 @@ class ISA:
                             imm_bin = '{:032b}'.format(inst.imm)
 
                             if ('imm' in instr_match and imm_bin[:7] == instr_match['imm']) or 'imm' not in instr_match:
-                                inst.execution_code = instr_match['exec'].replace('imm', '0b'+str(imm_bin))
+                                inst.execution_code = instr_match['exec'].replace('imm', str(inst.imm))
                                 inst.functional_unit = instr_match['funcUnit']
                                 inst.clock_needed = instr_match['clockNeeded']
                                 inst.program_counter = pc
@@ -248,10 +248,10 @@ class ISA:
                                 if inst.is_load():
                                     inst.length = instr_match['length']
                                     inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                            inst.imm, self.__map_reg_name__(inst.rs, inst.rs_type))
+                                        inst.imm, self.__map_reg_name__(inst.rs, inst.rs_type))
                                 else:
                                     inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                            self.__map_reg_name__(inst.rs, inst.rs_type), inst.imm)
+                                        self.__map_reg_name__(inst.rs, inst.rs_type), inst.imm)
 
                             return inst
                     elif instr_type == "s-type":
