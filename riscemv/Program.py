@@ -41,15 +41,15 @@ class Program:
             line = line.replace('\t', ' ')
 
             if line != '':
-                if re.match('\.[a-zA-Z0-9]+', line):
+                if re.match(r'\.[a-zA-Z0-9]+', line):
                     # Directive
                     try:
                         pc = self.__parse_directive__(line, pc)
                     except SyntaxError as s:
                         self.syntax_errors.append((l_n, line, s))
-                elif re.match('[a-zA-Z0-9]+:', line):
+                elif re.match(r'[a-zA-Z0-9]+:', line):
                     # Label
-                    label = re.match('[a-zA-Z0-9]+:', line).group(0)
+                    label = re.match(r'[a-zA-Z0-9]+:', line).group(0)
                     label = label[:-1]  # Remove colon
                     self.symbol_table[label] = pc
                 else:
