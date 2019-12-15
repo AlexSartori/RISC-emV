@@ -124,10 +124,18 @@ class Program:
 
     def to_code(self):
         lines = []
+        done_sections = []
+
         for idx, inst in enumerate(self.IM):
             for s in self.sections:
                 if self.sections[s] == idx:
                     lines.append('\n' + s)
+                    done_sections.append(s)
             lines.append('    ' + str(inst))
 
-        return '\n'.join(lines)
+        for s in self.sections:
+            if s not in done_sections:
+                lines.append('\n' + s)
+                lines.append('    ; todo')
+
+        return '\n'.join(lines).strip()

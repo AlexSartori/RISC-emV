@@ -59,9 +59,11 @@ class ELF:
             prog.sections[s.sh_name] = s.sh_addr
 
         # Dump DM
-        print("\nData Memory dump:")
+        print("\nData Memory dump (first 128 bytes):")
         bin, hex, ascii = [], [], []
         for addr, val in enumerate(prog.DM):
+            if addr >= 128:
+                break
             bin.append('{:08b}'.format(val))
             hex.append('{:02x}'.format(val))
             ascii.append(chr(val) if chr(val).isprintable() and chr(val) != '\n' else '.')
@@ -77,7 +79,6 @@ class ELF:
 
         # Make relocation of symbols
         symbol_bindings = self.parse_rs()  # Relocation section
-        
 
         # Parse .text section to instructions
         print("\nParsing .text section into ISA.Instruction objects...")
@@ -96,35 +97,16 @@ class ELF:
             except:
                 inst = None
 
-            if len(prog.IM) in symbol_bindings:  # Relocate symbol in the instruction
+            if symbol_bindings is not None and len(prog.IM) in symbol_bindings:  # Relocate symbol in the instruction
                 sym = symbol_bindings[len(prog.IM)]
-                print("Relocated a symbol: ", sym)
-                if (isinstance(inst, IType_Instruction) or isinstance(inst, UType_Instruction) 
+                print("    (relocating a symbol: {})".format(sym))
+                if (isinstance(inst, IType_Instruction) or isinstance(inst, UType_Instruction)
                     or isinstance(inst, UJType_Instruction)):
                     inst.imm = sym
                     inst.string = inst.string[:-1] + sym
 
-            print('   ', bin, '->', inst)
+            print('   ', bin, '->', inst if inst is not None else "! [error]")
             prog.IM.append(inst)
-
-
-    def generate_code_text(self, prog):
-        code = ''
-
-        # Section .data ecc 
-        code += '\n.data\n'
-        for sym in self.symbols:
-            if sym.st_name != '':
-                code += '{}:\n.string "{}"\n'.format(sym.st_name, self.sections['.rodata'].content.decode('UTF-8')) # TODO: fix
-            
-
-
-        # Section .text
-        code += '\n.text\n'
-        for inst in prog.IM:
-            code += str(inst) + '\n'
-
-        return code
 
 
     def __read_bytes__(self, n, to_int=True):
@@ -140,7 +122,10 @@ class ELF:
 
     def parse_rs(self):
         print("\nParsing .rela.text section...")
-        
+        if '.rela.text' not in self.sections:
+            print("    Not present")
+            return None
+
         binding = {}
 
         self.file.seek(self.sections['.rela.text'].sh_offset)
@@ -148,10 +133,10 @@ class ELF:
             r_offset = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
             r_info = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
             r_addend = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
-            
+
             r_offset = int(''.join(r_offset), 2) / 4
             r_info = ''.join(r_info)
-           
+
             r_info_sym_num = int(r_info[:32], 2)
             r_info_type = int(r_info[32:], 2)
 
@@ -161,7 +146,7 @@ class ELF:
                 binding[r_offset] = '%hi({})'.format(symbol.st_name)
             elif r_info_type == 27:  # %lo
                 binding[r_offset] = '%lo({})'.format(symbol.st_name)
-                
+
         return binding
 
 

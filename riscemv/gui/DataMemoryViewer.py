@@ -47,7 +47,14 @@ class DataMemoryViewer(QtWidgets.QFrame):
 
         for val in self.DM:
             hex_data.append('{:02x}'.format(val))
-            ascii_data.append(chr(val) if chr(val).isprintable() else '.')
+            try:
+                c = chr(val)
+                if c.isprintable() and c not in ['\n', '\r', '\t', '\v']:
+                    ascii_data.append(c)
+                else:
+                    ascii_data.append('.')
+            except ValueError:
+                ascii_data.append('.')
 
         self.hex_box.setPlainText(' '.join(hex_data))
         self.ascii_box.setPlainText(''.join(ascii_data))
