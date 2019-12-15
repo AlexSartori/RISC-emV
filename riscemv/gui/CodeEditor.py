@@ -1,5 +1,4 @@
 from riscemv.Program import Program
-from riscemv.ELF import ELF
 from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 
@@ -8,6 +7,7 @@ class CodeEditor(QtWidgets.QFrame):
     def __init__(self, DM, prog_loaded_callback=None):
         self.DM = DM
         self.prog_loaded_callback = prog_loaded_callback
+        self.filename = ""
 
         super(CodeEditor, self).__init__()
         self.setLayout(QtWidgets.QVBoxLayout())
@@ -67,23 +67,26 @@ class CodeEditor(QtWidgets.QFrame):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s);; ELF file (*.o)")
 
         if filename:
-            p = Program(self.DM)
+            self.filename = filename
             ext = os.path.splitext(filename)[1]
 
             if ext == '.s':
-                p.load_text(self.toPlainText())
                 self.setText(open(filename, 'r').read())
             elif ext == '.o':  # ELF file
-                p.load_machine_code(filename)
-                self.setText(p.to_code())
+                self.setText("Press \"Load Program\" to disassemble and display.")
             else:
                 raise Exception("Unsupported file format")
 
 
-
     def load_program(self):
         p = Program(self.DM)
-        p.load_text(self.text_edit.toPlainText())
+        ext = os.path.splitext(self.filename)[1]
+
+        if ext == '.s':
+            p.load_text(self.text_edit.toPlainText())
+        elif ext == '.o':  # ELF file
+            p.load_machine_code(self.filename)
+            self.setText(p.to_code())
 
         if len(p.syntax_errors) > 0:
             for e in p.syntax_errors:
