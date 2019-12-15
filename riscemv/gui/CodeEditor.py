@@ -67,16 +67,18 @@ class CodeEditor(QtWidgets.QFrame):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", "", "RISC-V source files (*.s);; ELF file (*.o)")
 
         if filename:
+            p = Program(self.DM)
             ext = os.path.splitext(filename)[1]
+
             if ext == '.s':
+                p.load_text(self.toPlainText())
                 self.setText(open(filename, 'r').read())
-            else:  # ELF file
-                p = Program(self.DM)
-                elf = ELF(filename)
-                elf.load_program(p)
-                code = elf.generate_code_text(p)
-                
-                self.setText(code)
+            elif ext == '.o':  # ELF file
+                p.load_machine_code(filename)
+                self.setText(p.to_code())
+            else:
+                raise Exception("Unsupported file format")
+
 
 
     def load_program(self):
