@@ -267,7 +267,7 @@ class ISA:
                         inst = SType_Instruction.parse(binary_code)
 
                         if instr_match['funct3'] == inst.funct3:
-                            inst.execution_code = instr_match['exec'].replace('imm', '0b'+str(inst.imm))
+                            inst.execution_code = instr_match['exec'].replace('imm', str(inst.imm))
                             inst.functional_unit = instr_match['funcUnit']
                             inst.clock_needed = instr_match['clockNeeded']
                             inst.length = instr_match['length']
