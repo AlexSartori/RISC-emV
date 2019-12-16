@@ -67,8 +67,12 @@ class RegisterViewer(QtWidgets.QFrame):
 
     def int_reg_changed(self, row, col):
         new_val = self.rf_int_table.item(row, col).text()
+        
         if new_val is None or new_val.strip() == '':
             return
+
+        if new_val[:2] == '0x':
+            new_val = new_val[2:]
 
         try:
             if self.format == 'BIN':
