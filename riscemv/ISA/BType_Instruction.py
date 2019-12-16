@@ -48,3 +48,8 @@ class BType_Instruction(Instruction):
         code = code.replace('rt', str(rs2_value))
 
         return self.imm if eval(code) else 4
+
+
+    def __str__(self):
+        return '{} {}, {}({})'.format(self.instr_name, self.__map_reg_name__(self.rs1, self.rs1_type),
+                self.imm, self.__map_reg_name__(self.rs2, self.rs2_type))

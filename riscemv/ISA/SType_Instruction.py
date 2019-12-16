@@ -42,3 +42,8 @@ class SType_Instruction(Instruction):
         code = code.replace('rs', str(rs_value))
 
         return eval(code)
+
+
+    def __str__(self):
+        return '{} {}, {}({})'.format(self.instr_name, self.__map_reg_name__(self.rs1, self.rs1_type),
+                self.imm, self.__map_reg_name__(self.rs2, self.rs2_type))

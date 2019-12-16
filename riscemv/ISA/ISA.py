@@ -226,8 +226,7 @@ class ISA:
                                     inst.rs2_type = instr_match['rtType']
 
 
-                                inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                        self.__map_reg_name__(inst.rs1, inst.rs1_type), self.__map_reg_name__(inst.rs2, inst.rs2_type))
+                                inst.instr_name = instr_code
 
                                 return inst
                     elif instr_type == "i-type":
@@ -247,23 +246,12 @@ class ISA:
                                 if 'rsType' in instr_match:
                                     inst.rs_type = instr_match['rsType']
 
-                                if inst.is_load() or opcode == '0100111':  # fsw
-                                    inst.length = instr_match['length']
-                                    inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                            inst.imm, self.__map_reg_name__(inst.rs, inst.rs_type))
-                                else:
-                                    inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                            self.__map_reg_name__(inst.rs, inst.rs_type), inst.imm)
-
                                 if inst.is_load():
                                     inst.length = instr_match['length']
-                                    inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                        inst.imm, self.__map_reg_name__(inst.rs, inst.rs_type))
-                                else:
-                                    inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type),
-                                        self.__map_reg_name__(inst.rs, inst.rs_type), inst.imm)
+                                
+                                inst.instr_name = instr_code
 
-                            return inst
+                                return inst
                     elif instr_type == "s-type":
                         inst = SType_Instruction.parse(binary_code)
 
@@ -279,8 +267,7 @@ class ISA:
                             if 'rtType' in instr_match:
                                 inst.rs2_type = instr_match['rtType']
 
-                            inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rs1, inst.rs1_type),
-                                    inst.imm, self.__map_reg_name__(inst.rs2, inst.rs2_type))
+                            inst.instr_name = instr_code
 
                             return inst
                     elif instr_type == "b-type":
@@ -297,8 +284,7 @@ class ISA:
                             if 'rtType' in instr_match:
                                 inst.rs2_type = instr_match['rtType']
 
-                            inst.string = '{} {}, {}({})'.format(instr_code, self.__map_reg_name__(inst.rs1, inst.rs1_type),
-                                    inst.imm, self.__map_reg_name__(inst.rs2, inst.rs2_type))
+                            inst.instr_name = instr_code
 
                             return inst
                     elif instr_type == "u-type":
@@ -314,7 +300,7 @@ class ISA:
                             if 'rdType' in instr_match:
                                 inst.rd_type = instr_match['rdType']
 
-                            inst.string = '{} {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type), inst.imm)
+                            inst.instr_name = instr_code
 
                             return inst
                     elif instr_type == "uj-type":
@@ -328,7 +314,7 @@ class ISA:
                         if 'rdType' in instr_match:
                             inst.rd_type = instr_match['rdType']
 
-                        inst.string = '{} {}, {}'.format(instr_code, self.__map_reg_name__(inst.rd, inst.rd_type), inst.imm)
+                        inst.instr_name = instr_code
 
                         return inst
                     elif instr_type == "r4-type":
@@ -349,18 +335,10 @@ class ISA:
                             if 'rs3Type' in instr_match:
                                 inst.rs3_type = instr_match['rs3Type']
 
-                            inst.string = '{} {}, {}, {}'.format(instr_code, self.__map_reg_name__(inst.rs1, inst.rs1_type),
-                                    self.__map_reg_name__(inst.rs2, inst.rs2_type), self.__map_reg_name__(inst.rs3, inst.rs3_type))
+                            inst.instr_name = instr_code
 
                             return inst
                     else:
                         raise NotImplementedError()
         else:
             raise NotImplementedError("Unknown OPCODE")
-
-
-    def __map_reg_name__(self, reg, reg_type):
-        if reg_type == 'fp':
-            return 'f' + str(reg)
-        else:
-            return 'x' + str(reg)

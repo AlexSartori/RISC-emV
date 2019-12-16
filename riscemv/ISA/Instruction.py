@@ -32,6 +32,13 @@ class Instruction(abc.ABC):
         return dec
 
 
+    def __map_reg_name__(self, reg, reg_type):
+        if reg_type == 'fp':
+            return 'f' + str(reg)
+        else:
+            return 'x' + str(reg)
+
+
     @abc.abstractmethod
     def to_binary(self):
         pass

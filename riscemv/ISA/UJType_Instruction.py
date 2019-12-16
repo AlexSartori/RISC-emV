@@ -32,3 +32,7 @@ class UJType_Instruction(Instruction):
         code = code.replace('PC', str(PC_value))
 
         return eval(code), PC_value + self.imm
+
+
+    def __str__(self):
+        return '{} {}, {}'.format(self.instr_name, self.__map_reg_name__(self.rd, self.rd_type), self.imm)

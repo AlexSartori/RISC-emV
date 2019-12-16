@@ -41,3 +41,12 @@ class IType_Instruction(Instruction):
 
     def is_load(self):
         return self.opcode in ["0000011", "0000111"]
+
+
+    def __str__(self):
+        if self.is_load() or self.opcode == '0100111':
+            return '{} {}, {}({})'.format(self.instr_name, self.__map_reg_name__(self.rd, self.rd_type),
+                self.imm, self.__map_reg_name__(self.rs, self.rs_type))
+        else:
+            return '{} {}, {}, {}'.format(self.instr_name, self.__map_reg_name__(self.rd, self.rd_type),
+                self.__map_reg_name__(self.rs, self.rs_type), self.imm)
