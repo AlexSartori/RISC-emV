@@ -26,10 +26,10 @@ class Tomasulo:
 
     def step(self):
         self.__steps += 1
-        print("[TOM #", self.thread_id,"] Performing step number", self.__steps)
+        print("Thread #{}: Performing step number {}".format(self.thread_id, self.__steps))
 
         self.write()
-        self.execute() # order is inverted to avoid skipping steps
+        self.execute()  # Order is inverted to avoid skipping steps
         self.issue()
 
         return self.__steps
@@ -43,21 +43,21 @@ class Tomasulo:
         pc = self.Regs.PC.get_value()
 
         if self.stall:
-            print("[TOM #", self.thread_id,"] self.stall = True, not issuing anything")
+            print("    self.stall = True, not issuing anything")
         elif self.IFQ.empty(pc):
-            print("[TOM #", self.thread_id,"] IFQ is empty")
+            print("    IFQ is empty")
         else:
             ifq_entry = self.IFQ.get(pc)
             instruction = ifq_entry.instruction
             instruction.program_counter = pc
             self.Regs.IR.set_value(int(instruction.to_binary(), 2))
             self.IFQ.set_instruction_issue(pc, self.__steps)
-            print("[TOM #", self.thread_id,"] Issuing", instruction)
+            print("    Issuing", instruction)
 
             fu = self.RS.get_first_free(instruction.functional_unit)
 
             if fu is None:
-                print("[TOM #", self.thread_id,"] No available Reservation Station, stalling")
+                print("    No available Reservation Station, stalling")
             else:
                 fu.busy = True
                 fu.thread_id = self.thread_id

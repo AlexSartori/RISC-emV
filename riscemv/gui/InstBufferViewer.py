@@ -25,8 +25,8 @@ class InstBufferViewer(QtWidgets.QFrame):
         self.load_contents()
 
 
-    def load_contents(self):        
-        self.ib_table.setRowCount(len(self.IFQ.code_lines))
+    def load_contents(self):
+        self.ib_table.setRowCount(len(self.IFQ.instructions))
 
         for i, ifq_entry in enumerate(self.IFQ):
             self.ib_table.setItem(i, 0, QtWidgets.QTableWidgetItem(str(ifq_entry.instruction)))

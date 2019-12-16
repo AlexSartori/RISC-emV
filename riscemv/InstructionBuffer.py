@@ -9,45 +9,40 @@ class IFQEntry:
 
 class InstructionBuffer():
     def __init__(self):
-        self.code_lines = []
-
-
-    def __pc_to_line_number__(self, pc):
-        return int(pc / 4)
+        self.instructions = {}
+        self.last_instruction = 0
 
 
     def get(self, pc):
-        line_number = self.__pc_to_line_number__(pc)
-        return self.code_lines[line_number]
+        if pc in self.instructions:
+            return self.instructions[pc]
+        else:
+            raise IndexError("No instruction at PC " + str(pc))
 
 
     def put(self, inst, iss=0, ex=0, wr=0):
-        self.code_lines.append(IFQEntry(inst, iss, ex, wr))
+        self.instructions[inst.program_counter] = IFQEntry(inst, iss, ex, wr)
+        self.last_instruction = inst.program_counter
 
 
     def set_instruction_issue(self, pc, steps):
-        line_number = self.__pc_to_line_number__(pc)
-        self.code_lines[line_number].issue = steps
+        self.instructions[pc].issue = steps
 
 
     def set_instruction_execute(self, pc, steps):
-        line_number = self.__pc_to_line_number__(pc)
-        self.code_lines[line_number].execute = steps
+        self.instructions[pc].execute = steps
 
 
     def set_instruction_write_result(self, pc, steps):
-        line_number = self.__pc_to_line_number__(pc)
-        self.code_lines[line_number].write_result = steps
+        self.instructions[pc].write_result = steps
 
 
     def empty(self, pc):
-        line_number = self.__pc_to_line_number__(pc)
-        return line_number == len(self.code_lines)
-
+        return pc == self.last_instruction
 
     def __iter__(self):
-        return iter(self.code_lines)
+        return iter(self.instructions.values())
 
 
     def clear(self):
-        self.code_lines = []
+        self.instructions = {}
