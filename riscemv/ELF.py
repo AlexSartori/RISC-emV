@@ -102,7 +102,6 @@ class ELF:
                 print("    (relocating a symbol: {})".format(sym))
                 if isinstance(inst, (IType_Instruction, UType_Instruction, UJType_Instruction)):
                     inst.imm = sym
-                    inst.string = inst.string[:-1] + sym
 
             print('   ', bin, '->', inst if inst is not None else "! [error]")
             if inst is not None:
@@ -130,22 +129,15 @@ class ELF:
 
         self.file.seek(self.sections['.rela.text'].sh_offset)
         while self.file.tell() < self.sections['.rela.text'].sh_offset + self.sections['.rela.text'].sh_size:
-            r_offset = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
-            r_info = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
-            r_addend = ["{:08b}".format(b) for b in reversed(self.file.read(8))]
+            relo = self.Relocation(self)
+            
+            symbol = self.symbols[relo.r_info_sym_num]
+            offset = relo.r_offset / 4
 
-            r_offset = int(''.join(r_offset), 2) / 4
-            r_info = ''.join(r_info)
-
-            r_info_sym_num = int(int(r_info[:32], 2) / 4)
-            r_info_type = int(r_info[32:], 2)
-
-            symbol = self.symbols[r_info_sym_num]
-
-            if r_info_type == 26:  # %hi
-                binding[r_offset] = '%hi({})'.format(symbol.st_name)
-            elif r_info_type == 27:  # %lo
-                binding[r_offset] = '%lo({})'.format(symbol.st_name)
+            if relo.r_info_type == 26:  # %hi
+                binding[offset] = '%hi({})'.format(symbol.st_name)
+            elif relo.r_info_type == 27:  # %lo
+                binding[offset] = '%lo({})'.format(symbol.st_name)
 
         return binding
 
@@ -339,3 +331,29 @@ class ELF:
                 self.sh_entsize = self.__read_bytes__(4)
             else:
                 self.sh_entsize = self.__read_bytes__(8)
+
+
+    class Relocation:
+        def __init__(self, elf):
+            self.file = elf.file
+            self.eheader = elf.eheader
+            self.__read_bytes__ = elf.__read_bytes__
+
+            if self.eheader['EI_CLASS'] == '32':
+                self.r_offset = self.__read_bytes__(4)
+            else:
+                self.r_offset = self.__read_bytes__(8)
+
+            if self.eheader['EI_CLASS'] == '32':
+                self.r_info_type = self.__read_bytes__(1)
+                self.r_info_sym_num = self.__read_bytes__(3)
+                #self.r_info = self.__read_bytes__(4, to_int=False)
+            else:
+                self.r_info_type = self.__read_bytes__(4)
+                self.r_info_sym_num = self.__read_bytes__(4)
+                #self.r_info = self.__read_bytes__(8, to_int=False)
+
+            if self.eheader['EI_CLASS'] == '32':
+                self.r_addend = self.__read_bytes__(4)
+            else:
+                self.r_addend = self.__read_bytes__(8)
