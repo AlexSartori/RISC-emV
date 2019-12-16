@@ -29,9 +29,9 @@ class Program:
 
     def get_entry_point(self):
         if '_start' in self.symbol_table:
-            return self.symbol_table['_start']
+            return self.symbol_table['_start'] - self.sections['.text']
         else:
-            return self.sections['.text']
+            return 0  # TODO: fix
 
 
     def load_text(self, text):
