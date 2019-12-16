@@ -137,7 +137,7 @@ class ELF:
             r_offset = int(''.join(r_offset), 2) / 4
             r_info = ''.join(r_info)
 
-            r_info_sym_num = int(r_info[:32], 2)
+            r_info_sym_num = int(int(r_info[:32], 2) / 4)
             r_info_type = int(r_info[32:], 2)
 
             symbol = self.symbols[r_info_sym_num]

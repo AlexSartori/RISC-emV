@@ -16,6 +16,7 @@
             "exec": "rs + imm",
             "funcUnit": "fld",
             "clockNeeded": 1,
+	    "length": 32,
             "rdType": "fp",
             "rsType": "int"
         }

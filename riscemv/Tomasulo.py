@@ -8,6 +8,7 @@ from riscemv.ISA.RType_Instruction import RType_Instruction
 from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
+from riscemv.ISA.UType_Instruction import UType_Instruction
 
 
 class Tomasulo:
@@ -100,6 +101,10 @@ class Tomasulo:
                     else:
                         fu.Vk = self.Regs.read(instruction.rs2, instruction.rs2_type)
                         fu.Qk = 0
+                elif isinstance(instruction, UType_Instruction):
+                    fu.A = instruction.imm
+                    fu.Qk = 0
+                    fu.Qj = 0
 
                 if not isinstance(instruction, SType_Instruction) and not isinstance(instruction, BType_Instruction):
                     self.RegisterStat.add_status(instruction.rd, fu.name, instruction.rd_type)
@@ -129,6 +134,8 @@ class Tomasulo:
                         pc = self.Regs.PC.get_value() - 4
                         pc += fu.instruction.execute(fu.Vj, fu.Vk)
                         self.Regs.PC.set_value(pc)
+                    elif isinstance(fu.instruction, UType_Instruction):
+                        fu.result = fu.instruction.execute(fu.A)
 
 
     def write(self):
