@@ -15,7 +15,10 @@ class IType_Instruction(Instruction):
 
 
     def to_binary(self):
-        imm_bin = "{:05b}".format(self.imm)
+        if type(self.imm) == str:
+            imm_bin = '0' * 5
+        else:
+            imm_bin = "{:05b}".format(self.imm)
         return "{0}$rs{1}$rd{2}".format(
             imm_bin, self.funct3, self.opcode
         ).replace("$rs", "{:05b}".format(self.rs)

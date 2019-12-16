@@ -16,11 +16,17 @@ class BType_Instruction(Instruction):
 
 
     def to_binary(self):
-        imm_bin = "{:013b}".format(self.imm)
-        imm12 = imm_bin[0]
-        imm10 = imm_bin[2:8]
-        imm4 = imm_bin[8:12]
-        imm11 = imm_bin[1]
+        if type(self.imm) == str:
+            imm12 = '0'
+            imm10 = '0' * 6
+            imm4 = '0' * 4
+            imm11 = '0'
+        else:
+            imm_bin = "{:012b}".format(self.imm)
+            imm12 = imm_bin[0]
+            imm10 = imm_bin[2:8]
+            imm4 = imm_bin[8:12]
+            imm11 = imm_bin[1]
         return "{0}{1}$rs2$rs1{2}{3}{4}{5}".format(
             imm12, imm10, self.funct3, imm4, imm11, self.opcode
         ).replace("$rs1", "{:05b}".format(self.rs1)

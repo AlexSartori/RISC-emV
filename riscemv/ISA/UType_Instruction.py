@@ -13,7 +13,10 @@ class UType_Instruction(Instruction):
 
 
     def to_binary(self):
-        imm_bin = "{:020b}".format(self.imm)
+        if type(self.imm) == str:
+            imm_bin = '0' * 20
+        else:
+            imm_bin = "{:020b}".format(self.imm)
         return "{0}$rd{1}".format(
             imm_bin, self.opcode
         ).replace("$rd", "{:05b}".format(self.rd))
