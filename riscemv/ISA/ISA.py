@@ -63,7 +63,7 @@ class ISA:
 
             funct3 = match['funct3'] if 'funct3' in match else '000'
             inst = RType_Instruction(match["opcode"], rd, funct3, rs1, rs2, match['funct7'])
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
@@ -88,7 +88,7 @@ class ISA:
                 imm = int(line[3])
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
@@ -109,7 +109,7 @@ class ISA:
             imm = int(rs1_parts[0])
 
             inst = SType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', str(imm))
             inst.functional_unit = match['funcUnit']
@@ -132,7 +132,7 @@ class ISA:
                 imm = symbol_table[line[3]] - pc
 
             inst = BType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
@@ -148,7 +148,7 @@ class ISA:
             imm = int(line[2])
 
             inst = UType_Instruction(match.opcode, rd, imm)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
             inst.functional_unit = match['funcUnit']
@@ -162,7 +162,7 @@ class ISA:
             imm = int(line[2])
 
             inst = UJType_Instruction(match.opcode, rd, imm)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
@@ -179,7 +179,7 @@ class ISA:
 
             fmt = match['fmt']
             inst = R4Type_Instruction(match["opcode"], rd, funct3, rs1, rs2, rs3, fmt)
-            inst.string = ' '.join(line)
+            inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec']
             inst.functional_unit = match['funcUnit']
