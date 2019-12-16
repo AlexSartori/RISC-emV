@@ -41,17 +41,17 @@ class Program:
             line = line.replace('\t', ' ')
 
             if line != '':
-                if re.match(r'\.[a-zA-Z0-9]+', line):
+                if re.match(r'.+:', line):
+                    # Label
+                    label = re.match(r'.+:', line).group(0)
+                    label = label[:-1].lower()
+                    self.symbol_table[label] = pc
+                elif re.match(r'\.[a-zA-Z0-9]+', line):
                     # Directive
                     try:
                         pc = self.__parse_directive__(line, pc)
                     except SyntaxError as s:
                         self.syntax_errors.append((l_n, line, s))
-                elif re.match(r'[a-zA-Z0-9]+:', line):
-                    # Label
-                    label = re.match(r'[a-zA-Z0-9]+:', line).group(0)
-                    label = label[:-1]  # Remove colon
-                    self.symbol_table[label] = pc
                 else:
                     # Instruction
                     try:
@@ -72,8 +72,10 @@ class Program:
     def __parse_directive__(self, line, pc):
         line = line.split(' ')
 
-        if line[0] in ['.text', '.data', '.rodata', '.bss']:
-            self.sections[line[0]] = pc
+        sections = ['.text', '.data', '.rodata', '.bss']
+        if line[0] in sections or (line[0] == '.section' and line[1]) in sections:
+            section = line[0] if line[0] in sections else line[1]
+            self.sections[section] = pc
         elif line[0] == '.align' or line[0] == '.p2align':
             self.alignment = 2**int(line[1])
         elif line[0] == '.balign':

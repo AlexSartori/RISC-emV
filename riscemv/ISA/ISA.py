@@ -48,6 +48,21 @@ class ISA:
         return reg_name
 
 
+    def __map_symbols__(self, imm, symbol_table):
+        try:
+            int(imm)
+            return imm  # Not a symbol
+        except:
+            # Load from symbol table
+            if re.match(r'%lo\((.+)\)', imm):
+                label = re.match(r'%lo\((.+)\)', imm).group(1)
+                return symbol_table[label] #TODO: fix length
+            elif re.match(r'%hi\((.+)\)', imm):
+                label = re.match(r'%hi\((.+)\)', imm).group(1)
+                return symbol_table[label]
+            return "10"
+
+
     def instruction_from_str(self, line, symbol_table, pc):
         line = [l.lower().strip() for l in re.split(' |,', line)]
         line = list(filter(None, line))
@@ -79,13 +94,15 @@ class ISA:
             match = self.ISA['i-type'][line[0]]
             rd = int(line[1][1:])  # Remove letter
 
-            if match['opcode'] in ["0000011", "0000111"]:  # Load instructions
-                _rexp = re.search(r'([0-9]{1,2})\([x|fp]([0-9]{1,2})\)', line[2])
-                imm = int(_rexp.group(1))
-                rs  = int(_rexp.group(2))
+            if match['opcode'] in ["0000011", "0000111", "0100111"]:  # Load instructions and flw
+                _rexp = re.search(r'(.+)\((.+)\)$', line[2])
+                imm = _rexp.group(1)
+                rs  = int(self.__map_register_name__(_rexp.group(2))[1:])
             else:
-                rs  = int(line[2][1:])
-                imm = int(line[3])
+                rs  = int(self.__map_register_name__(line[2])[1:])
+                imm = line[3]
+
+            imm = int(self.__map_symbols__(imm, symbol_table))
 
             inst = IType_Instruction(match["opcode"], rd, match['funct3'], rs, imm)
             inst.instr_name = line[0]
@@ -105,8 +122,9 @@ class ISA:
             match = self.ISA['s-type'][line[0]]
             rs2 = int(line[1][1:])  # Remove letter
             rs1_parts = line[2][:-1].split('(')
-            rs1 = int(rs1_parts[1][1:])  # Remove letter
-            imm = int(rs1_parts[0])
+
+            rs1 = int(self.__map_register_name__(rs1_parts[1])[1:])  # Remove letter
+            imm = int(self.__map_symbols__(rs1_parts[0], symbol_table))
 
             inst = SType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
             inst.instr_name = line[0]
@@ -145,12 +163,12 @@ class ISA:
         elif line[0] in self.ISA['u-type']:
             match = self.ISA['u-type'][line[0]]
             rd  = int(line[1][1:])
-            imm = int(line[2])
+            imm = int(self.__map_symbols__(line[2], symbol_table))
 
-            inst = UType_Instruction(match.opcode, rd, imm)
+            inst = UType_Instruction(match["opcode"], rd, imm)
             inst.instr_name = line[0]
             inst.program_counter = pc
-            inst.execution_code = match['exec'].replace('imm', "{020b}".format(imm))
+            inst.execution_code = match['exec'].replace('imm', "{:020b}".format(imm))
             inst.functional_unit = match['funcUnit']
             inst.clock_needed = match['clockNeeded']
 
@@ -159,9 +177,9 @@ class ISA:
         elif line[0] in self.ISA['uj-type']:
             match = self.ISA['uj-type'][line[0]]
             rd = int(line[1][1:])
-            imm = int(line[2])
+            imm = int(self.__map_symbols__(line[2], symbol_table))
 
-            inst = UJType_Instruction(match.opcode, rd, imm)
+            inst = UJType_Instruction(match["opcode"], rd, imm)
             inst.instr_name = line[0]
             inst.program_counter = pc
             inst.execution_code = match['exec']
