@@ -86,15 +86,12 @@ class ELF:
         pc = prog.sections['.text']
         self.file.seek(self.sections['.text'].sh_offset)
 
-
         while self.file.tell() < self.sections['.text'].sh_offset + self.sections['.text'].sh_size:
-            bin = ["{:08b}".format(b) for b in reversed(self.file.read(4))]
-
-            bin = ''.join(''.join((byte)) for byte in bin)
+            bin = ''.join(["{:08b}".format(b) for b in reversed(self.file.read(4))])
 
             try:
                 inst = isa.instruction_from_bin(bin, pc)
-            except:
+            except NotImplementedError:
                 inst = None
 
             if symbol_bindings is not None and len(prog.IM) in symbol_bindings:  # Relocate symbol in the instruction
@@ -130,7 +127,7 @@ class ELF:
         self.file.seek(self.sections['.rela.text'].sh_offset)
         while self.file.tell() < self.sections['.rela.text'].sh_offset + self.sections['.rela.text'].sh_size:
             relo = self.Relocation(self)
-            
+
             symbol = self.symbols[relo.r_info_sym_num]
             offset = relo.r_offset / 4
 
@@ -139,6 +136,7 @@ class ELF:
             elif relo.r_info_type == 27:  # %lo
                 binding[offset] = '%lo({})'.format(symbol.st_name)
 
+        print("    Found {} relocatable symbols".format(len(binding)))
         return binding
 
 
@@ -264,7 +262,7 @@ class ELF:
             self.symbols.append(sym)
 
             if name != '':
-                print("    {} := {}".format(sym.st_name, sym.st_value))
+                print("    {} := {} ({} bytes)".format(sym.st_name, sym.st_value, sym.st_size))
 
 
     class Symbol:
@@ -274,6 +272,10 @@ class ELF:
             self.__read_bytes__ = elf.__read_bytes__
 
             self.st_name = self.__read_bytes__(4)
+            self.st_info = self.__read_bytes__(1, to_int=False)
+            self.st_other = self.__read_bytes__(1, to_int=False)
+            self.st_shndx = self.__read_bytes__(2, to_int=False)
+
             if self.eheader['EI_CLASS'] == '32':
                 self.st_value = self.__read_bytes__(4, to_int=False)
             else:
@@ -284,9 +286,6 @@ class ELF:
             else:
                 self.st_size = self.__read_bytes__(8)
 
-            self.st_info = self.__read_bytes__(1, to_int=False)
-            self.st_other = self.__read_bytes__(1, to_int=False)
-            self.st_half = self.__read_bytes__(2, to_int=False)
 
 
     class Section:
