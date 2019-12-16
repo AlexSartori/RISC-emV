@@ -46,6 +46,9 @@ class ResStationsViewer(QtWidgets.QFrame):
             self.rs_table.setItem(i, 8, QtWidgets.QTableWidgetItem(fmt_int(r.A)))
             self.rs_table.setItem(i, 9, QtWidgets.QTableWidgetItem(fmt_int(r.result)))
 
+            header = self.rs_table.horizontalHeader()
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+
             if r.busy:
                 self.set_row_color(i, self.get_color(r.thread_id))
 
