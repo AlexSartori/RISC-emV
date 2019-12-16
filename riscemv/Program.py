@@ -46,6 +46,7 @@ class Program:
                     label = re.match(r'.+:', line).group(0)
                     label = label[:-1].lower()
                     self.symbol_table[label] = pc
+                    self.last_symbol = label
                 elif re.match(r'\.[a-zA-Z0-9]+', line):
                     # Directive
                     try:
@@ -100,6 +101,15 @@ class Program:
             for c in s:
                 self.DM.store(addr, ord(c))
                 addr += 1
+
+            # Save the length of the symbol
+            sym_pc = self.symbol_table[self.last_symbol]
+            self.symbol_table[self.last_symbol] = {
+                'pc': sym_pc,
+                'length': len(s),
+                'text': s
+            }
+            self.last_symbol = None
 
             pc += addr
         else:

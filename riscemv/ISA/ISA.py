@@ -56,11 +56,15 @@ class ISA:
             # Load from symbol table
             if re.match(r'%lo\((.+)\)', imm):
                 label = re.match(r'%lo\((.+)\)', imm).group(1)
-                return symbol_table[label] #TODO: fix length
+                sym = symbol_table[label]
+                bins = ''.join(['{:08b}'.format(ord(char)) for char in sym['text']])
+                return int(bins[:-12])
             elif re.match(r'%hi\((.+)\)', imm):
                 label = re.match(r'%hi\((.+)\)', imm).group(1)
-                return symbol_table[label]
-            return "10"
+                sym = symbol_table[label]
+                bins = ''.join(['{:08b}'.format(ord(char)) for char in sym['text']])
+                return int(bins[:20])
+            return None
 
 
     def instruction_from_str(self, line, symbol_table, pc):
@@ -147,7 +151,7 @@ class ISA:
             if line[3].isdigit():
                 imm = int(line[3])
             else:
-                imm = symbol_table[line[3]] - pc
+                imm = symbol_table[line[3]].pc - pc
 
             inst = BType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
             inst.instr_name = line[0]
