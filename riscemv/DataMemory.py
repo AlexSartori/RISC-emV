@@ -29,6 +29,10 @@ class DataMemory:
                 return 0x00
 
 
+    def resize(self, new_size):
+        self.size = new_size
+
+
     def __iter__(self):
         for addr in range(self.size):
             yield self.load(addr)

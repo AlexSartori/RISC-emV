@@ -22,65 +22,97 @@ class ConfWindow(QtWidgets.QDialog):
         self.setLayout(QtWidgets.QVBoxLayout())
 
         tabs = QtWidgets.QTabWidget()
-        self.tab_rs = self.cretae_tab_rs()
+        self.tab_rs = self.create_tab_rs()
+        self.tab_dm = self.create_tab_dm()
         self.tab_isa = self.create_tab_isa()
 
         tabs.addTab(self.tab_rs, "Reservation Stations")
+        tabs.addTab(self.tab_dm, "Data Memory")
         tabs.addTab(self.tab_isa, "ISA")
 
         self.layout().addWidget(tabs)
 
 
-    def cretae_tab_rs(self):
+    def create_tab_dm(self):
         frame = QtWidgets.QFrame()
         frame.setLayout(QtWidgets.QFormLayout())
+
+        for emu in self.MW.emulators:
+            frame.layout().addRow("Thread #" + str(emu.thread_id), None)
+
+            dm_size = QtWidgets.QSpinBox()
+            dm_size.setMinimum(64)
+            dm_size.setMaximum(1024*8)  # 8 Kb
+            dm_size.setValue(emu.DM.size)
+            dm_size.valueChanged.connect(emu.DM.resize)
+            dm_size.valueChanged.connect(emu.datamemory_view.load_contents)
+            frame.layout().addRow("Data Memory size (bytes):", dm_size)
+
+        return frame
+
+
+    def create_tab_rs(self):
+        frame = QtWidgets.QFrame()
+        frame.setLayout(QtWidgets.QFormLayout())
+
+        def refresh_rs_view():
+            for emu in self.MW.emulators:
+                emu.resstations_view.load_contents()
 
         adders_num = QtWidgets.QSpinBox()
         adders_num.setMinimum(1)
         adders_num.setValue(len(self.MW.ResStations.adders))
         adders_num.valueChanged.connect(self.MW.ResStations.set_adders_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of adders:", adders_num)
 
         multipliers_num = QtWidgets.QSpinBox()
         multipliers_num.setMinimum(1)
         multipliers_num.setValue(len(self.MW.ResStations.multipliers))
         multipliers_num.valueChanged.connect(self.MW.ResStations.set_multipliers_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of multipliers:", multipliers_num)
 
         dividers_num = QtWidgets.QSpinBox()
         dividers_num.setMinimum(1)
         dividers_num.setValue(len(self.MW.ResStations.dividers))
         dividers_num.valueChanged.connect(self.MW.ResStations.set_dividers_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of dividers:", dividers_num)
 
         loaders_num = QtWidgets.QSpinBox()
         loaders_num.setMinimum(1)
         loaders_num.setValue(len(self.MW.ResStations.loaders))
         loaders_num.valueChanged.connect(self.MW.ResStations.set_loaders_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of loaders:", loaders_num)
 
         fp_adders_num = QtWidgets.QSpinBox()
         fp_adders_num.setMinimum(1)
         fp_adders_num.setValue(len(self.MW.ResStations.fp_adders))
         fp_adders_num.valueChanged.connect(self.MW.ResStations.set_fp_adders_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of FP adders:", fp_adders_num)
 
         fp_multipliers_num = QtWidgets.QSpinBox()
         fp_multipliers_num.setMinimum(1)
         fp_multipliers_num.setValue(len(self.MW.ResStations.fp_multipliers))
         fp_multipliers_num.valueChanged.connect(self.MW.ResStations.set_fp_multipliers_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of FP multipliers:", fp_multipliers_num)
 
         fp_dividers_num = QtWidgets.QSpinBox()
         fp_dividers_num.setMinimum(1)
         fp_dividers_num.setValue(len(self.MW.ResStations.fp_dividers))
         fp_dividers_num.valueChanged.connect(self.MW.ResStations.set_fp_dividers_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of FP dividers:", fp_dividers_num)
 
         fp_loaders_num = QtWidgets.QSpinBox()
         fp_loaders_num.setMinimum(1)
         fp_loaders_num.setValue(len(self.MW.ResStations.fp_loaders))
         fp_loaders_num.valueChanged.connect(self.MW.ResStations.set_fp_loaders_number)
+        adders_num.valueChanged.connect(refresh_rs_view)
         frame.layout().addRow("Number of FP loaders:", fp_loaders_num)
 
         return frame
@@ -89,7 +121,6 @@ class ConfWindow(QtWidgets.QDialog):
     def create_tab_isa(self):
         isa = ISA().ISA
         toolbox = QtWidgets.QToolBox()
-
 
         # Lambdas do not preserve context when updating ISA from event signal
         def get_isa_updater(t, i, f):
