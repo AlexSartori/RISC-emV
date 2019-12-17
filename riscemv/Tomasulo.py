@@ -157,10 +157,12 @@ class Tomasulo:
                         old[-i] = val[-i]
 
                     self.DM.store(fu.A, int("".join(old), 2))
-                else:
+                elif not isinstance(fu.instruction, BType_Instruction):
                     self.RegisterStat.remove_status(fu.instruction.rd, fu.instruction.rd_type)
-                    if not (isinstance(fu.instruction, UJType_Instruction) and fu.instruction.rd == 0):  # j instruction
-                        self.Regs.write(fu.instruction.rd, fu.result, fu.instruction.rd_type)
+                    
+                    if not ((isinstance(fu.instruction, UJType_Instruction) or (isinstance(fu.instruction, IType_Instruction) and fu.instruction.is_jalr())) and fu.instruction.rd == 0):  # j instruction
+                        if not str(fu.instruction) == 'addi x0, x0, 0':  # nop
+                            self.Regs.write(fu.instruction.rd, fu.result, fu.instruction.rd_type)
 
                     # Write result
                     for other_fu in self.RS:
