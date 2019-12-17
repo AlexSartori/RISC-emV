@@ -118,6 +118,8 @@ class ELF:
             if inst is None:
                 self.unknown_instructions.append(len(prog.IM)-1)
 
+            pc += 4
+
 
     def __read_bytes__(self, n, to_int=True):
         data = self.file.read(n)
