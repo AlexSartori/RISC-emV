@@ -49,25 +49,27 @@ riscemv
 - **Extensible**: adding support for more instruction sets is a matter of writing a JSON file
 
 
+
+## Screenshots
+#### Main window
+![Image #1](images/image_1.png)
+
+#### Configuration window
+![Image #2](images/image_2.png)
+![Image #3](images/image_3.png)
+
+#### The `hello_word` sample program loaded
+![Image #4](images/image_4.png)
+
+#### Running emulator
+![Image #5](images/image_5.png)
+
+#### The execution has ended and the program has written `Hello` in memory
+![Image #6](images/image_6.png)
+
+
+
 ## Authors
 [Alessandro Sartori](https://github.com/AlexSartori)
 
 [Davide Zanella](https://github.com/davidezanella)
-
-
-## Screenshots
-The main window of the program
-![Image #1](images/image_1.png)
-
-The configuration window
-![Image #2](images/image_2.png)
-![Image #3](images/image_3.png)
-
-The `hello_word` program loaded
-![Image #4](images/image_4.png)
-
-The code is executing
-![Image #5](images/image_5.png)
-
-The execution has ended and the program has written `Hello` in memory
-![Image #6](images/image_6.png)
