@@ -18,7 +18,10 @@ class ELF:
         self.parse_ph()  # Program header
 
         self.sections = []
+        self.ordered_sections = {}
         self.parse_sh()  # Section header
+
+        self.unknown_instructions = []
 
 
     def load_program(self, prog):
@@ -80,6 +83,16 @@ class ELF:
         # Make relocation of symbols
         symbol_bindings = self.parse_rs()  # Relocation section
 
+        # Fill program's symbol table
+        for s in self.symbols:
+            if s.st_shndx < len(self.ordered_sections):
+                prog.symbol_table[s.st_name] = {
+                    'name': s.st_name,
+                    'value': s.st_value,
+                    'size': s.st_size,
+                    'section': self.ordered_sections[s.st_shndx].sh_name
+                }
+
         # Parse .text section to instructions
         print("\nParsing .text section into ISA.Instruction objects...")
         isa = ISA()
@@ -101,8 +114,9 @@ class ELF:
                     inst.imm = sym
 
             print('   ', bin, '->', inst if inst is not None else "! [error]")
-            if inst is not None:
-                prog.IM.append(inst)
+            prog.IM.append(inst)
+            if inst is None:
+                self.unknown_instructions.append(len(prog.IM)-1)
 
 
     def __read_bytes__(self, n, to_int=True):
@@ -235,6 +249,7 @@ class ELF:
             s.sh_name = name
             named_sections[name] = s
             print("    {}: {} bytes".format(s.sh_name, s.sh_size))
+        self.ordered_sections = self.sections
         self.sections = named_sections
 
         # Read strings section
@@ -261,8 +276,8 @@ class ELF:
             sym.st_name = name
             self.symbols.append(sym)
 
-            if name != '':
-                print("    {} := {} ({} bytes)".format(sym.st_name, sym.st_value, sym.st_size))
+            if name != '' and sym.st_shndx < len(self.ordered_sections):
+                print("    {} := {} [{} bytes, from section {}]".format(sym.st_name, sym.st_value, sym.st_size, self.ordered_sections[sym.st_shndx].sh_name))
 
 
     class Symbol:
@@ -271,20 +286,21 @@ class ELF:
             self.eheader = elf.eheader
             self.__read_bytes__ = elf.__read_bytes__
 
-            self.st_name = self.__read_bytes__(4)
-            self.st_info = self.__read_bytes__(1, to_int=False)
-            self.st_other = self.__read_bytes__(1, to_int=False)
-            self.st_shndx = self.__read_bytes__(2, to_int=False)
-
             if self.eheader['EI_CLASS'] == '32':
-                self.st_value = self.__read_bytes__(4, to_int=False)
-            else:
-                self.st_value = self.__read_bytes__(8, to_int=False)
-
-            if self.eheader['EI_CLASS'] == '32':
+                self.st_name = self.__read_bytes__(4)
+                self.st_value = self.__read_bytes__(4)
                 self.st_size = self.__read_bytes__(4)
+                self.st_info = self.__read_bytes__(1, to_int=False)
+                self.st_other = self.__read_bytes__(1, to_int=False)
+                self.st_shndx = self.__read_bytes__(2)
             else:
+                self.st_name = self.__read_bytes__(4)
+                self.st_info = self.__read_bytes__(1, to_int=False)
+                self.st_other = self.__read_bytes__(1, to_int=False)
+                self.st_shndx = self.__read_bytes__(2)
+                self.st_value = self.__read_bytes__(8)
                 self.st_size = self.__read_bytes__(8)
+
 
 
 

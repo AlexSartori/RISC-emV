@@ -8,7 +8,9 @@ class Program:
         self.DM = DM
         self.ISA = ISA()
 
-        self.syntax_errors = []
+        self.syntax_errors = []         # Line numbers for text
+        self.unknown_instructions = []  # Instruction indexes for ELF
+
         self.IM = []  # Instruction Memory
         self.sections = {'.text': 0}
         self.symbol_table = {}
@@ -102,15 +104,6 @@ class Program:
                 self.DM.store(addr, ord(c))
                 addr += 1
 
-            # Save the length of the symbol
-            sym_pc = self.symbol_table[self.last_symbol]
-            self.symbol_table[self.last_symbol] = {
-                'pc': sym_pc,
-                'length': len(s),
-                'text': s
-            }
-            self.last_symbol = None
-
             pc += addr
         else:
             raise SyntaxError("Unknown directive")
@@ -125,14 +118,8 @@ class Program:
     def load_machine_code(self, filename):
         file = ELF(filename)
         file.load_program(self)
+        self.unknown_instructions = file.unknown_instructions
 
-        # 6 types of instructions: R/I/S/SB/U/UJ
-        #   - R-Format:  3 register inputs (add, xor, mul)
-        #   - I-Format:  immediates or loads (addi, lw, jalr, ...)
-        #   - S-Format:  store (sw, sb)
-        #   - SB-Format: branch instructions (beq, bge)
-        #   - U-Format:  upper immediates (?) (lui, auipc)
-        #   - UJ-Format: jumps (jal)
 
     def to_code(self):
         lines = []
@@ -140,14 +127,45 @@ class Program:
 
         for idx, inst in enumerate(self.IM):
             for s in self.sections:
-                if self.sections[s] == idx:
-                    lines.append('\n' + s)
+                if self.sections[s] == idx*4:
+                    if s != '.text':  # If not the first line
+                        lines.append('')
+                    lines.append(s)
                     done_sections.append(s)
+            for s in self.symbol_table:
+                if self.symbol_table[s]['value'] == idx*4 and self.symbol_table[s]['section'] == done_sections[-1]:
+                    lines.append('')
+                    lines.append(s + ':')
             lines.append('    ' + str(inst))
+
+            if idx in self.unknown_instructions:
+                self.syntax_errors.append((len(lines)-1, str(inst), "Unknown Instruction"))
 
         for s in self.sections:
             if s not in done_sections:
-                lines.append('\n' + s)
-                lines.append('    ; todo')
+                lines.append('')
+                lines.append(s)
+                for sym in self.symbol_table.values():
+                    if sym['section'] == s:
+                        lines.append(sym['name'] + ":")
 
-        return '\n'.join(lines).strip()
+                        if sym['size'] == 1:
+                            dim = '.byte'
+                        elif sym['size'] == 2:
+                            dim = '.2byte'
+                        elif sym['size'] == 4:
+                            dim = '.4byte'
+                        elif sym['size'] == 8:
+                            dim = '.8byte'
+                        else:
+                            lines.append('    <no_info>')
+                            continue
+
+                        data = []
+                        for i in range(sym['size']):
+                            addr = self.sections[sym['section']] + sym['value']
+                            data.append('{:x}'.format(self.DM.load(addr)))
+
+                        lines.append("    {} 0x{}".format(dim, ''.join(data)))
+
+        return '\n'.join(lines)

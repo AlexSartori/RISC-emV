@@ -60,7 +60,8 @@ class TomasuloView(QtWidgets.QSplitter):
         self.IFQ.clear()
 
         for inst in prog:
-            self.IFQ.put(inst)
+            if inst is not None:
+                self.IFQ.put(inst)
         self.instbuffer_view.load_contents()
         self.datamemory_view.load_contents()
 

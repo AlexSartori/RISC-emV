@@ -87,7 +87,8 @@ class CodeEditor(QtWidgets.QFrame):
             p.load_text(self.text_edit.toPlainText())
         elif ext == '.o':  # ELF file
             p.load_machine_code(self.filename)
-            self.setText(p.to_code())
+
+        self.setText(p.to_code())
 
         if len(p.syntax_errors) > 0:
             for e in p.syntax_errors:
