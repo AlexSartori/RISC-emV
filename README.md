@@ -16,6 +16,11 @@ From within the repository directory:
 pip install -e .
 ```
 
+## Execution
+Just type:
+```
+riscemv
+```
 
 
 ## Features
@@ -34,15 +39,20 @@ pip install -e .
 
 ### Instruction Set Support
 - 32 bits:
- - **RV32I**: base support for 32 bit integer operations
- - **RV32M**: 32 bit integer multiplication and division
- - **RV32F**: 32 bit floating point operations
+    - **RV32I**: base support for 32 bit integer operations
+    - **RV32M**: 32 bit integer multiplication and division
+    - **RV32F**: 32 bit floating point operations
 
 ### Other
 - **Configurable**: a configuration window allows to tune many parameters
 - **Sample Programs**: the `sample_programs` folder contains different ready to play with programs
 - **Extensible**: adding support for more instruction sets is a matter of writing a JSON file
 
+
+## Authors
+[Alessandro Sartori](https://github.com/AlexSartori)
+
+[Davide Zanella](https://github.com/davidezanella)
 
 
 ## Screenshots
