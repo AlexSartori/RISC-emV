@@ -150,7 +150,7 @@ class Tomasulo:
             if fu.busy and fu.time_remaining == 0:
                 self.IFQ.set_instruction_write_result(fu.instruction.program_counter, self.__steps)
                 if isinstance(fu.instruction, SType_Instruction):
-                    val = "{:032b}".format(fu.Vj)
+                    val = "{:032b}".format(fu.Vk)
                     old = list("{:032b}".format(self.DM.load(fu.A)))
 
                     for i in range(1, fu.instruction.length):
