@@ -4,7 +4,7 @@ from riscemv.DataMemory import DataMemory
 
 
 def test_load_text():
-    image = '18 02 49 01 90 02 89 01 00 94 86 63 00 95 24 23 42 92 c1 01 00 a4 86 33'
+    image = '18 02 49 01 90 02 89 01 00 94 8c 63 00 95 24 23 42 92 c1 01 00 a4 86 33'
     image = image.split(' ')
 
     DM = DataMemory(128)
