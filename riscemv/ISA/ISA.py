@@ -6,6 +6,7 @@ from riscemv.ISA.BType_Instruction import BType_Instruction
 from riscemv.ISA.UType_Instruction import UType_Instruction
 from riscemv.ISA.UJType_Instruction import UJType_Instruction
 from riscemv.ISA.R4Type_Instruction import R4Type_Instruction
+from riscemv.ISA.Ret_Instruction import Ret_Instruction
 from riscemv.RegisterFile import RegisterFile
 
 
@@ -217,6 +218,9 @@ class ISA:
                 inst.rs3_type = match['rs3Type']
         elif line[0] in ['nop', 'ecall']:
             raise NotImplementedError()
+        elif line[0] == 'ret':
+            inst = Ret_Instruction()
+            inst.program_counter = pc
         else:
             raise SyntaxError()
 
@@ -362,5 +366,10 @@ class ISA:
                             return inst
                     else:
                         raise NotImplementedError()
+        
+        if binary_code == '00000000000000001000000001100111':  # ret instruction
+            inst = Ret_Instruction()
+            inst.program_counter = pc
+            return inst
         else:
             raise NotImplementedError("Unknown OPCODE")

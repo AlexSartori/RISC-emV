@@ -9,6 +9,7 @@ from riscemv.ISA.IType_Instruction import IType_Instruction
 from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
 from riscemv.ISA.UType_Instruction import UType_Instruction
+from riscemv.ISA.Ret_Instruction import Ret_Instruction
 
 
 class Tomasulo:
@@ -61,7 +62,7 @@ class Tomasulo:
             else:
                 fu.busy = True
                 fu.thread_id = self.thread_id
-                if isinstance(instruction, BType_Instruction):
+                if isinstance(instruction, (BType_Instruction, Ret_Instruction)):
                     self.stall = True
 
                 pc += 4
@@ -69,7 +70,7 @@ class Tomasulo:
                 fu.instruction = instruction
                 fu.time_remaining = instruction.clock_needed
 
-                if isinstance(instruction, RType_Instruction) or isinstance(instruction, BType_Instruction):
+                if isinstance(instruction, (RType_Instruction, BType_Instruction)):
                     if self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type) is not None:
                         fu.Qj = self.RegisterStat.get_status(instruction.rs1, instruction.rs1_type)
                     else:
@@ -106,7 +107,7 @@ class Tomasulo:
                     fu.Qk = 0
                     fu.Qj = 0
 
-                if not isinstance(instruction, SType_Instruction) and not isinstance(instruction, BType_Instruction):
+                if not isinstance(instruction, (SType_Instruction, BType_Instruction)):
                     self.RegisterStat.add_status(instruction.rd, fu.name, instruction.rd_type)
 
 
@@ -134,6 +135,10 @@ class Tomasulo:
                         pc = self.Regs.PC.get_value() - 4
                         pc += fu.instruction.execute(fu.Vj, fu.Vk)
                         self.Regs.PC.set_value(pc)
+                    elif isinstance(fu.instruction, Ret_Instruction):
+                        pc = self.Regs.PC.get_value() - 4
+                        pc = fu.instruction.execute(fu.Vj, fu.Vk)
+                        self.Regs.PC.set_value(pc)
                     elif isinstance(fu.instruction, UType_Instruction):
                         fu.result = fu.instruction.execute(fu.A)
 
@@ -150,7 +155,7 @@ class Tomasulo:
                         old[-i] = val[-i]
 
                     self.DM.store(fu.A, int("".join(old), 2))
-                elif isinstance(fu.instruction, BType_Instruction):
+                elif isinstance(fu.instruction, (BType_Instruction, Ret_Instruction)):
                     self.stall = False
                 else:
                     self.RegisterStat.remove_status(fu.instruction.rd, fu.instruction.rd_type)
