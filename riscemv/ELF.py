@@ -164,6 +164,7 @@ class ELF:
 
         # Class (32 or 64 bit)
         self.eheader['EI_CLASS'] = '32' if self.__read_bytes__(1) == 1 else '64'
+        print("    EI_CLASS:", self.eheader['EI_CLASS'])
 
         # Endianness
         self.eheader['EI_DATA']     = 'little' if self.__read_bytes__(1) == 1 else 'big'
@@ -183,6 +184,8 @@ class ELF:
             self.eheader['e_entry'] = self.__read_bytes__(4)   # Program entry point address
         else:
             self.eheader['e_entry'] = self.__read_bytes__(8)
+
+        print("    e_entry:", self.eheader['e_entry'])
 
         if self.eheader['EI_CLASS'] == '32':
             self.eheader['e_phoff'] = self.__read_bytes__(4)   # Program header offset

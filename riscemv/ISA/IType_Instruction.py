@@ -43,7 +43,7 @@ class IType_Instruction(Instruction):
         code = self.execution_code
         code = code.replace('rs', str(rs_value))
 
-        code.replace('PC', str(PC_value))
+        code = code.replace('PC', str(PC_value))
         return eval(code)
 
 

@@ -129,7 +129,7 @@ class Tomasulo:
                             fu.result = int(val[-fu.instruction.length:], 2)
                         elif fu.instruction.is_jalr():
                             pc = self.Regs.PC.get_value() - 4
-                            rd, pc = fu.instruction.execute(fu.Vj, fu.Vk)
+                            rd, pc = fu.instruction.execute(fu.Vj, pc)
                             self.Regs.PC.set_value(pc)
                             fu.result = rd
                         else:

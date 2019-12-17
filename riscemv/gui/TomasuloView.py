@@ -62,11 +62,13 @@ class TomasuloView(QtWidgets.QSplitter):
         for inst in prog:
             if inst is not None:
                 self.IFQ.put(inst)
-        self.instbuffer_view.load_contents()
-        self.datamemory_view.load_contents()
 
         self.RF.PC.set_value(prog.get_entry_point())
         self.RF.SP.set_value(self.DM.size)
+
+        self.register_view.load_contents()
+        self.instbuffer_view.load_contents()
+        self.datamemory_view.load_contents()
         self.emulator_instance.reset_steps()
 
 
