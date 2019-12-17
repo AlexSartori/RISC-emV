@@ -35,10 +35,15 @@ class IType_Instruction(Instruction):
         return IType_Instruction(opcode, rd, funct3, rs, imm)
 
 
-    def execute(self, rs_value):
+    def is_jalr(self):
+        return self.opcode == '1100111'
+
+
+    def execute(self, rs_value, PC_value=None):
         code = self.execution_code
         code = code.replace('rs', str(rs_value))
 
+        code.replace('PC', str(PC_value))
         return eval(code)
 
 

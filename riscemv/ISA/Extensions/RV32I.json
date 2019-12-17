@@ -178,6 +178,13 @@
             "length": 16,
             "funcUnit": "ld",
             "clockNeeded": 2
+        },
+        "jalr": {
+            "opcode": "1100111",
+            "funct3": "000",
+            "exec": "PC + 4, rs + imm",
+            "funcUnit": "add",
+            "clockNeeded": 1
         }
     },
     "s-type": {
