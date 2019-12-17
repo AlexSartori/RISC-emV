@@ -56,4 +56,18 @@ riscemv
 
 
 ## Screenshots
-...
+The main window of the program
+![Image #1](images/image_1.png)
+
+The configuration window
+![Image #2](images/image_2.png)
+![Image #3](images/image_3.png)
+
+The `hello_word` program loaded
+![Image #4](images/image_4.png)
+
+The code is executing
+![Image #5](images/image_5.png)
+
+The execution has ended and the program has written `Hello` in memory
+![Image #6](images/image_6.png)
