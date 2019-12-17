@@ -10,7 +10,6 @@ from riscemv.ISA.SType_Instruction import SType_Instruction
 from riscemv.ISA.BType_Instruction import BType_Instruction
 from riscemv.ISA.UType_Instruction import UType_Instruction
 from riscemv.ISA.UJType_Instruction import UJType_Instruction
-from riscemv.ISA.Ret_Instruction import Ret_Instruction
 
 
 class Tomasulo:
@@ -63,7 +62,7 @@ class Tomasulo:
             else:
                 fu.busy = True
                 fu.thread_id = self.thread_id
-                if isinstance(instruction, (BType_Instruction, Ret_Instruction)) or (isinstance(instruction, IType_Instruction) and instruction.is_jalr()):
+                if isinstance(instruction, BType_Instruction) or (isinstance(instruction, IType_Instruction) and instruction.is_jalr()):
                     self.stall = True
 
                 pc += 4
@@ -133,7 +132,6 @@ class Tomasulo:
                             rd, pc = fu.instruction.execute(fu.Vj, fu.Vk)
                             self.Regs.PC.set_value(pc)
                             fu.result = rd
-                            print(fu.instruction)
                         else:
                             fu.result = fu.instruction.execute(fu.Vj)
                     elif isinstance(fu.instruction, SType_Instruction):
@@ -142,10 +140,6 @@ class Tomasulo:
                         pc = self.Regs.PC.get_value() - 4
                         fu.result = pc + 4
                         pc += fu.instruction.execute(fu.Vj, fu.Vk)
-                        self.Regs.PC.set_value(pc)
-                    elif isinstance(fu.instruction, Ret_Instruction):
-                        pc = self.Regs.PC.get_value() - 4
-                        pc = fu.instruction.execute(fu.Vj, fu.Vk)
                         self.Regs.PC.set_value(pc)
                     elif isinstance(fu.instruction, UType_Instruction):
                         fu.result = fu.instruction.execute(fu.A)
@@ -163,7 +157,7 @@ class Tomasulo:
                         old[-i] = val[-i]
 
                     self.DM.store(fu.A, int("".join(old), 2))
-                elif not isinstance(fu.instruction, Ret_Instruction):
+                else:
                     self.RegisterStat.remove_status(fu.instruction.rd, fu.instruction.rd_type)
                     if not (isinstance(fu.instruction, UJType_Instruction) and fu.instruction.rd == 0):  # j instruction
                         self.Regs.write(fu.instruction.rd, fu.result, fu.instruction.rd_type)
@@ -177,7 +171,7 @@ class Tomasulo:
                             other_fu.Vk = fu.result
                             other_fu.Qk = 0
 
-                if isinstance(fu.instruction, (BType_Instruction, Ret_Instruction)) or (isinstance(fu.instruction, IType_Instruction) and fu.instruction.is_jalr()):
+                if isinstance(fu.instruction, BType_Instruction) or (isinstance(fu.instruction, IType_Instruction) and fu.instruction.is_jalr()):
                     self.stall = False
 
                 fu.clear()
