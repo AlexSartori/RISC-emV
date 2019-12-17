@@ -14,6 +14,7 @@ def test_tomasulo():
 
     for l in P:
         tomasulo.IFQ.put(l)
+    tomasulo.Regs.PC.set_value(P.get_entry_point())
 
     reg_addr = 9
     tomasulo.Regs.writeInt(reg_addr, 0)

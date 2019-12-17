@@ -52,7 +52,7 @@ class ISA:
         try:
             int(imm)
             return imm  # Not a symbol
-        except:
+        except ValueError:
             # Load from symbol table
             if re.match(r'%lo\((.+)\)', imm):
                 label = re.match(r'%lo\((.+)\)', imm).group(1)
@@ -270,7 +270,7 @@ class ISA:
 
                                 if inst.is_load():
                                     inst.length = instr_match['length']
-                                
+
                                 inst.instr_name = instr_code
 
                                 return inst
@@ -362,5 +362,5 @@ class ISA:
                             return inst
                     else:
                         raise NotImplementedError()
-        
+
         raise NotImplementedError("Unknown OPCODE")

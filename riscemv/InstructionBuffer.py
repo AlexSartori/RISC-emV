@@ -38,7 +38,7 @@ class InstructionBuffer():
 
 
     def empty(self, pc):
-        return pc == self.last_instruction
+        return pc > self.last_instruction
 
     def __iter__(self):
         return iter(self.instructions.values())

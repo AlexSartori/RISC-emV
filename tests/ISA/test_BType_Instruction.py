@@ -19,4 +19,4 @@ def test_beq():
 
 def test_to_bin():
     inst = ISA().instruction_from_str('beq x5, x0, 4', None, 0)  # BType_Instruction(1100011, 5, '000', 1, 2)
-    assert inst.to_binary() == '00000000010100000000001001100011'
+    assert inst.to_binary() == '00000000010100000000010001100011'
