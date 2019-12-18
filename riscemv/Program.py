@@ -49,7 +49,12 @@ class Program:
                     # Label
                     label = re.match(r'.+:', line).group(0)
                     label = label[:-1].lower()
-                    self.symbol_table[label] = pc
+                    self.symbol_table[label] = {
+                        'name': label,
+                        'value': pc,
+                        'size': 0,
+                        'section': '.text'
+                    }
                     self.last_symbol = label
                 elif re.match(r'\.[a-zA-Z0-9]+', line):
                     # Directive

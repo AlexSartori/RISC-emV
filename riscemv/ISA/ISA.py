@@ -148,10 +148,10 @@ class ISA:
             rs2 = int(line[1][1:])  # Remove letter
             rs1 = int(line[2][1:])  # Remove letter
 
-            if line[3].isdigit():
+            if re.match(r'[-+]?\d+', line[3]):
                 imm = int(line[3])
             else:
-                imm = symbol_table[line[3]].pc - pc
+                imm = symbol_table[line[3]]['value'] - pc
 
             inst = BType_Instruction(match["opcode"], imm, match['funct3'], rs1, rs2)
             inst.instr_name = line[0]
