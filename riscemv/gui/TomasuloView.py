@@ -66,6 +66,8 @@ class TomasuloView(QtWidgets.QSplitter):
         self.RF.PC.set_value(prog.get_entry_point())
         self.RF.SP.set_value(self.DM.size)
         self.RF.RA.set_value(0)
+        for i in range(3, 9):
+            self.RF.IntRegisters[i].set_value(0)
 
         self.register_view.load_contents()
         self.instbuffer_view.load_contents()
