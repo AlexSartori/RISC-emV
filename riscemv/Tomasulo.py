@@ -96,7 +96,6 @@ class Tomasulo:
                         fu.Vj = self.Regs.read(instruction.rs1, instruction.rs1_type)
                         fu.Qj = 0
                     fu.A = instruction.imm # store the immediate value
-                    fu.Qk = 0
                     if self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type) is not None:
                         fu.Qk = self.RegisterStat.get_status(instruction.rs2, instruction.rs2_type)
                     else:

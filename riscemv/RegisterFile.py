@@ -44,6 +44,7 @@ class RegisterFile:
         for fp_reg in rf_config['FPRegisters']:
             self.FPRegisters.append(Register.parse(fp_reg))
 
+        self.RA = self.IntRegisters[1]
         self.SP = self.IntRegisters[2]
 
 
