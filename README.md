@@ -9,6 +9,8 @@
 Graphical emulator for the RISC-V architecture, implementing the Tomasulo algorithm and the Simultaneous Multi-Threading.
 
 
+[Here](documentation.pdf) you can find a brief documentation of the project.
+
 
 ## Installation
 From within the repository directory:
